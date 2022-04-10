@@ -1,0 +1,99 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2018-03-18 日 19:51]
+#+TITLE: Struts2 参数转换异常处理
+#+HUGO_TAGS: Java Struts2
+#+HUGO_CATEGORIES: Java
+
+
+* Struts2 参数转换异常处理
+  :PROPERTIES:
+  :CUSTOM_ID: struts2-参数转换异常处理
+  :END:
+
+#+begin_quote
+  2018-03-18 19:51:33
+#+end_quote
+
+** 异常描述
+   :PROPERTIES:
+   :CUSTOM_ID: 异常描述
+   :END:
+无法获取参数值,但也不报错, 只是警告 异常描述如下:
+
+#+begin_example
+18-Mar-2018 19:44:20.974 警告 [http-apr-8080-exec-1] com.opensymphony.xwork2.util.logging.jdk.JdkLogger.warn Error setting expression 'user.score' with value '[Ljava.lang.String;@6b961655'
+#+end_example
+
+User 类具体代码如下:
+
+#+begin_src java
+package action.convert;
+
+import java.util.Date;
+
+/**
+ * @author : Creeper
+ * @date : 2018/3/18 15:53
+ */
+public class User {
+
+    private String name;
+    private int age;
+    private double score;
+    private Date birthday;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public double getscore() {
+        return score;
+    }
+
+    public void setscore(double score) {
+        this.score = score;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", score=" + score +
+                ", birthday=" + birthday +
+                '}';
+    }
+}
+#+end_src
+
+*** 异常原因
+    :PROPERTIES:
+    :CUSTOM_ID: 异常原因
+    :END:
+因为 User 的 score 属性的 set,get 防范书写不规范, 所以导致获取不到值,
+将方法名改为 =setScore= 和 =getScore= 即可

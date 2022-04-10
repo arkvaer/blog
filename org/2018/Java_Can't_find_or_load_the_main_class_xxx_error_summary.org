@@ -1,0 +1,66 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2018-02-01 23:47:43]
+#+TITLE: Java 找不到或无法加载主类XXX终极解决方案
+#+HUGO_TAGS: Java Exception
+#+HUGO_CATEGORIES: Java
+
+
+
+** 起因
+   :PROPERTIES:
+   :CUSTOM_ID: 起因
+   :END:
+今天突发奇想用命令行运行 Java 文件,
+但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过,
+便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH,
+临时环境变量等所有可能的因素后,依然报这个错,
+好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后,
+但是结果又让人欲哭无泪...
+
+** 解决方案:
+   :PROPERTIES:
+   :CUSTOM_ID: 解决方案
+   :END:
+*** 配置错误
+    :PROPERTIES:
+    :CUSTOM_ID: 配置错误
+    :END:
+入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和
+javac 都有提示出来，说明没问题了，
+
+​ 主要是以下两点要注意：
+
+1. 在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。\\
+2. 更为重要的是，在 cmd 下运行 javac
+   和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不
+   会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径
+   下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意
+   到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。
+
+​
+如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可
+
+#+begin_quote
+  以上解决方案转自
+  [[http://blog.csdn.net/wangjiaweiwei/article/details/42212525][javac编译成功，用java运行class文件出现“找不到或无法加载主类”
+  的问题]]
+#+end_quote
+
+*** 语法错误
+    :PROPERTIES:
+    :CUSTOM_ID: 语法错误
+    :END:
+语法错误分两种:
+
+1. 文件名与主类名不相同
+
+2. package 包不存在
+
+   *第二种错误很容易忽视.在这踩个坑*
+   (笔者就是因为将 IDEA 中的文件直接考出来才.......,一切尽在不言中,
+   你们可能很难想象在半夜 12 点数次装 Java 配环境变量的紧张与刺激!)​

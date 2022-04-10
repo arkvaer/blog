@@ -1,0 +1,155 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2018-03-11 17:39:23]
+#+TITLE: 深入浅出Java转发和重定向的区别
+#+HUGO_TAGS: Java
+#+HUGO_CATEGORIES: Java
+
+
+* 深入浅出 Java 转发和重定向的区别
+  :PROPERTIES:
+  :CUSTOM_ID: 深入浅出 java 转发和重定向的区别
+  :END:
+- 2018-03-11 17:39:23
+
+#+begin_quote
+  本文转自[[http://blog.csdn.net/lishehe/article/details/23133105][深入浅出Java
+  重定向和请求转发的区别 李社河]]
+#+end_quote
+
+** 示例
+   :PROPERTIES:
+   :CUSTOM_ID: 示例
+   :END:
+下面是一个小例子
+
+#+begin_src java
+import java.util.*;
+import java.io.*;  
+import javax.servlet.http.*;  
+import javax.servlet.*;  
+
+import com.bjpowernode.exam.model.*;  
+import com.bjpowernode.exam.manager.*;  
+
+public class SearchStudentServlet extends HttpServlet {  
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)   
+    throws ServletException, IOException {  
+        doPost(request, response);  
+    }  
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)  
+    throws ServletException, IOException {  
+
+        String sBeginDate = request.getParameter("beginDate");  
+        String sEndDate = request.getParameter("endDate");  
+
+        Date beginDate = new Date();  
+        Date endDate = new Date();  
+        try {  
+            beginDate = new SimpleDateFormat("yyyy-MM-dd").parse(sBeginDate);  
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse(sEndDate);  
+         }catch(Exception e) {  
+            e.printStackTrace();
+         }
+
+        StudentManager studentManager = new StudentManagerImpl();  
+        List<Student> studentList = studentManager.findStudentList(beginDate, endDate);  
+
+        //将学生列表设置到requet范围中  
+        //request.setAttribute("student_list", studentList);  
+
+        //转发,转发是在服务器端转发的，客户端是不知道的  
+        //request.getRequestDispatcher("/student_list.jsp").forward(request, response);  
+
+
+        //将studentList放到session中  
+        HttpSession session = request.getSession();  
+        session.setAttribute("student_list", studentList);  
+
+        //重定向，不会共享request  
+        //以下写法错误,该 "/"代表了8080端口  
+        //response.sendRedirect("/student_list.jsp");  
+        response.sendRedirect(request.getContextPath() + "/student_list.jsp");  
+    }  
+}
+#+end_src
+
+这个里面尝试了两种调到后面的 Jsp 方法，在 servlet 中调用转发、重定向的语句如下：
+
+- 实现转发:
+
+#+begin_src java
+//转发,转发是在服务器端转发的，客户端是不知道的  
+request.getRequestDispatcher("/student_list.jsp").forward(request, response);
+#+end_src
+
+分析：请求转发是服务器内部把对一个 request/response 的处理权，移交给另外一个对于客户端而言，它只知道自己最早请求的那个 A，而不知道中间的 B，甚至 C、D。
+传输的信息不会丢失。
+
+- 实现重定向：
+
+#+begin_src java
+//重定向，不会共享request  
+//以下写法错误,该 "/"代表了8080端口  
+response.sendRedirect("/student_list.jsp");  
+response.sendRedirect(request.getContextPath() + "/student_list.jsp");
+#+end_src
+
+** 深入（分析理解）
+   :PROPERTIES:
+   :CUSTOM_ID: 深入分析理解
+   :END:
+*** 转发过程
+    :PROPERTIES:
+    :CUSTOM_ID: 转发过程
+    :END:
+客户首先发送一个请求到服务器端，服务器端发现匹配的 servlet，并指定它去执行，当这个 servlet 执行完之后，它要调用 getRequestDispacther()方法，把请求转发给指定的 student_list.jsp,整个流程都是在服务器端完成的，而且是在同一个请求里面完成的，因此 servlet 和 jsp 共享的是同一个 request，在 servlet 里面放的所有东西，在 student_list 中都能取出来，因此，student_list 能把结果 getAttribute()出来，getAttribute()出来后执行完把结果返回给客户端。整个过程是一个请求，一个响应。
+
+*** 重定向过程
+    :PROPERTIES:
+    :CUSTOM_ID: 重定向过程
+    :END:
+客户发送一个请求到服务器，服务器匹配 servlet，这都和请求转发一样，servlet 处理完之后调用了 sendRedirect()这个方法，这个方法是 response 的方法，所以，当这个 servlet 处理完之后，看到 response.senRedirect()方法，立即向客户端返回这个响应，响应行告诉客户端你必须要再发送一个请求，去访问 student_list.jsp，紧接着客户端受到这个请求后，立刻发出一个新的请求，去请求 student_list.jsp,这里两个请求互不干扰，相互独立，在前面 request 里面 setAttribute()的任何东西，在后面的 request 里面都获得不了。可见，在 sendRedirect()里面是两个请求，两个响应。
+
+** 浅出（表象）
+   :PROPERTIES:
+   :CUSTOM_ID: 浅出表象
+   :END:
+*** 转发
+    :PROPERTIES:
+    :CUSTOM_ID: 转发
+    :END:
+当用 RequestDispatcher 请求转发后，地址栏为
+=http://localhost:8080/test/TestServlet=
+这真好应正了上面的分析，我们起初请求的就一个 servlet，至于你服务器端怎么转，流程怎么样的，我客户端根本就不知道，我发了请求后我就等着响应，那你服务器那边愿意怎么转就怎么转，我客户端不关心也没法知道，所以当服务器端转发到 jsp 后，它把结果返回给客户端，客户端根本就不知道你这个结果是我真正访问的 servlet 产生的，还是由 servlet 转发后下一个组件产生的。
+
+*** 重定向
+    :PROPERTIES:
+    :CUSTOM_ID: 重定向
+    :END:
+当用 sendRedirect 重定向后，地址栏为
+=http://localhost:8080/test/student_list.jsp=
+因为这个时候，客户端已经知道了他第二次请求的是 student_list.jsp，服务器已经告诉客户端要去访问 student_list.jsp 了，所以地址栏里会显示想要访问的结果。
+
+** 总结
+   :PROPERTIES:
+   :CUSTOM_ID: 总结
+   :END:
+转发在服务器端完成的；重定向是在客户端完成的 转发的速度快；重定向速度慢
+转发的是同一次请求；重定向是两次不同请求
+转发不会执行转发后的代码；重定向会执行重定向之后的代码
+转发地址栏没有变化；重定向地址栏有变化
+转发必须是在同一台服务器下完成；重定向可以在不同的服务器下完成
+
+*Forward 是在服务器端的跳转，就是客户端一个请求发给服务器，服务器直接将请求相关的参数的信息原封不动的传递到该服务器的其他 jsp 或 servlet 去处理，而 sendredirect 是在客户端的跳转，服务器会返回给客户端一个响应报头和新的 URL 地址，原来的参数什么的信息如果服务器端没有特别处理就不存在了，浏览器会访问新的 URL 所指向的 servlet 或 jsp，这可能不是原先服务器上的 webservce 了。*
+
+#+begin_quote
+  本文转自[[http://blog.csdn.net/lishehe/article/details/23133105][深入浅出Java
+  重定向和请求转发的区别 李社河]]
+#+end_quote

@@ -1,0 +1,13 @@
+#+OPTIONS: author:nil ^:{waver}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2022/04
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2022-04-09 六 23:24:24]
+#+TITLE:  从0开始搭建DNS服务器
+#+HUGO_TAGS: Network DNS
+#+HUGO_CATEGORIES: Network
+
+
+* 从 0 开始搭建 DNS 服务器

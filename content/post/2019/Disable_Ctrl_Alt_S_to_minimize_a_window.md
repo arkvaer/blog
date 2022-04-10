@@ -1,0 +1,43 @@
++++
+title = "禁用Gnome桌面Ctrl+Alt+S调整桌面快捷键"
+date = 2019-08-09T23:13:00+08:00
+lastmod = 2022-04-10T01:49:01+08:00
+tags = ["Configure"]
+categories = ["Configure"]
+draft = false
+toc = true
++++
+
+## 禁用 Gnome 桌面 Ctrl+Alt+S 调整桌面快捷键 {#禁用 gnome 桌面 ctrlalts 调整桌面快捷键}
+
+-   2019-08-09 23:13:04
+
+
+### 正文 {#正文}
+
+久仰 Manjaro 大名很久,所以最近搞了个 Manjaro, 为了平滑过度, 所以选择了
+Gnome 版的, 本来以为可以开开心心的撸代码了, 但是当我在 IDEA 中按下快捷键
+备打开设置配置一下字体的时候, 我的 IDEA 竟然变小了??? 想都不用想,
+快捷键冲突, 改 IDEA 的快捷键是不可能的了, 毕竟我已经和 JetBarins
+开展了深度合作,这要改了,岂不是什么 WebStorm PyCharm CLion
+GoLand(虽然不经常用,但是据说多写几个显得牛逼:) )啥的全都得改? 然后......
+我特么把快捷键列表翻了个遍也没找到一个对应的! Fuck!!!
+
+但是,作为 Google(养大的)程序员怎么可能妥协, 然后在 Ubuntu
+论坛上找到了这篇帖子,但是我就啥都没找到......
+![](https://waver.me/album/images/post/2019/08/02.png) 最后在 SuperUser
+找到了以下结果 ![](https://waver.me/album/images/post/2019/08/03.png)
+然后 ![](https://waver.me/album/images/post/2019/08/04.png) 嗯??? Gnome
+扩展??? ![](https://waver.me/album/images/post/2019/08/01.png)
+特么要把这个叫 Screen Window sizer 的扩展禁用,
+就解决了!!!也不知到是不是自己手贱装上的, 就当不是吧.
+
+又水了一篇博客,开心 -_-
+
+
+### 参考链接 {#参考链接}
+
+[SuperUser](https://superuser.com/questions/1352037/ctrl-alt-s-on-ubuntu-18-04-triggers-a-screen-size-toggle-but-is-not-listed-i)
+
+[Ask
+Ubuntu](https://askubuntu.com/questions/74041/how-do-i-disable-ctrlalts-to-minimize-a-window?newreg=fd6736b0f20d4307ab995a5ba33a117d)

@@ -1,0 +1,45 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2017-12-28 四 18:52]
+#+TITLE: maven管理SSM时xml和properties文件丢失异常
+#+HUGO_TAGS: Java Maven Exveption
+#+HUGO_CATEGORIES: Java
+
+
+* classpath resource [com/qinkangdeid/mapping/] cannot be resolved to
+URL because it does not exist 和
+org.apache.ibatis.binding.BindingException: Invalid bound statement (not
+found)异常解决
+  :PROPERTIES:
+  :CUSTOM_ID: classpath-resource-comqinkangdeidmapping-cannot-be-resolved-to-url-because-it-does-not-exist-和-org.apache.ibatis.binding.bindingexception-invalid-bound-statement-not-found 异常解决
+  :END:
+项目结构如图所示: [[/images/post_images/20171228ResourceException.jpg]]
+
+#+begin_example
+<build>
+  <resources>
+      <resource>
+        <directory>src/main/java</directory>
+          <includes>
+            <include>**/*.properties</include>
+            <include>**/*.xml</include>
+          </includes>
+          <filtering>false</filtering>
+        </resource>
+        <resource>
+          <directory>src/main/resources</directory>
+          <includes>
+            <include>**/*.properties</include>
+            <include>**/*.xml</include>
+          </includes>
+          <filtering>false</filtering>
+        </resource>
+      </resources>
+</build>
+#+end_example
+
+如上图所示, 将 com.bobo.mapper 和 resource 目录配置到 pom 文件的 bulid 中即可

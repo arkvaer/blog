@@ -1,0 +1,31 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2017
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2017-12-04 一 19:59]
+#+TITLE: FTP storFile返回false 解决方法
+#+HUGO_TAGS: Java Desgin_Patterns
+#+HUGO_CATEGORIES: Java
+
+
+
+
+[[https://www.cnblogs.com/xiangpiaopiao2011/archive/2012/02/28/2371679.html#undefined][本文参考地址]]
+
+** 错误描述
+   :PROPERTIES:
+   :CUSTOM_ID: 错误描述
+   :END:
+- 自己搭建的 FTP 服务器总是在执行 FTPClient.storFile(); 方法时返回 false
+
+** 解决方法
+   :PROPERTIES:
+   :CUSTOM_ID: 解决方法
+   :END:
+- 添加以下代码即可
+
+  #+begin_example
+    ftpClient.setControlEncoding("UTF-8");
+  #+end_example

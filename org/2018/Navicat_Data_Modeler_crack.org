@@ -1,0 +1,66 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2018-09-23 16:02:47]
+#+TITLE: Navicat Data Modeler 破解
+#+HUGO_TAGS: Tools
+#+HUGO_CATEGORIES: Tools
+
+* Navicat Data Modeler 破解
+  :PROPERTIES:
+  :CUSTOM_ID: navicat-data-modeler-破解
+  :END:
+
+#+begin_quote
+  2018-09-23 16:02:47
+#+end_quote
+
+** 起因
+   :PROPERTIES:
+   :CUSTOM_ID: 起因
+   :END:
+最近发现 =Navicat Data Modeler= 设计起数据库来特别顺手, 但是,
+它和其他 Navicat 家的工具一样, 只有 14 天的试用期
+
+激活工具下载地址
+[[https://waver.me/resource/Files/resource/Navicat_Keygen_Patch_v3.7_By_DFoX_URET.rar][]]
+
+*** 破解工具
+    :PROPERTIES:
+    :CUSTOM_ID: 破解工具
+    :END:
+虽然知道破解软件是不对的, 但奈何作为无产阶级的我又家境贫寒, 无钱购买,
+终于在我的坚持下发现了一款神奇的破解工具, 那下面就说说我的励志故事吧!
+
+*** 破解步骤
+    :PROPERTIES:
+    :CUSTOM_ID: 破解步骤
+    :END:
+工具解压后的样子如下:
+[[https://waver.me/album/images/post/2018/09/20180924-1.png]]
+
+**** 具体步骤
+     :PROPERTIES:
+     :CUSTOM_ID: 具体步骤
+     :END:
+1. 打开 /Navicat_Keygen_Patch_v3.7_By_DFoX_URET.exe/ 按照图中标出的选,
+   点击 /patch/ 按钮, 选择自己的 =Navicat Data Modeler= 后, 提示如下
+   [[https://waver.me/album/images/post/2018/09/20180924-2.png]]
+2. 然后点击 /Generate/, 会在 =Navicat Data Modeler= 生成 /Serial Keygen/
+
+[[https://waver.me/album/images/post/2018/09/20180924-3.png]] 3.
+后点击激活工具最下方的 /Generate/ (图上忘标了), 然后选择 =Modeler=
+的安装目录,选择后将会在安装目录下生成 /license_file/ 文件
+[[https://waver.me/album/images/post/2018/09/20180924-2-2.png]] 4.
+在激活之前, 先确保你的电脑是离线的, 否则将会激活失败
+[[https://waver.me/album/images/post/2018/09/20180924-disable-net.png]] 5.
+然后打开 =Navicat Data Modeler= 依次点击 帮助 > 注册 将刚刚复制的
+/Serial Keygen/ 粘上去
+[[https://waver.me/album/images/post/2018/09/20180924-4.png]] 6. 注意!
+不要直接点击激活按钮, 要按住 =Ctrl + Shift= 然后点击激活, 然后会让你选择
+/license_file/, 选择第三步生成的文件, 然后.....
+[[https://waver.me/album/images/post/2018/09/20180924-6.png]] 7.
+大功告成 [[https://waver.me/album/images/post/2018/09/20180924-7.png]]

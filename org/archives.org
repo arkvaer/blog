@@ -1,0 +1,18 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2022/04
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2022-04-09 23:42:20]
+#+TITLE: 归档
+#+HUGO_TAGS:
+#+HUGO_CATEGORIES:
+
+* 歸檔
+  :PROPERTIES:
+  :CUSTOM_ID: 歸檔
+  :END:
+- [[/posts/2017/_index.md][2017年]]
+- [[/posts/2018/_index.md][2018年]]
+- [[/posts/2019/_index.md][2019年]]

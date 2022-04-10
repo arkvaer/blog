@@ -1,0 +1,73 @@
+* Summary
+  :PROPERTIES:
+  :CUSTOM_ID: summary
+  :END:
+** [[./archives.md][博客歸檔]]
+   :PROPERTIES:
+   :CUSTOM_ID: 博客歸檔
+   :END:
+- [[file:posts/2019/_index.md][2019年]]
+  - [[file:posts/2019/Disable_Ctrl_Alt_S_to_minimize_a_window.md][禁用Gnome桌面Ctrl+Alt+S調整桌面快捷鍵]]
+  - [[file:posts/2019/Nginx_image_server.md][Nginx 搭建圖片緩存服務器]]
+- [[file:posts/2018/_index.md][2018年]]
+  - [[file:posts/2018/Navicat_Data_Modeler_crack.md][Navicat Data
+    Modeler 破解]]
+  - [[file:posts/2018/IDEA_maven_bug_fix.md][通過一次 IDEA Spring Boot
+    啟動報錯深入理解 maven scope 標籤]]
+  - [[file:posts/2018/Jrebel_activation_server_and_how_to_use_it.md][Jrebel
+    激活服務器及使用方法]]
+  - [[file:posts/2018/volatile_keyword_detailed.md][volatile 關鍵字詳解
+    (轉)]]
+  - [[file:posts/2018/Code_points_and_code_units_in_Java.md][Java
+    中的代碼點和代碼單元]]
+  - [[file:posts/2018/Jackson_Direct_self_reference_leading_to_cycle_Exception.md][Jackson
+    Direct self-reference leading to cycle 異常解決]]
+  - [[file:posts/2018/Contravariance_and_Covariance_in_Java.md][Java
+    中的逆變與協變]]
+  - [[file:posts/2018/RandomAccess_interface_detailed.md][RandomAccess
+    接口理解]]
+  - [[file:posts/2018/IDEA_performance_optimization.md][IDEA 性能調優]]
+  - [[file:posts/2018/Common_Git_Command_List.md][常用 Git 命令清單]]
+  - [[file:posts/2018/Struts2_Download_file_abnormal_solution.md][Struts2
+    下载文件异常解决]]
+  - [[file:posts/2018/Struts2_Parameter_conversion_Exception.md][Struts2
+    参数转换异常处理]]
+  - [[file:posts/2018/Explain_the_difference_between_Java_forwarding_and_redirection_in_a_simple_way.md][深入浅出
+    Java 转发和重定向的区别]]
+  - [[file:posts/2018/Mybatis_Error_parsing_Mapper_XML_Cause_java_lang_IllegalArgumentException_Result_Maps_collection_already.md][Mybatis
+    异常: Error parsing Mapper XML...]]
+  - [[file:posts/2018/In-depth_analysis_of_Java_serialization_and_deserialization.md][深入分析
+    Java 的序列化与反序列化]]
+  - [[file:posts/2018/Java_Can't_find_or_load_the_main_class_xxx_error_summary.md][Java
+    找不到或无法加载主类 XXX 错误原因汇总]]
+  - [[file:posts/2018/Tool_recommendation_AutoHotKey.md][工具推荐-AutoHotKey]]
+  - [[file:posts/2018/wechat_jump_cheat.md][微信跳一跳高分攻(外)略(挂)]]
+  - [[file:posts/2018/maven_manager_SSM_xml_and_properties_file_not_found_Exception.md][maven
+    管理 SSM 时 xml 和 properties 文件丢失异常]]
+- [[file:posts/2017/_index.md][2017年]]
+  - [[file:posts/2017/Remember_a_Redis_connection_exhaustion_exception_solution.md][记一次
+    Redis 连接用尽异常解决]]
+  - [[file:posts/2017/FTP_Client.storFile_return_false.md][FTP storFile
+    返回 false 解决方法]]
+  - [[file:posts/2017/GitHub_Pages_bind_domain.md][GitHub Pages
+    绑定域名]]
+  - [[file:posts/2017/23_design_patterns_in_Java_part_one.md][Java 中的
+    23 种设计模式 (一)]]
+  - [[file:posts/2017/23_design_patterns_in_Java_part_two.md][Java 中的
+    23 中设计模式 (二)]]
+  - [[file:posts/2017/23_design_patterns_in_Java_part_three.md][Java
+    中的 23 中设计模式 (三)]]
+  - [[file:posts/2017/23_design_patterns_in_Java_part_four.md][Java 中的
+    23 中设计模式 (四)]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_basic_syntax_1.md][Java知识点总结-1-基础语法]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_arrays_2.md][Java知识点总结-2-数组]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_package_3.md][Java知识点总结-3-封装]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_static_4.md][Java知识点总结-4-静态]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_extends_5.md][Java知识点总结-5-继承]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_Polymorphism_6.md][Java知识点总结-6-多态]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_inner_class_7.md][Java知识点总结-7-内部类]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_exception_8.md][Java知识点总结-8-异常]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_threads_9.md][Java知识点总结-9-线程]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_Thread_communication_10.md][Java知识点总结-10-线程通信]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_string_11.md][Java知识点总结-11-String]]
+  - [[file:posts/2017/summary_of_java_knowledge_points_collection_framework_12.md][Java知识点总结-12-集合框架]]

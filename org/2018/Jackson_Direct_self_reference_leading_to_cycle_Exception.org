@@ -1,0 +1,26 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2018-05-13 23:42:20]
+#+TITLE: Jackson Direct self-reference leading to cycle 异常解决
+#+HUGO_TAGS: Java
+#+HUGO_CATEGORIES: Java
+
+
+* Jackson Direct self-reference leading to cycle 异常解决
+  :PROPERTIES:
+  :CUSTOM_ID: jackson-direct-self-reference-leading-to-cycle-异常解决
+  :END:
+- 2018-05-13
+
+错误信息如图所示:
+[[https://waver.me/album/images/post/2018/05/jackson_2.png]] 代码如下:
+[[https://waver.me/album/images/post/2018/05/jackson_1.png]]
+
+由错误信息可以看出保存是因为=PageResult=类中使用了=this=对象,
+从而导致了自引用异常,将其改写成返回属性值后可回复正常
+[[https://stackoverflow.com/questions/10446891/jackson-self-reference-leading-to-cycle][StackOverFlow
+上 的]]

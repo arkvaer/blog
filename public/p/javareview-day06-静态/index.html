@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Java 复习第 6 天 {#java 复习第 6 天} static 关键字 static 的特点: 内存特点 存储位置: data segment(数据区 [也叫 共享区/方法区]); 可以通过 &amp;ldquo;类名.'><title>JavaReview-day06-静态</title>
+
+<link rel='canonical' href='https://arkvaer.io/p/javareview-day06-%E9%9D%99%E6%80%81/'>
+
+<link rel="stylesheet" href="/scss/style.min.450926226e724574a6b936335ea06111f8aeb253d932c86cb2cc807341cd2889.css"><meta property='og:title' content='JavaReview-day06-静态'>
+<meta property='og:description' content='Java 复习第 6 天 {#java 复习第 6 天} static 关键字 static 的特点: 内存特点 存储位置: data segment(数据区 [也叫 共享区/方法区]); 可以通过 &amp;ldquo;类名.'>
+<meta property='og:url' content='https://arkvaer.io/p/javareview-day06-%E9%9D%99%E6%80%81/'>
+<meta property='og:site_name' content='Waver 的博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Java' /><meta property='article:published_time' content='2017-11-30T19:49:00&#43;08:00'/><meta property='article:modified_time' content='2022-04-10T01:45:36&#43;08:00'/>
+<meta name="twitter:site" content="@arkvaer">
+    <meta name="twitter:creator" content="@arkvaer"><meta name="twitter:title" content="JavaReview-day06-静态">
+<meta name="twitter:description" content="Java 复习第 6 天 {#java 复习第 6 天} static 关键字 static 的特点: 内存特点 存储位置: data segment(数据区 [也叫 共享区/方法区]); 可以通过 &amp;ldquo;类名.">
+    <link rel="shortcut icon" href="true" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huaccf751e998e924f194edcb88b85a25f_202352_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Waver 的博客</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/arkvaer'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+                <li id="i18n-switch">  
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                    <select name="language" onchange="window.location.href = this.selectedOptions[0].value">
+                        
+                            <option value="https://arkvaer.io/en/" >English</option>
+                        
+                            <option value="https://arkvaer.io/" selected>中文</option>
+                        
+                    </select>
+                </li>
+            
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/java/" >
+                Java
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/javareview-day06-%E9%9D%99%E6%80%81/">JavaReview-day06-静态</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Nov 30, 2017</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="java-复习第-6-天-java-复习第-6-天">Java 复习第 6 天 {#java 复习第 6 天}</h2>
+<h3 id="static-关键字">static 关键字</h3>
+<h4 id="static-的特点">static 的特点:</h4>
+<ol>
+<li>
+<p>内存特点</p>
+</li>
+<li>
+<p>存储位置: data segment(数据区 [也叫 共享区/方法区]);</p>
+</li>
+<li>
+<p>可以通过 &ldquo;类名.静态成员&rdquo; 的方式调用;</p>
+</li>
+<li>
+<p>随着类的加载而加载, 随着类的消失而消失(说明它的生命周期最长);</p>
+</li>
+<li>
+<p>优先于对象存在(加载);</p>
+</li>
+<li>
+<p>被所有对象所共享</p>
+</li>
+<li>
+<p>只有数据被多个对象共享是才适合定义静态</p>
+</li>
+<li>
+<p>可以直接被类名调用</p>
+</li>
+</ol>
+<h4 id="静态变量和非静态变量的举例">静态变量和非静态变量的举例</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">    <span class="kd">class</span> <span class="nc">Person</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">         <span class="n">String</span> <span class="n">name</span><span class="o">;</span><span class="c1">//成员变量，实例变量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="kd">static</span> <span class="n">String</span> <span class="n">country</span> <span class="o">=</span> <span class="s">&#34;CN&#34;</span><span class="o">;</span><span class="c1">//静态变量。类变量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="kd">public</span>  <span class="kt">void</span> <span class="nf">show</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">country</span><span class="o">+</span><span class="s">&#34;:&#34;</span><span class="o">+</span><span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>静态变量又叫类变量或静态成员变量, 非静态变量也叫成员变量或实例变量</p>
+</li>
+<li>
+<p>静态变量和非静态变量的访问权限的不同</p>
+<ul>
+<li>static 方法只能访问 static 的变量，没有权限访问非 static 变量。</li>
+<li>static 方法中声明的变量可以与非 static 变量并且是类的属性重名</li>
+<li>方法中声明的变量可以与非 static 变量并且是类的属性重名</li>
+<li>非 static 方法中可以方访问 static 变量。</li>
+<li>static 方法可以访问 static 属性</li>
+</ul>
+</li>
+</ul>
+<h4 id="实例变量静态变量和类变量非静态变量的区别">实例变量(静态变量)和类变量(非静态变量)的区别</h4>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h4 id="静态使用注意事项">静态使用注意事项</h4>
+<ul>
+<li>静态方法只能访问静态变量成员,
+非静态方法既可以访问静态成员也可以访问非静态成员;</li>
+<li>静态方法中不可以定义 this, super 关键字, 因为静态成员优先于对象存在,
+所以静态 方法中不可能存在 this;</li>
+<li>主函数(main) 也是静态的;</li>
+</ul>
+<h3 id="main函数-main-函数">main()函数 {#main 函数}</h3>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="nv">$java</span> MainDemo hehe enen oo
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>PS: 向 main 函数中传入 &ldquo;hehe&rdquo; &ldquo;enen&rdquo; &ldquo;oo&rdquo; 三个参数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">MainDemo</span>
+</span></span><span class="line"><span class="cl">  <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;hehe&#34;</span><span class="o">,</span> <span class="s">&#34;haha&#34;</span><span class="o">,</span> <span class="s">&#34;oo&#34;</span><span class="o">,</span> <span class="s">&#34;enen&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TestMain</span><span class="o">.</span><span class="na">main</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">TestMain</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="n">0</span><span class="o">;</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">args</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">x</span><span class="o">++){</span>
+</span></span><span class="line"><span class="cl">          <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="n">x</span><span class="o">]);</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="静态的使用条件">静态的使用条件</h4>
+<!-- raw HTML omitted -->
+<ul>
+<li>
+<p>可以分为两部分(因为静态修饰的内容有成员变量和函数):</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+</li>
+</ul>
+<h4 id="jvm-的编译特点-jvm-的编译特点">JVM 的编译特点 {#jvm 的编译特点}</h4>
+<ul>
+<li>JVM 编译文件时会先查找当前类中对其他类的引用, 如果有其引用的
+<strong>class 文件</strong>,如果没有, 再查找与其同名的 <strong>java 文件</strong>,如果有, 先编译其
+java 文件, 然后在编译当前文件, 没有则报错;</li>
+</ul>
+<h4 id="类加载的特点">类加载的特点</h4>
+<ul>
+<li>只有用到类中的内容是, 类才被加载</li>
+</ul>
+<!-- raw HTML omitted -->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Demo</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;a&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">TestDemo</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Demo</span> <span class="n">demo</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上代码执行后没有运行结果, 因为 <code>TestDemo</code> 中并没有实际用到 <code>Demo</code>
+中的内容</p>
+<h3 id="java-帮助文档">Java 帮助文档</h3>
+<h4 id="java-注释常用标签实例-java-注释常用标签实例">Java 注释常用标签实例 {#java 注释常用标签实例}</h4>
+<ul>
+<li>() 引用其他类:
+( 标签允许你引用其他类的文档)。javadoc 会在其生成的 HTML 文件中，用@see 标签链接到其他文档。</li>
+<li>(a) package. class#member label
+该标签与@see 及其相似，只是它可以用于行内，并且是用”label”作为超链接文本而不用”See
+Also”</li>
+<li>(a)
+该标签产生到文档根目录的相对路径，用于文档树页面的显示超链接</li>
+<li>(a)
+该标签从当前这个类的最直接的基类中继承相关文档到当前的文档注释中</li>
+<li>(a) 该标签格式如下： (a)
+version-information
+其中，&ldquo;version-information&quot;可以是任何你认为适合作为版本说明的重要信息，如果 javadoc 命令行使用了”-version”标记，那么久可以从生成的 HTML 文档中提取出版本信息</li>
+<li>(a) 该标签的格式如下： (a)
+author-information
+其中，&ldquo;author-information&rdquo;,望文生义你也知道，应该是你的名字，也可以包括电子邮件地址或者其他任何适宜的信息</li>
+<li>(a) 该标签允许你指定程序代码最早使用的版本，你将会在 HTML
+java 文档中看到他被用来指定所用的 JDK 版本</li>
+<li>(a) 该标签用于方法文档中，形式如下： (a)
+parameter-name description
+其中，parameter-name 是方法的参数列表中标识符</li>
+<li>(a) 异常</li>
+<li>(a)
+该标签用于指出一些旧特性已由改进的新特性所取代，建议用户不要使用这些旧特征。</li>
+</ul>
+<h4 id="java-注释的使用顺序-java-注释的使用顺序">Java 注释的使用顺序 {#java 注释的使用顺序}</h4>
+<ol>
+<li>(a) (classes and interfaces only, required)</li>
+<li>(a) (classes and interfaces only, required. See
+footnote 1)</li>
+<li>(a) (methods and constructors only)</li>
+<li>(a) (methods only)</li>
+<li>(a) ((a) is a synonym added in Javadoc
+1.2)</li>
+<li>()</li>
+<li>(a)</li>
+<li>(a) (or (a) or (a))</li>
+<li>(a) (see How and When To Deprecate APIs)</li>
+</ol>
+<h4 id="注意">注意</h4>
+<ul>
+<li>一个类中默认会有一个空参数的构造函数,
+这个默认构造函数的权限和所属类一致;</li>
+<li>默认构造函数的权限是随着类的权限变化而变化的;</li>
+</ul>
+<h4 id="静态代码块">静态代码块</h4>
+<ul>
+<li>
+<p>格式:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">  <span class="n">class</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">static</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//静态代码块中的执行语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>特点: 随着类的加载而执行, <strong>且只执行一次</strong>;</p>
+</li>
+<li>
+<p>作用: 用于给类初始化</p>
+</li>
+</ul>
+<h4 id="应用-类中各个代码块之间的执行顺序">应用: 类中各个代码块之间的执行顺序</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">StaticCode</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">StaticCode</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&#34;b &#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">static</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&#34;a &#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&#34;c &#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">StaticCode</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&#34;d &#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">StaticCodeDemo</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">new</span> <span class="n">StaticCode</span><span class="o">(</span><span class="n">4</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>以上代码的输出结果是: <code>a c d</code></li>
+</ul>
+<!-- raw HTML omitted -->
+<ul>
+<li>
+<p>原因:</p>
+<ul>
+<li>静态代码块的作用是给*类*初始化的, 随着类的加载而执行, <strong>且只执行一次</strong>;</li>
+<li>构造代码块的作用是给*对象(所有对象)*初始化的,对象一建立就运行,
+而且优先于构造函数执行;</li>
+<li>构造函数的作用是给*对应对象*初始化</li>
+</ul>
+<p>参考链接:
+<a class="link" href="https://www.cnblogs.com/sophine/p/3531282.html"  target="_blank" rel="noopener"
+    >Java中普通代码块，构造代码块，静态代码块区别及代码示例</a></p>
+</li>
+</ul>
+<h4 id="总结">总结</h4>
+<ol>
+<li>虚拟机在首次加载 Java 类时，会对静态初始化块、静态成员变量、静态方法进行一次初始化</li>
+<li>只有在调用 new 方法时才会创建类的实例</li>
+<li>类实例创建过程：按照父子继承关系进行初始化，首先执行父类的初始化块部分，然后是父类的构造方法；再执行本类继承的子类的初始化块，最后是子类的构造方法</li>
+<li>类实例销毁时候，首先销毁子类部分，再销毁父类部分</li>
+</ol>
+<h3 id="对象的初始化过程">对象的初始化过程</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">class</span> <span class="n">Person</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;Jack&#34;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">country</span> <span class="o">=</span> <span class="s">&#34;CN&#34;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">speak</span><span class="o">()</span>
+</span></span><span class="line"><span class="cl">    <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;name=&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">+</span> <span class="s">&#34;, age=&#34;</span><span class="o">+</span><span class="n">age</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">class</span>  <span class="nc">PersonDemo</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Person</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&#34;Tom&#34;</span><span class="o">,</span> <span class="n">20</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上代码中 =Person p = new Person(&ldquo;Tom&rdquo;, 20)=执行时 Java
+所完成的工作: 1. 在栈内存中创建变量 &lsquo;p&rsquo;; 2. 因为 &ldquo;new&rdquo; 用到了
+&ldquo;<strong>Person.class</strong>&rdquo;, 所以先找到&rdquo;<strong>Person.class</strong>&ldquo;文件并加载到 内存中 3.
+执行该类中的 <strong>static 代码块</strong>, 给 &ldquo;<strong>Person 类</strong>&ldquo;进行初始化 4.
+在堆内存中开辟空间, 并分配内存地址 5. 在内存中建立对象的特有属性,
+并进行默认初始化 6. 对属性进行显示初始化 7.
+对对象进行构造代码块初始化 8. 对对象进行对应的构造函数初始化 9.
+将内存地址赋给栈内存中的 &lsquo;p&rsquo; 变量</p>
+<h4 id="对象调用成员过程">对象调用成员过程</h4>
+<h4 id="单例设计模式">单例设计模式</h4>
+<!-- raw HTML omitted -->
+<ul>
+<li>
+<p>例子</p>
+<p>下面是一个简单的单例设计模式的例子</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">Single</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Single</span><span class="o">(){}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Single</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Single</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Single</span> <span class="nf">getInstance</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">SingleDemo</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Single</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Single</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<!-- raw HTML omitted -->
+<ul>
+<li>
+<p>饿汉式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">Single</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Single</span><span class="o">(){}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Single</span> <span class="n">single</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Single</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Single</span> <span class="nf">getInstance</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">single</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h4 id="懒汉式">懒汉式</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">Single</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Single</span><span class="o">(){}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Single</span> <span class="n">single</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Single</span> <span class="nf">getInstance</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="o">(</span><span class="n">single</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//如果在此卡住, 则会出现多个对象
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">single</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Single</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">single</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><!-- raw HTML omitted -->
+<ul>
+<li>
+<p>懒汉式和饿汉式的区别</p>
+<ul>
+<li>饿汉式不管调不调用, 都会先加载对象,
+而懒汉式则会在需要时才会进行加载对象</li>
+</ul>
+</li>
+</ul>
+<!-- raw HTML omitted -->
+<ul>
+<li>
+<p>懒汉式最终解决方案</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">  <span class="kd">class</span> <span class="nc">Single</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Single</span><span class="o">(){}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Single</span> <span class="n">single</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Single</span> <span class="nf">getInstance</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="o">(</span><span class="n">single</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">synchronized</span><span class="o">(</span><span class="n">Single</span><span class="o">.</span><span class="na">class</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="o">(</span><span class="n">single</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">single</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Single</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">          <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">single</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<!-- raw HTML omitted -->
+<ul>
+<li>
+<p>注意!</p>
+<ul>
+<li>懒汉式加载会有安全性问题: 如果同时被多个对象同时调用, 则会出现多个对象</li>
+<li>开发用饿汉式</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/java/">Java</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Apr 10, 2022 01:45 CST
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-contents--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-contents">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/java%E4%B8%AD%E7%9A%8423%E4%B8%AD%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java中的23中设计模式 (1)</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/java%E4%B8%AD%E7%9A%8423%E4%B8%AD%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-4/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java中的23中设计模式 (4)</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3%E8%BD%AC/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">volatile关键字详解(转)</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/jrebel%E6%BF%80%E6%B4%BB%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Jrebel激活服务器及使用方法</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/java%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E7%82%B9%E5%92%8C%E4%BB%A3%E7%A0%81%E5%8D%95%E5%85%83/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java中的代码点和代码单元</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 Waver 的博客
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#java-复习第-6-天-java-复习第-6-天">Java 复习第 6 天 {#java 复习第 6 天}</a>
+      <ol>
+        <li><a href="#static-关键字">static 关键字</a>
+          <ol>
+            <li><a href="#static-的特点">static 的特点:</a></li>
+            <li><a href="#静态变量和非静态变量的举例">静态变量和非静态变量的举例</a></li>
+            <li><a href="#实例变量静态变量和类变量非静态变量的区别">实例变量(静态变量)和类变量(非静态变量)的区别</a></li>
+            <li><a href="#静态使用注意事项">静态使用注意事项</a></li>
+          </ol>
+        </li>
+        <li><a href="#main函数-main-函数">main()函数 {#main 函数}</a>
+          <ol>
+            <li><a href="#静态的使用条件">静态的使用条件</a></li>
+            <li><a href="#jvm-的编译特点-jvm-的编译特点">JVM 的编译特点 {#jvm 的编译特点}</a></li>
+            <li><a href="#类加载的特点">类加载的特点</a></li>
+          </ol>
+        </li>
+        <li><a href="#java-帮助文档">Java 帮助文档</a>
+          <ol>
+            <li><a href="#java-注释常用标签实例-java-注释常用标签实例">Java 注释常用标签实例 {#java 注释常用标签实例}</a></li>
+            <li><a href="#java-注释的使用顺序-java-注释的使用顺序">Java 注释的使用顺序 {#java 注释的使用顺序}</a></li>
+            <li><a href="#注意">注意</a></li>
+            <li><a href="#静态代码块">静态代码块</a></li>
+            <li><a href="#应用-类中各个代码块之间的执行顺序">应用: 类中各个代码块之间的执行顺序</a></li>
+            <li><a href="#总结">总结</a></li>
+          </ol>
+        </li>
+        <li><a href="#对象的初始化过程">对象的初始化过程</a>
+          <ol>
+            <li><a href="#对象调用成员过程">对象调用成员过程</a></li>
+            <li><a href="#单例设计模式">单例设计模式</a></li>
+            <li><a href="#懒汉式">懒汉式</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

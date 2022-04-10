@@ -1,0 +1,87 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2018-07-12 四 14:19]
+#+TITLE: Jrebel激活服务器及使用方法
+#+HUGO_TAGS: Java Jrebel
+#+HUGO_CATEGORIES: Java
+
+** 起因
+   :PROPERTIES:
+   :CUSTOM_ID: 起因
+   :END:
+前几天写代码写的正开心,突然屏幕右下角提示我激活 Jrebel, WTF???,
+注册后不是可以免费使用的吗? 等心情平复后感觉为知识付费没什么不对的,
+然后就准备买一个注册码, 然后我就看见了这副场面:
+[[https://waver.me/album/images/post/2018/07/jrebel_buy.png]] 这....
+既然你有意难为我胖虎,
+那就不要怪我胖虎翻脸了,那么接下来就说一下怎么破解它吧 =(￣_,￣ )=
+
+** 破解方法
+   :PROPERTIES:
+   :CUSTOM_ID: 破解方法
+   :END:
+*** 1.使用激活软件
+    :PROPERTIES:
+    :CUSTOM_ID: 使用激活软件
+    :END:
+[[https://github.com/ilanyu/ReverseProxy/releases][github:ilanyu]]
+
+*** 2.使用激活服务器
+    :PROPERTIES:
+    :CUSTOM_ID: 使用激活服务器
+    :END:
+这个方法和第一个方法原理上是一致的,只是这个更方便一些;
+
+**** 激活步骤:这里以 IDEA 为例
+     :PROPERTIES:
+     :CUSTOM_ID: 激活步骤这里以 idea 为例
+     :END:
+1. 菜单栏 Intellij IDEA->Preference...
+2. 选择 JRebel->JRebel License
+3. 点击 Connect to License Server
+4. 填入服务器 http://65.49.200.145:8081/{username}
+   {username}替换为任何 guid 即可(末尾没有斜线”/“)
+5. 填入邮箱 邮箱随便填(jokerwaver@gmail.com)
+6. 点击 Activate
+7. 激活完成！
+
+激活完后大概是这个样子的:
+
+[[https://waver.me/album/images/post/2018/07/jrebel_active.png]]
+
+上面提到的这个服务器是笔者自己搭的,各位请放心使用; 当然,
+假如挂了也可以评论告诉我下, 我会尽快修复
+
+*** 缓兵之计
+    :PROPERTIES:
+    :CUSTOM_ID: 缓兵之计
+    :END:
+前几天服务器已被墙, 暂时没有打算买新服务器的打算, 不好意思了
+
+新的激活方式请去这
+[[https://blog.csdn.net/qq_20607505/article/details/80513012][qq_20607505 的博客]]
+
+激活服务器下载地址[[https://github.com/ilanyu/ReverseProxy/releases/tag/v1.0][传送门]]
+
+** 其他资源链接
+   :PROPERTIES:
+   :CUSTOM_ID: 其他资源链接
+   :END:
+*** 在线生成 guid 的网站:
+    :PROPERTIES:
+    :CUSTOM_ID: 在线生成 guid 的网站
+    :END:
+[[https://www.guidgen.com/][Create GUIDs online]]
+[[https://www.guidgenerator.com/][Online GUID Generator]]
+
+** 参考文章
+   :PROPERTIES:
+   :CUSTOM_ID: 参考文章
+   :END:
+[[https://qinjiangbo.com/build-jrebel-license-server-with-docker.html][秦江波的个人博客]]
+[[https://blog.csdn.net/qq_20607505/article/details/80513012][qq_20607505 的博客]]
+[[https://blog.csdn.net/allen_liyu/article/details/80984378][Allen_liyu 的博客]]

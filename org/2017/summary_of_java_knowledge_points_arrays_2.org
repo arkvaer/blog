@@ -1,0 +1,218 @@
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2017
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2017-11-28 二 16:14]
+#+TITLE: JavaReview-day04-数组
+#+HUGO_TAGS: Java
+#+HUGO_CATEGORIES: Java
+
+
+*** 数组
+    :PROPERTIES:
+    :CUSTOM_ID: 数组
+    :END:
+#+begin_example
+  1. 数据类型分类: 基本数据类型, 引用数据类型
+  2. Java 程序在运行时,需要在内存中分配空间, 为了提高运算效率, 又对空间进行了不同区域的划分 因为每一片区域都有特定的处理数据的方式和内存管理方式 共分为五个区域: 栈内存, 堆内存, 方法区, 本地方法区, 寄存器
+
+- 栈内存:用于存储局部变量, 当数据使用完, 所占空间会自动释放;
+- 堆内存:
+  1. 数组和对象,通过 new 建立的实例都存放在堆内存中;
+  2. 每一个实体都有内存地址值;
+  3. 实体中的变量都有默认的初始化值
+  4. 实体不再被使用时, 会在不确定的时间内被垃圾回收器回收
+#+end_example
+
+*** 数组的定义方式
+    :PROPERTIES:
+    :CUSTOM_ID: 数组的定义方式
+    :END:
+#+begin_example
+    1. int[] arr = new int[5]; (推荐写法)
+    2. int arr[] = new int[5]; (与第一种意义相同)
+    3. int[] arr = new int[]{1, 2, 3, 4, 5}; (静态初始化方式)
+    4. int[] arr = {1, 2, 3, 4, 5} (第三种的简化格式)
+#+end_example
+
+**** 数组排序
+     :PROPERTIES:
+     :CUSTOM_ID: 数组排序
+     :END:
+***** 选择排序
+      :PROPERTIES:
+      :CUSTOM_ID: 选择排序
+      :END:
+#+begin_src java
+        public void selectSort(int[] arr){
+            for(int x = 0; x < arr.length-1; x++){
+                for(int y = x + 1; y < arr.length; y++){
+                    if(arr[x] > arr[y]){
+                        int temp = arr[x];
+                        arr[x] = arr[y];
+                        arr[y] = temp;
+                    }
+                }
+            }
+        }
+#+end_src
+
+#+begin_quote
+  说明: 选择排序是用当前元素与其他所有元素比较, 如果符合条件,就交换位置
+#+end_quote
+
+***** 冒泡排序
+      :PROPERTIES:
+      :CUSTOM_ID: 冒泡排序
+      :END:
+#+begin_src java
+        public void bubbleSort(int[] arr){
+            for(int x = 0; x < arr.length; x ++){
+                for(int y = 0; y < arr.length - x - 1; y ++){
+                    if(arr[y] > arr[y + 1]){
+                        int temp = arr[y];
+                        arr[y] = arr[y + 1];
+                        arr[y + 1] = temp;
+
+                    }
+                }
+            }
+        }
+#+end_src
+
+***** 说明: 冒泡排序是用相邻的元素进行比较, 如果符合条件,就交换位置
+      :PROPERTIES:
+      :CUSTOM_ID: 说明-冒泡排序是用相邻的元素进行比较-如果符合条件就交换位置
+      :END:
+***** 使用 java.util 包中的 Array.sort(arr); 可以进行排序数组
+      :PROPERTIES:
+      :CUSTOM_ID: 使用-java.util 包中的-array.sortarr-可以进行排序数组
+      :END:
+- 将数组交换的方法进行封装
+
+#+begin_src java
+        public void swap(int[] arr, int a, int b){
+            int temp = arr[a];
+            arr[b] = arr[a];
+            arr[b] = temp;
+        }
+#+end_src
+
+***** 使用异或方式实现
+      :PROPERTIES:
+      :CUSTOM_ID: 使用异或方式实现
+      :END:
+#+begin_src java
+        public void swap1(int arr, int a, int b){
+            arr[b] = arr[b] ^ arr[a];
+            arr[a] = arr[b] ^ arr[a];
+            arr[b] = arr[b] ^ arr[a];
+        }
+#+end_src
+
+**** 折半查找
+     :PROPERTIES:
+     :CUSTOM_ID: 折半查找
+     :END:
+***** 第一种方式
+      :PROPERTIES:
+      :CUSTOM_ID: 第一种方式
+      :END:
+#+begin_src java
+     public int halfSearch (int[] arr, int key){
+       int min = 0;
+       int max = arr.length - 1;
+       int mid = (min + max)/2;
+       while(arr[mid] != key){
+         if(key < arr[mid]){
+           max = mid - 1;
+         }else if(key > arr[mid]){
+           min = mid + 1;
+         }
+         mid = (min + max)/2;
+       }
+       return mid;
+     }
+#+end_src
+
+***** 第二种方式
+      :PROPERTIES:
+      :CUSTOM_ID: 第二种方式
+      :END:
+#+begin_src java
+     public int halfSearch2(int arr[], int key){
+       int min = 0;
+       int max = arr.length;
+       while(min <= max){
+          mid = (min + max) >> 1;
+          if(key > arr[mid]){
+            min = mid + 1;
+          }else if(key < arr[mid]){
+            max = mid -1;
+          }else{
+            return mid;
+          }
+          return -1;
+
+       }
+
+     }
+#+end_src
+
+#+begin_quote
+  面试题:将一个数字插入一个有序数组, 插入后,保证数组有序;
+#+end_quote
+
+- 思路: 通过折半查找, 找到所插入数组的下标,
+  如果数组中存在与插入值相同的值,则在该元素之前插入
+
+***** 十进制转二进制
+      :PROPERTIES:
+      :CUSTOM_ID: 十进制转二进制
+      :END:
+#+begin_src java
+  public void decimalToBinary() {
+          int num = 8;
+          StringBuffer sb = new StringBuffer();
+          while (num > 0) {
+              sb.append(num % 2);
+              num = num / 2;
+          }
+          System.out.println(sb.reverse());
+      }
+#+end_src
+
+***** 十进制转十六进制
+      :PROPERTIES:
+      :CUSTOM_ID: 十进制转十六进制
+      :END:
+- 第一种方式
+
+#+begin_src java
+  public void decimalToHexadecimal() {
+        int num = 60;
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int x = 0; x < 8; x++) {
+            int temp = num & 15;
+            if (temp > 9) {
+                stringBuffer.append((char) (temp - 10 + 'A'));
+            } else {
+                stringBuffer.append(temp);
+            }
+            num = num >>> 4;
+        }
+        System.out.println(stringBuffer.reverse());
+    }
+#+end_src
+
+*二维数组的定义方法*
+
+#+begin_src java
+int[][] array = {{1,2},{34,5,7}};
+int[][] array1 = new int[][]{{10,20,30},{40,50},{60}};
+short[][] array3 = new short[5][8];
+float[][] array4;
+array4 = new float[5][5];
+#+end_src

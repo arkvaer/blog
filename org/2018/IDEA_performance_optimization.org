@@ -1,0 +1,35 @@
+
+#+OPTIONS: author:nil ^:{}
+#+HUGO_BASE_DIR: ~/waver/github/blog
+#+HUGO_SECTION: post/2018
+#+HUGO_CUSTOM_FRONT_MATTER: :toc true
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DRAFT: false
+#+DATE: [2018-03-30 22:15:53]
+#+TITLE: IDEA性能调优
+#+HUGO_TAGS: IDE
+#+HUGO_CATEGORIES: IDE
+
+
+优化参数如下:
+
+#+begin_example
+-server
+-Xms1024m
+-Xmx4096m
+-XX:NewRatio=3
+-Xss16m
+-XX:+UseConcMarkSweepGC
+-XX:+CMSParallelRemarkEnabled
+-XX:ConcGCThreads=4
+-XX:ReservedCodeCacheSize=1024m
+-XX:+AlwaysPreTouch
+-XX:+TieredCompilation
+-XX:+UseCompressedOops
+-XX:SoftRefLRUPolicyMSPerMB=50
+-Dsun.io.useCanonCaches=false
+-Djava.net.preferIPv4Stack=true
+-Djsse.enableSNIExtension=false
+-ea
+-Dide.no.platform.update=true
+#+end_example
