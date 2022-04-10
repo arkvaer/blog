@@ -1,3 +1,3 @@
 * Waver 的 博客
 博客采用 hugo + org-mode + ox-hugo 搭建, 托管在 Vercel 上
-博客地址: [[https://arkvaer.io][Waver的博客]
+博客地址: [[https://arkvaer.io][Waver's Blog]]
