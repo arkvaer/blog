@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='开篇 最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了), 下面就来说说这篇博客的搭建历程, 包'><title>使用Org-mode 和 hugo 搭建博客</title>
+
+<link rel='canonical' href='https://arkvaer.io/p/%E4%BD%BF%E7%94%A8org-mode-%E5%92%8C-hugo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/'>
+
+<link rel="stylesheet" href="/scss/style.min.450926226e724574a6b936335ea06111f8aeb253d932c86cb2cc807341cd2889.css"><meta property='og:title' content='使用Org-mode 和 hugo 搭建博客'>
+<meta property='og:description' content='开篇 最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了), 下面就来说说这篇博客的搭建历程, 包'>
+<meta property='og:url' content='https://arkvaer.io/p/%E4%BD%BF%E7%94%A8org-mode-%E5%92%8C-hugo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/'>
+<meta property='og:site_name' content='Waver&#39;s博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='org-mode' /><meta property='article:published_time' content='2022-04-10T00:55:00&#43;08:00'/><meta property='article:modified_time' content='2022-04-11T17:27:47&#43;08:00'/>
+<meta name="twitter:site" content="@arkvaer">
+    <meta name="twitter:creator" content="@arkvaer"><meta name="twitter:title" content="使用Org-mode 和 hugo 搭建博客">
+<meta name="twitter:description" content="开篇 最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了), 下面就来说说这篇博客的搭建历程, 包">
+    <link rel="shortcut icon" href="true" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huaccf751e998e924f194edcb88b85a25f_202352_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🦀</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Waver&#39;s博客</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/arkvaer'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+                <li id="i18n-switch">  
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                    <select name="language" onchange="window.location.href = this.selectedOptions[0].value">
+                        
+                            <option value="https://arkvaer.io/en/" >English</option>
+                        
+                            <option value="https://arkvaer.io/" selected>中文</option>
+                        
+                    </select>
+                </li>
+            
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/org-mode/" >
+                org-mode
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E4%BD%BF%E7%94%A8org-mode-%E5%92%8C-hugo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/">使用Org-mode 和 hugo 搭建博客</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 10, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="开篇">开篇</h2>
+<p>最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了),
+下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.</p>
+<h2 id="环境搭建">环境搭建</h2>
+<ol>
+<li>hugo <a class="link" href="https://gohugo.io/getting-started/installing/"  target="_blank" rel="noopener"
+    >Install Hugo</a></li>
+<li>hugo 主题 <a class="link" href="https://docs.stack.jimmycai.com/"  target="_blank" rel="noopener"
+    >Hugo theme Stack</a></li>
+<li>ox-hugo</li>
+<li>pandoc (用于博客迁移, 将 markdown 转为 org 文件)</li>
+</ol>
+<h3 id="搭建步骤">搭建步骤</h3>
+<ol>
+<li>
+<p>通过 hugo 初始化一个目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">     <span class="c1"># blog 为你的博客目录名称</span>
+</span></span><span class="line"><span class="cl">     hugo new site blog
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了</p>
+</li>
+<li>
+<p>挑选博客主题我这里选用的是: <a class="link" href="https://docs.stack.jimmycai.com/"  target="_blank" rel="noopener"
+    >Hugo theme Stack</a>
+根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了</p>
+<ol>
+<li>
+<p>进入到博客根目录下的 <code>themes</code> 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">        git submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>进入到主题目录下的 exampleSite 文件夹下 <code>/blog/themes/hugo-theme-stack/exampleSite/</code> 将其中的 <code>content</code> 文件夹和 <code>config.yaml</code> 文件覆盖到博客根目录下.</p>
+</li>
+<li>
+<p>根据自己的喜好修改配置文件</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>最终的目录结构如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl"> .
+</span></span><span class="line"><span class="cl">├──  archetypes
+</span></span><span class="line"><span class="cl">├──  config.yaml
+</span></span><span class="line"><span class="cl">├──  content
+</span></span><span class="line"><span class="cl">├──  data
+</span></span><span class="line"><span class="cl">├──  layouts
+</span></span><span class="line"><span class="cl">├──  LICENSE
+</span></span><span class="line"><span class="cl">├──  org
+</span></span><span class="line"><span class="cl">├──  public
+</span></span><span class="line"><span class="cl">├──  README.org
+</span></span><span class="line"><span class="cl">├──  resources
+</span></span><span class="line"><span class="cl">├──  static
+</span></span><span class="line"><span class="cl">└──  themes
+</span></span><span class="line"><span class="cl">   └──  hugo-theme-stack
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="工具配置">工具配置</h2>
+<p>因为我使用的是 <code>Doom Emacs</code> 这里也就以此为例</p>
+<ol>
+<li>
+<p>安装 ox-hugo
+在 <code>~/.doom.d/packages.el</code> 中添加下面代码, 以引入 ox-hugo 依赖</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-elisp" data-lang="elisp"><span class="line"><span class="cl">    <span class="c1">;; 添加 ox-hugo</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="nv">package!</span> <span class="nv">ox-hugo</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在 <code>~/.doom.d/config.el</code> 文件中加入以下代码, 配置 ox-hugo 加载的时间</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-elisp" data-lang="elisp"><span class="line"><span class="cl">    <span class="c1">;; hugo org 转 markdown</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="nv">use-package!</span> <span class="nv">ox-hugo</span>
+</span></span><span class="line"><span class="cl">      <span class="nb">:after</span> <span class="nv">ox</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">:config</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="nb">setq</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">;; 设置在文件导出到content下的哪个目录，我的这个是 content/post</span>
+</span></span><span class="line"><span class="cl">   <span class="nv">org-hugo-section</span> <span class="s">&#34;post&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">;; 设置文章的最后修改时间为导出时间</span>
+</span></span><span class="line"><span class="cl">   <span class="nv">org-hugo-auto-set-lastmod</span>	<span class="no">t</span>
+</span></span><span class="line"><span class="cl">   <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">;; 设置在org文件保存的时候自动导出到org-hugo-section下</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="nv">org-hugo-auto-export-mode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>添加代码片段(snippet), 方便以后创建文章使用在  <code>~/.doom.d/init.el</code> 中将 <code>:editor snippets</code> 注释去掉, 启用模块. 使用 <code>M-x doom/reload</code> 下载并重新加载模块然后使用 <code>M-x yas-new-snippet</code> 创建一个 snippet
+将下面代码片段复制到 snippet 编辑区</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">    # -*- mode: snippet -*-
+</span></span><span class="line"><span class="cl">    # name: hugo
+</span></span><span class="line"><span class="cl">    # uuid: edb130fa-6a6c-452b-8d2d-52b0400241fe
+</span></span><span class="line"><span class="cl">    # key: hugo
+</span></span><span class="line"><span class="cl">    # condition: t
+</span></span><span class="line"><span class="cl">    # --
+</span></span><span class="line"><span class="cl">    #+OPTIONS: author:nil ^:{}
+</span></span><span class="line"><span class="cl">    #+HUGO_BASE_DIR: ../../../blog
+</span></span><span class="line"><span class="cl">    #+HUGO_SECTION: post/`(format-time-string &#34;%Y/%m&#34;)`
+</span></span><span class="line"><span class="cl">    #+HUGO_CUSTOM_FRONT_MATTER: :toc true
+</span></span><span class="line"><span class="cl">    #+HUGO_AUTO_SET_LASTMOD: t
+</span></span><span class="line"><span class="cl">    #+HUGO_DRAFT: false
+</span></span><span class="line"><span class="cl">    #+DATE: `(format-time-string &#34;[%Y-%m-%d %a %H:%M]&#34;)`
+</span></span><span class="line"><span class="cl">    #+TITLE: $1
+</span></span><span class="line"><span class="cl">    #+HUGO_TAGS: $2
+</span></span><span class="line"><span class="cl">    #+HUGO_CATEGORIES: $3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    $0
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<p>注意:</p>
+<ol>
+<li><code>#+HUGO_BASE_DIR</code> 的值以自己的为准, 也可以使用绝对路径, 指定的目录就是你的博客根目录</li>
+<li><code>#+DATE</code> 的时间格式最好不要改动, 中间的 <code>%a</code> 代表的是周几, 而且当光标处于日期上时, 通过快捷键 <code>Shift+左/右方向键</code> 可以以天为单位前后调整日期.</li>
+</ol>
+<p>编辑好 snippet 后通过快捷键 <code>C-c C-c</code> 来创建在 <code>Choose or enter a table (yas guesses nothing):</code> 中输入 <code>org-mode</code>
+然后在 <code>File to save snippet in: ~/.doom.d/snippets/org-mode/</code> 后面输入 <code>__hugo.org</code> 保存结束即可建立成功后在 org 文件中 通过输入 <code>hugo</code> 关键字来快速插入代码片段效果如下:</p>
+<p><img src="/ox-hugo/01.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+>
+<img src="/ox-hugo/02.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+>
+也可以通过 <code>M-x yas-insert-snippet</code> 或通过快捷键 <code>C-c &amp; C-s</code> 然后通过关键字 hugo 进行选用.</p>
+<h2 id="文件转换和生成">文件转换和生成</h2>
+<p>使用 <code>C-c C-e H A</code> 将文件转为 markdown 文件</p>
+<h3 id="自动导出-实时预览">自动导出, 实时预览</h3>
+<p>在 blog 根目录创建 <code>.dir-locals.el</code>
+文件内容如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-elisp" data-lang="elisp"><span class="line"><span class="cl"><span class="c1">;; .dir-locals.el</span>
+</span></span><span class="line"><span class="cl"><span class="p">((</span><span class="s">&#34;org/&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">.</span> <span class="p">((</span><span class="nv">org-mode</span> <span class="o">.</span> <span class="p">((</span><span class="nf">eval</span> <span class="o">.</span> <span class="p">(</span><span class="nv">org-hugo-auto-export-mode</span><span class="p">)))))))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中 <code>org</code> 是你存放 org 文件的目录.</p>
+<h2 id="生成静态文件和部署">生成静态文件和部署</h2>
+<ol>
+<li>生成:
+在博客根目录使用命令 <code>hugo -D</code> 生成静态文件, 提交推送到 github 仓库</li>
+<li>部署到 <a class="link" href="https://vercel.com"  target="_blank" rel="noopener"
+    >vercel</a>:
+<ol>
+<li>
+<p>选择要部署的仓库
+<img src="/ox-hugo/03.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>选择项目类型, 这里选择 Other 就行
+<img src="/ox-hugo/04.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>选择发布根目录
+<img src="/ox-hugo/05.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>自定义域名
+<img src="/ox-hugo/06.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>修改 vervel 分配的域名
+<img src="/ox-hugo/07.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>添加自定义域名
+<img src="/ox-hugo/08.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>选择重定向方式三种方式分别是:</p>
+<ul>
+<li>xxx.com &ndash;&gt; <a class="link" href="https://www.xxx.com"  target="_blank" rel="noopener"
+    >www.xxx.com</a></li>
+<li><a class="link" href="https://www.xxx.com"  target="_blank" rel="noopener"
+    >www.xxx.com</a> &ndash;&gt; xxx.com</li>
+<li>只添加 xxx.com 不进行重定向</li>
+</ul>
+<figure><img src="/ox-hugo/09.png"/>
+</figure>
+
+</li>
+</ol>
+</li>
+</ol>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/org-mode/">org-mode</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Apr 11, 2022 17:27 CST
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="https://utteranc.es/client.js" 
+        repo="arkvaer/my-blog"
+        issue-term="title"
+        
+        label="Comment"
+        
+        crossorigin="anonymous"
+        async
+        >
+</script>
+
+<style>
+    .utterances {
+        max-width: unset;
+    }
+</style>
+
+<script>
+    function setUtterancesTheme(theme) {
+        let utterances = document.querySelector('.utterances iframe');
+        if (utterances) {
+            utterances.contentWindow.postMessage(
+                {
+                    type: 'set-theme',
+                    theme: `github-${theme}`
+                },
+                'https://utteranc.es'
+            );
+        }
+    }
+
+    addEventListener('message', event => {
+        if (event.origin !== 'https://utteranc.es') return;
+        setUtterancesTheme(document.documentElement.dataset.scheme)
+    });
+
+    window.addEventListener('onColorSchemeChange', (e) => {
+        setUtterancesTheme(e.detail)
+    })
+</script>
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 Waver&#39;s博客
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#开篇">开篇</a></li>
+    <li><a href="#环境搭建">环境搭建</a>
+      <ol>
+        <li><a href="#搭建步骤">搭建步骤</a></li>
+      </ol>
+    </li>
+    <li><a href="#工具配置">工具配置</a></li>
+    <li><a href="#文件转换和生成">文件转换和生成</a>
+      <ol>
+        <li><a href="#自动导出-实时预览">自动导出, 实时预览</a></li>
+      </ol>
+    </li>
+    <li><a href="#生成静态文件和部署">生成静态文件和部署</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

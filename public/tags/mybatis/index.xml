@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>MyBatis on Waver&#39;s博客</title>
+        <link>https://arkvaer.io/tags/mybatis/</link>
+        <description>Recent content in MyBatis on Waver&#39;s博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Fri, 29 Dec 2017 20:02:00 +0800</lastBuildDate><atom:link href="https://arkvaer.io/tags/mybatis/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Result Maps collection already contains value for xxx.xxx.Mapper.BaseResultMap异常解决</title>
+        <link>https://arkvaer.io/p/result-maps-collection-already-contains-value-for-xxx.xxx.mapper.baseresultmap%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3/</link>
+        <pubDate>Fri, 29 Dec 2017 20:02:00 +0800</pubDate>
+        
+        <guid>https://arkvaer.io/p/result-maps-collection-already-contains-value-for-xxx.xxx.mapper.baseresultmap%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3/</guid>
+        <description>&lt;h2 id=&#34;result-maps-collection-already-contains-value-for-xxx-dot-xxx-dot-mapper-dot-baseresultmap-异常解决&#34;&gt;Result Maps collection already contains value for xxx.xxx.Mapper.BaseResultMap 异常解决&lt;/h2&gt;
+&lt;p&gt;突然项目启动时报出以下错误: 百度上的所有答案没能解决,
+最终索性重新把 mapper 文件重新生成了一遍, 结果令人感到意外, 竟然不报错了,
+至于原因好像是运行过一个 mybatis-gen&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userServiceImpl&amp;#39;: Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire field: private com.bobo.mapper.UserMapper com.bobo.service.impl.UserServiceImpl.userMapper; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type [com.bobo.mapper.UserMapper] found for dependency: expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;avisMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\AvisMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.AvisMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;avisMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\AvisMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.AvisMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        </item>
+        
+    </channel>
+</rss>

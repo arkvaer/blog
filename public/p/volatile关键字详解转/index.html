@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='volatile 关键字详解(转) {#volatile 关键字详解转} 2019-08-09 23:13:04 本文转自Ruheng的简书&amp;ndash;你真的了解volatile关键字吗？ volatile 关键字经常在并发编程中使'><title>volatile关键字详解(转)</title>
+
+<link rel='canonical' href='https://arkvaer.io/p/volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3%E8%BD%AC/'>
+
+<link rel="stylesheet" href="/scss/style.min.450926226e724574a6b936335ea06111f8aeb253d932c86cb2cc807341cd2889.css"><meta property='og:title' content='volatile关键字详解(转)'>
+<meta property='og:description' content='volatile 关键字详解(转) {#volatile 关键字详解转} 2019-08-09 23:13:04 本文转自Ruheng的简书&amp;ndash;你真的了解volatile关键字吗？ volatile 关键字经常在并发编程中使'>
+<meta property='og:url' content='https://arkvaer.io/p/volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3%E8%BD%AC/'>
+<meta property='og:site_name' content='Waver&#39;s博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Java' /><meta property='article:published_time' content='2019-08-09T23:13:00&#43;08:00'/><meta property='article:modified_time' content='2022-04-10T01:48:07&#43;08:00'/>
+<meta name="twitter:site" content="@arkvaer">
+    <meta name="twitter:creator" content="@arkvaer"><meta name="twitter:title" content="volatile关键字详解(转)">
+<meta name="twitter:description" content="volatile 关键字详解(转) {#volatile 关键字详解转} 2019-08-09 23:13:04 本文转自Ruheng的简书&amp;ndash;你真的了解volatile关键字吗？ volatile 关键字经常在并发编程中使">
+    <link rel="shortcut icon" href="true" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_huaccf751e998e924f194edcb88b85a25f_202352_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🦀</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Waver&#39;s博客</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/arkvaer'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+                <li id="i18n-switch">  
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                    <select name="language" onchange="window.location.href = this.selectedOptions[0].value">
+                        
+                            <option value="https://arkvaer.io/en/" >English</option>
+                        
+                            <option value="https://arkvaer.io/" selected>中文</option>
+                        
+                    </select>
+                </li>
+            
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/java/" >
+                Java
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3%E8%BD%AC/">volatile关键字详解(转)</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 09, 2019</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 17 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="volatile-关键字详解转-volatile-关键字详解转">volatile 关键字详解(转) {#volatile 关键字详解转}</h2>
+<ul>
+<li>2019-08-09 23:13:04</li>
+</ul>
+<blockquote>
+<p>本文转自<a class="link" href="https://www.jianshu.com/p/7798161d7472"  target="_blank" rel="noopener"
+    >Ruheng的简书&ndash;你真的了解volatile关键字吗？</a>
+volatile 关键字经常在并发编程中使用，其特性是保证可见性以及有序性，但是关于 volatile 的使用仍然要小心，这需要明白 volatile 关键字的特性及实现的原理，这也是本篇文章的主要内容。</p>
+</blockquote>
+<figure><img src="https://waver.me/album/images/post/2018/06/title.png"/>
+</figure>
+
+<h3 id="java-内存模型-java-内存模型">Java 内存模型 {#java 内存模型}</h3>
+<p>想要理解 volatile 为什么能确保可见性，就要先理解 Java 中的内存模型是什么样的。</p>
+<p>Java 内存模型规定了所有的变量都存储在主内存中。每条线程中还有自己的工作内存，线程的工作内存中保存了被该线程所使用到的变量（这些变量是从主内存中拷贝而来）。线程对变量的所有操作（读取，赋值）都必须在工作内存中进行。不同线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成。
+<img src="https://waver.me/album/images/post/2018/06/jvm_ram.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>基于此种内存模型，便产生了多线程编程中的数据“脏读”等问题。</p>
+<p>举个简单的例子：在 java 中，执行下面这个语句:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">i</span>  <span class="o">=</span> <span class="n">10</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>执行线程必须先在自己的工作线程中对变量 i 所在的缓存行进行赋值操作，然后再写入主存当中。而不是直接将数值 10 写入主存当中。</strong></p>
+<p>比如同时有 2 个线程执行这段代码，假如初始时 i 的值为 10，那么我们希望两个线程执行完之后 i 的值变为 12。但是事实会是这样吗？</p>
+<p><strong>可能存在下面一种情况：初始时，两个线程分别读取 i 的值存入各自所在的工作内存当中，然后线程 1 进行加 1 操作，然后把 i 的最新值 11 写入到内存。此时线程 2 的工作内存当中 i 的值还是 10，进行加 1 操作之后，i的值为 11，然后线程 2 把 i 的值写入内存。</strong></p>
+<p>最终结果 i 的值是 11，而不是 12。这就是著名的缓存一致性问题。通常称这种被多个线程访问的变量为共享变量。</p>
+<p>那么如何确保共享变量在多线程访问时能够正确输出结果呢？</p>
+<p>在解决这个问题之前，我们要先了解并发编程的三大概念：*原子性，有序性，可见性。*</p>
+<h3 id="二原子性">二、原子性</h3>
+<h4 id="原子性-定义">原子性 定义</h4>
+<p>原子性：即一个操作或者多个操作
+要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</p>
+<h4 id="原子性-实例">原子性 实例</h4>
+<p>一个很经典的例子就是银行账户转账问题：</p>
+<p>比如从账户 A 向账户 B 转 1000 元，那么必然包括 2 个操作：从账户 A 减去 1000 元，往账户 B 加上 1000 元。</p>
+<p>试想一下，如果这 2 个操作不具备原子性，会造成什么样的后果。假如从账户 A 减去 1000 元之后，操作突然中止。这样就会导致账户 A 虽然减去了 1000 元，但是账户 B 没有收到这个转过来的 1000 元。</p>
+<p>所以这 2 个操作必须要具备原子性才能保证不出现一些意外的问题。</p>
+<p>同样地反映到并发编程中会出现什么结果呢？</p>
+<p>举个最简单的例子，大家想一下假如为一个 32 位的变量赋值过程不具备原子性的话，会发生什么后果？</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="n">9</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>假若一个线程执行到这个语句时，我暂且假设为一个 32 位的变量赋值包括两个过程：为低 16 位赋值，为高 16 位赋值。</p>
+<p>那么就可能发生一种情况：当将低 16 位数值写入之后，突然被中断，而此时又有一个线程去读取 i 的值，那么读取到的就是错误的数据。</p>
+<h4 id="java-中的原子性-java-中的原子性">Java 中的原子性 {#java 中的原子性}</h4>
+<p>在 Java 中，对基本数据类型的变量的读取和赋值操作是原子性操作，即这些操作是不可被中断的，要么执行，要么不执行。</p>
+<p>上面一句话虽然看起来简单，但是理解起来并不是那么容易。看下面一个例子 i：</p>
+<p>请分析以下哪些操作是原子性操作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span> <span class="n">10</span><span class="o">;</span>         <span class="c1">//语句1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>         <span class="c1">//语句2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">x</span><span class="o">++;</span>           <span class="c1">//语句3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">1</span><span class="o">;</span>     <span class="c1">//语句4
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>乍一看，可能会说上面的 4 个语句中的操作都是原子性操作。其实只有语句 1 是原子性操作，其他三个语句都不是原子性操作。</p>
+<p>语句 1 是直接将数值 10 赋值给 x，也就是说线程执行这个语句的会直接将数值 10 写入到工作内存中。</p>
+<p>*语句 2 实际上包含 2 个操作，它先要去读取 x 的值，再将 x 的值写入工作内存*，虽然读取 x 的值以及
+将 x 的值写入工作内存
+这 2 个操作都是原子性操作，但是合起来就不是原子性操作了。</p>
+<p>同样的，x++和 x = x+1 包括 3 个操作：读取 x 的值，进行加 1 操作，写入新的值。</p>
+<p>所以上面 4 个语句只有语句 1 的操作具备原子性。</p>
+<p>也就是说，*只有简单的读取、赋值（而且必须是将数字赋值给某个变量，变量之间的相互赋值不是原子操作）才是原子操作。*</p>
+<p>从上面可以看出，Java 内存模型只保证了基本读取和赋值是原子性操作，*如果要实现更大范围操作的原子性，可以通过 synchronized 和 Lock 来实现。由于 synchronized 和 Lock 能够保证任一时刻只有一个线程执行该代码块，那么自然就不存在原子性问题了，从而保证了原子性。*</p>
+<p>关于 synchronized 和 Lock 的使用，参考：<a class="link" href="https://www.jianshu.com/p/96c89e6e7e90"  target="_blank" rel="noopener"
+    >关于synchronized和ReentrantLock之多线程同步详解</a></p>
+<h3 id="三可见性">三、可见性</h3>
+<p>可见性是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。</p>
+<h4 id="可见性-定义">可见性 定义</h4>
+<p>可见性是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。</p>
+<h4 id="可见性-实例">可见性 实例</h4>
+<p>举个简单的例子，看下面这段代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//线程1执行的代码
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="n">10</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//线程2执行的代码
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>由上面的分析可知，当线程 1 执行 i
+=10 这句时，会先把 i 的初始值加载到工作内存中，然后赋值为 10，那么在线程 1 的工作内存当中 i 的值变为 10 了，却没有立即写入到主存当中。</p>
+<p>此时线程 2 执行 j =
+i，它会先去主存读取 i 的值并加载到线程 2 的工作内存当中，注意此时内存当中 i 的值还是 0，那么就会使得 j 的值为 0，而不是 10.</p>
+<p>这就是可见性问题，线程 1 对变量 i 修改了之后，线程 2 没有立即看到线程 1 修改的值。</p>
+<h3 id="java-中的可见性-java-中的可见性">Java 中的可见性 {#java 中的可见性}</h3>
+<p>对于可见性，Java 提供了 volatile 关键字来保证可见性。</p>
+<p><strong>当一个共享变量被 volatile 修饰时，它会保证修改的值会立即被更新到主存，当有其他线程需要读取时，它会去内存中读取新值。</strong></p>
+<p>而普通的共享变量不能保证可见性，*因为普通共享变量被修改之后，什么时候被写入主存是不确定的，当其他线程去读取时，此时内存中可能还是原来的旧值，因此无法保证可见性。*</p>
+<p>另外，通过 synchronized 和 Lock 也能够保证可见性，synchronized 和 Lock 能保证同一时刻只有一个线程获取锁然后执行同步代码，并且
+<strong>在释放锁之前会将对变量的修改刷新到主存当中。因此可以保证可见性。</strong></p>
+<h3 id="四有序性">四、有序性</h3>
+<h4 id="有序性定义">有序性定义</h4>
+<p>有序性：即程序执行的顺序按照代码的先后顺序执行。</p>
+<h3 id="有序性实例">有序性实例</h3>
+<p>举个简单的例子，看下面这段代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">boolean</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">i</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>                <span class="c1">//语句1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>          <span class="c1">//语句2
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面代码定义了一个 int 型变量，定义了一个 boolean 类型变量，然后分别对两个变量进行赋值操作。从代码顺序上看，语句 1 是在语句 2 前面的，那么 JVM 在真正执行这段代码的时候会保证语句 1 一定会在语句 2 前面执行吗？不一定，为什么呢？这里可能会发生指令重排序（Instruction
+Reorder）。</p>
+<p>下面解释一下什么是指令重排序，*一般来说，处理器为了提高程序运行效率，可能会对输入代码进行优化，它不保证程序中各个语句的执行先后顺序同代码中的顺序一致，但是它会保证程序最终执行结果和代码顺序执行的结果是一致的。*</p>
+<p>比如上面的代码中，语句 1 和语句 2 谁先执行对最终的程序结果并没有影响，那么就有可能在执行过程中，语句 2 先执行而语句 1 后执行。</p>
+<p>但是要注意，虽然处理器会对指令进行重排序，但是它会保证程序最终结果会和代码顺序执行结果相同，那么它靠什么保证的呢？再看下面一个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">10</span><span class="o">;</span>    <span class="c1">//语句1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">2</span><span class="o">;</span>    <span class="c1">//语句2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">3</span><span class="o">;</span>    <span class="c1">//语句3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">r</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="o">;</span>     <span class="c1">//语句4
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这段代码有 4 个语句，那么可能的一个执行顺序是：
+<img src="https://waver.me/album/images/post/2018/06/commond.jpg"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>那么可不可能是这个执行顺序呢： 语句 2 语句 1 语句 4 语句 3</p>
+<p><strong>不可能，因为处理器在进行重排序时是会考虑指令之间的数据依赖性，如果一个指令 Instruction
+2 必须用到 Instruction 1 的结果，那么处理器会保证 Instruction
+1 会在 Instruction 2 之前执行。</strong></p>
+<p>虽然重排序不会影响单个线程内程序执行的结果，但是多线程呢？下面看一个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//线程1:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span> <span class="o">=</span> <span class="n">loadContext</span><span class="o">();</span>   <span class="c1">//语句1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">inited</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>             <span class="c1">//语句2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"> <span class="c1">//线程2:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">while</span><span class="o">(!</span><span class="n">inited</span> <span class="o">){</span>
+</span></span><span class="line"><span class="cl">   <span class="n">sleep</span><span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">doSomethingwithconfig</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面代码中，由于语句 1 和语句 2 没有数据依赖性，因此可能会被重排序。假如发生了重排序，在线程 1 执行过程中先执行语句 2，而此是线程 2 会以为初始化工作已经完成，那么就会跳出 while 循环，去执行 doSomethingwithconfig(context)方法，而此时 context 并没有被初始化，就会导致程序出错。</p>
+<p>从上面可以看出，*指令重排序不会影响单个线程的执行，但是会影响到线程并发执行的正确性。*</p>
+<p>也就是说，*要想并发程序正确地执行，必须要保证原子性、可见性以及有序性。只要有一个没有被保证，就有可能会导致程序运行不正确。*</p>
+<h3 id="3java-中的有序性-java-中的有序性">3.Java 中的有序性 {#java 中的有序性}</h3>
+<p>在 Java 内存模型中，允许编译器和处理器对指令进行重排序，但是重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性。</p>
+<p>在 Java 里面，可以通过 volatile 关键字来保证一定的“有序性”。另外可以通过 synchronized 和 Lock 来保证有序性，很显然，synchronized 和 Lock 保证每个时刻是有一个线程执行同步代码，相当于是让线程顺序执行同步代码，自然就保证了有序性。</p>
+<p>另外，Java 内存模型具备一些先天的“有序性”，*即不需要通过任何手段就能够得到保证的有序性，这个通常也称为
+happens-before
+原则。如果两个操作的执行次序无法从 happens-before 原则推导出来，那么它们就不能保证它们的有序性，虚拟机可以随意地对它们进行重排序。*</p>
+<h4 id="下面就来具体介绍下-happens-before-原则先行发生原则-下面就来具体介绍下-happens-before-原则先行发生原则">下面就来具体介绍下 happens-before 原则(先行发生原则) {#下面就来具体介绍下 happens-before 原则先行发生原则}</h4>
+<ol>
+<li>
+<p>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作</p>
+</li>
+<li>
+<p>锁定规则：一个 unLock 操作先行发生于后面对同一个锁额 lock 操作</p>
+</li>
+<li>
+<p>volatile 变量规则：对一个变量的写操作先行发生于后面对这个变量的读操作</p>
+</li>
+<li>
+<p>传递规则：如果操作 A 先行发生于操作 B，而操作 B 又先行发生于操作 C，则可以得出操作 A 先行发生于操作 C</p>
+</li>
+<li>
+<p>线程启动规则：Thread 对象的 start()方法先行发生于此线程的每个一个动作</p>
+</li>
+<li>
+<p>线程中断规则：对线程 interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生</p>
+</li>
+<li>
+<p>线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过 Thread.join()方法结束、Thread.isAlive()的返回值手段检测到线程已经终止执行</p>
+</li>
+<li>
+<p>对象终结规则：一个对象的初始化完成先行发生于他的 finalize()方法的开始</p>
+</li>
+</ol>
+<p>这 8 条规则中，前 4 条规则是比较重要的，后 4 条规则都是显而易见的。</p>
+<p>下面我们来解释一下前 4 条规则：</p>
+<p>对于程序次序规则来说，就是一段程序代码的执行
+<strong>在单个线程中看起来是有序的*。注意，虽然这条规则中提到“书写在前面的操作先行发生于书写在后面的操作”，这个应该是程序看起来执行的顺序是按照代码顺序执行的，*但是虚拟机可能会对程序代码进行指令重排序*。虽然进行重排序，但是最终执行的结果是与程序顺序执行的结果一致的，它只会对不存在数据依赖性的指令进行重排序。因此，*在单个线程中，程序执行看起来是有序执行的，这一点要注意理解。事实上，这个规则是用来保证程序在单线程中执行结果的正确性，但无法保证程序在多线程中执行的正确性。</strong></p>
+<p>第二条规则也比较容易理解，也就是说无论在单线程中还是多线程中，*同一个锁如果处于被锁定的状态，那么必须先对锁进行了释放操作，后面才能继续进行 lock 操作。*</p>
+<p>第三条规则是一条比较重要的规则。直观地解释就是，*如果一个线程先去写一个变量，然后一个线程去进行读取，那么写入操作肯定会先行发生于读操作。*</p>
+<p>第四条规则实际上就是体现 happens-before 原则 <strong>具备传递性。</strong></p>
+<h3 id="五深入理解-volatile-关键字-五深入理解-volatile-关键字">五、深入理解 volatile 关键字 {#五深入理解 volatile 关键字}</h3>
+<h4 id="1volatile-保证可见性-volatile-保证可见性">1.volatile 保证可见性 {#volatile 保证可见性}</h4>
+<p>一旦一个共享变量（类的成员变量、类的静态成员变量）被 volatile 修饰之后，那么就具备了两层语义：</p>
+<ol>
+<li>
+<p>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。</p>
+</li>
+<li>
+<p>禁止进行指令重排序。</p>
+</li>
+</ol>
+<p>先看一段代码，假如线程 1 先执行，线程 2 后执行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//线程1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">boolean</span> <span class="n">stop</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span><span class="o">(!</span><span class="n">stop</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">    <span class="n">doSomething</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//线程2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">stop</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这段代码是很典型的一段代码，很多人在中断线程时可能都会采用这种标记办法。但是事实上，这段代码会完全运行正确么？即一定会将线程中断么？不一定，也许在大多数时候，这个代码能够把线程中断，但是也有可能会导致无法中断线程（虽然这个可能性很小，但是只要一旦发生这种情况就会造成死循环了）。</p>
+<p>下面解释一下这段代码为何有可能导致无法中断线程。在前面已经解释过，每个线程在运行过程中都有自己的工作内存，那么线程 1 在运行的时候，会将 stop 变量的值拷贝一份放在自己的工作内存当中。</p>
+<p><strong>那么当线程 2 更改了 stop 变量的值之后，但是还没来得及写入主存当中，线程 2 转去做其他事情了，那么线程 1 由于不知道线程 2 对 stop 变量的更改，因此还会一直循环下去。</strong></p>
+<p>但是用 volatile 修饰之后就变得不一样了：</p>
+<ul>
+<li>
+<p>第一: 使用 volatile 关键字会 <strong>强制将修改的值立即写入主存;</strong></p>
+</li>
+<li>
+<p>第二:
+使用 volatile 关键字的话，当线程 2 进行修改时，*会导致线程 1 的工作内存中缓存变量 stop 的缓存行无效（反映到硬件层的话，就是 CPU 的 L1 或者 L2 缓存中对应的缓存行无效）;*</p>
+</li>
+<li>
+<p>第三：由于线程 1 的工作内存中缓存变量 stop 的缓存行无效，所以
+<strong>线程 1 再次读取变量 stop 的值时会去主存读取。</strong></p>
+</li>
+</ul>
+<p>那么在线程 2 修改 stop 值时（当然这里包括 2 个操作，修改线程 2 工作内存中的值，然后将修改后的值写入内存），会使得线程 1 的工作内存中缓存变量 stop 的缓存行无效，然后线程 1 读取时，发现自己的缓存行无效，它会等待缓存行对应的主存地址被更新之后，然后去对应的主存读取最新的值。</p>
+<p>那么线程 1 读取到的就是最新的正确的值</p>
+<h4 id="2volatile-不能确保原子性-volatile-不能确保原子性">2.volatile 不能确保原子性 {#volatile 不能确保原子性}</h4>
+<p>下面看一个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Test</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">volatile</span> <span class="kt">int</span> <span class="n">inc</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">increase</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inc</span><span class="o">++;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">final</span> <span class="n">Test</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Test</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">10</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">new</span> <span class="n">Thread</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">0</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">1000</span><span class="o">;</span><span class="n">j</span><span class="o">++)</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">test</span><span class="o">.</span><span class="na">increase</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="o">};</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}.</span><span class="na">start</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">activeCount</span><span class="o">()&gt;</span><span class="n">1</span><span class="o">)</span>  <span class="c1">//保证前面的线程都执行完
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">.</span><span class="na">inc</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>大家想一下这段程序的输出结果是多少？也许有些朋友认为是 10000。但是事实上运行它会发现每次运行结果都不一致，都是一个小于 10000 的数字。</p>
+<p>可能有的朋友就会有疑问，不对啊，上面是对变量 inc 进行自增操作，由于 volatile 保证了可见性，那么在每个线程中对 inc 自增完之后，在其他线程中都能看到修改后的值啊，所以有 10 个线程分别进行了 1000 次操作，那么最终 inc 的值应该是 1000*10=10000。</p>
+<p>这里面就有一个误区了，*volatile 关键字能保证可见性没有错，但是上面的程序错在没能保证原子性*。可见性只能保证每次读取的是最新的值，但是 volatile 没办法保证对变量的操作的原子性。</p>
+<p>在前面已经提到过，*自增操作是不具备原子性的，它包括读取变量的原始值、进行加 1 操作、写入工作内存*。那么就是说自增操作的三个子操作可能会分割开执行，就有可能导致下面这种情况出现：</p>
+<p>假如某个时刻变量 inc 的值为 10，</p>
+<p><strong>线程 1 对变量进行自增操作，线程 1 先读取了变量 inc 的原始值，然后线程 1 被阻塞了；</strong></p>
+<p>然后线程 2 对变量进行自增操作，线程 2 也去读取变量 inc 的原始值，*由于线程 1 只是对变量 inc 进行读取操作，而没有对变量进行修改操作，所以不会导致线程 2 的工作内存中缓存变量 inc 的缓存行无效，也不会导致主存中的值刷新*，所以线程 2 会直接去主存读取 inc 的值，发现 inc 的值时 10，然后进行加 1 操作，并把 11 写入工作内存，最后写入主存。</p>
+<p>然后线程 1 接着进行加 1 操作，由于已经读取了 inc 的值，注意此时在线程 1 的工作内存中 inc 的值仍然为 10，所以线程 1 对 inc 进行加 1 操作后 inc 的值为 11，然后将 11 写入工作内存，最后写入主存。</p>
+<p>那么两个线程分别进行了一次自增操作后，inc 只增加了 1。</p>
+<p><strong>根源就在这里，自增操作不是原子性操作，而且 volatile 也无法保证对变量的任何操作都是原子性的。</strong></p>
+<p><strong>解决方案：可以通过 synchronized 或 lock，进行加锁，来保证操作的原子性。也可以通过 AtomicInteger。</strong></p>
+<p>在 java 1.5 的 java.util.concurrent.atomic 包下提供了一些
+<strong>原子操作类*，即对基本数据类型的
+自增（加 1 操作），自减（减 1 操作）、以及加法操作（加一个数），减法操作（减一个数）进行了封装，保证这些操作是原子性操作。*atomic 是利用 CAS 来实现原子性操作的（Compare
+And
+Swap），CAS 实际上是利用处理器提供的 CMPXCHG 指令实现的，而处理器执行 CMPXCHG 指令是一个原子性操作。</strong></p>
+<h4 id="3volatile-保证有序性-volatile-保证有序性">3.volatile 保证有序性 {#volatile 保证有序性}</h4>
+<p>在前面提到 volatile 关键字能禁止指令重排序，所以 volatile 能在一定程度上保证有序性。</p>
+<p>volatile 关键字禁止指令重排序有两层意思：</p>
+<ol>
+<li>
+<p>当程序执行到 volatile 变量的读操作或者写操作时，*在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见；在其后面的操作肯定还没有进行；*</p>
+</li>
+<li>
+<p>在进行指令优化时，*不能将在对 volatile 变量的读操作或者写操作的语句放在其后面执行，也不能把 volatile 变量后面的语句放到其前面执行。*</p>
+</li>
+</ol>
+<p>可能上面说的比较绕，举个简单的例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//x、y为非volatile变量
+</span></span></span><span class="line"><span class="cl"><span class="c1">//flag为volatile变量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span> <span class="n">2</span><span class="o">;</span>        <span class="c1">//语句1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">y</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>        <span class="c1">//语句2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>  <span class="c1">//语句3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">x</span> <span class="o">=</span> <span class="n">4</span><span class="o">;</span>         <span class="c1">//语句4
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">1</span><span class="o">;</span>       <span class="c1">//语句5
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>由于
+<strong>flag 变量为 volatile 变量*，那么在进行指令重排序的过程的时候，*不会将语句 3 放到语句 1、语句 2 前面，也不会讲语句 3 放到语句 4、语句 5 后面。但是要注意语句 1 和语句 2 的顺序、语句 4 和语句 5 的顺序是不作任何保证的。</strong></p>
+<p>并且 volatile 关键字能保证，*执行到语句 3 时，语句 1 和语句 2 必定是执行完毕了的，且语句 1 和语句 2 的执行结果对语句 3、语句 4、语句 5 是可见的。*</p>
+<p>那么我们回到前面举的一个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//线程1:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">context</span> <span class="o">=</span> <span class="n">loadContext</span><span class="o">();</span>   <span class="c1">//语句1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">inited</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>             <span class="c1">//语句2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//线程2:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">while</span><span class="o">(!</span><span class="n">inited</span> <span class="o">){</span>
+</span></span><span class="line"><span class="cl">  <span class="n">sleep</span><span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">doSomethingwithconfig</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>前面举这个例子的时候，提到有可能语句 2 会在语句 1 之前执行，那么久可能导致 context 还没被初始化，而线程 2 中就使用未初始化的 context 去进行操作，导致程序出错。</p>
+<p>这里如果用 volatile 关键字对 inited 变量进行修饰，就不会出现这种问题了，*因为当执行到语句 2 时，必定能保证 context 已经初始化完毕。*</p>
+<h3 id="六volatile-的实现原理-六-volatile-的实现原理">六、volatile 的实现原理 {#六 volatile 的实现原理}</h3>
+<h3 id="可见性">1.可见性</h3>
+<p>处理器为了提高处理速度，不直接和内存进行通讯，而是将系统内存的数据独到内部缓存后再进行操作，但操作完后不知什么时候会写到内存。</p>
+<p>如果
+*对声明了 volatile 变量进行写操作时，JVM 会向处理器发送一条 Lock 前缀的指令，将这个变量所在缓存行的数据写会到系统内存*。
+这一步确保了如果有其他线程对声明了 volatile 变量进行修改，则立即更新主内存中数据。</p>
+<p>但这时候其他处理器的缓存还是旧的，所以在多处理器环境下，为了保证各个处理器缓存一致，每个处理会通过嗅探在总线上传播的数据来检查
+自己的缓存是否过期，*当处理器发现自己缓存行对应的内存地址被修改了，就会将当前处理器的缓存行设置成无效状态，当处理器要对这个数据进行修改操作时*，会强制重新从系统内存把数据读到处理器缓存里。
+这一步确保了其他线程获得的声明了 volatile 变量都是从主内存中获取最新的。</p>
+<h3 id="有序性">2.有序性</h3>
+<p>Lock 前缀指令实际上相当于一个内存屏障（也成内存栅栏），*它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；*
+即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。</p>
+<h3 id="七volatile-的应用场景-七-volatile-的应用场景">七、volatile 的应用场景 {#七 volatile 的应用场景}</h3>
+<p>synchronized 关键字是防止多个线程同时执行一段代码，那么就会很影响程序执行效率，而 volatile 关键字在某些情况下性能要优于 synchronized，但是要注意 volatile 关键字是无法替代 synchronized 关键字的，因为 volatile 关键字无法保证操作的原子性。通常来说，使用 volatile 必须具备以下 2 个条件：</p>
+<ol>
+<li>
+<p>对变量的写操作不依赖于当前值</p>
+</li>
+<li>
+<p>该变量没有包含在具有其他变量的不变式中</p>
+</li>
+</ol>
+<p>下面列举几个 Java 中使用 volatile 的几个场景:</p>
+<ol>
+<li>
+<p>状态标记量</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl">   <span class="kd">volatile</span> <span class="kt">boolean</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">//线程1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="k">while</span><span class="o">(!</span><span class="n">flag</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">       <span class="n">doSomething</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">//线程2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFlag</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">       <span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据状态标记，终止线程。</p>
+</li>
+<li>
+<p>单例模式中的 double check</p>
+</li>
+</ol>
+<!-- raw HTML omitted -->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">volatile</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">instance</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">instance</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Singleton</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="n">instance</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="为什么要使用-volatile-修饰-instance-为什么要使用-volatile-修饰-instance">为什么要使用 volatile 修饰 instance {#为什么要使用 volatile-修饰 instance}</h4>
+<p>主要在于 instance = new Singleton()这句，这并非是一个原子操作，事实上在
+JVM 中这句话大概做了下面 3 件事情:</p>
+<ol>
+<li>
+<p>给 instance 分配内存</p>
+</li>
+<li>
+<p>调用 Singleton 的构造函数来初始化成员变量</p>
+</li>
+<li>
+<p>将 instance 对象指向分配的内存空间(执行完这步 instance 就为非 null
+了)。</p>
+</li>
+</ol>
+<p>但是在 JVM
+的即时编译器中存在指令重排序的优化。也就是说上面的第二步和第三步的顺序是不能保证的，最终的执行顺序可能是
+1-2-3 也可能是 1-3-2。如果是后者，则在 3 执行完毕、2
+未执行之前，被线程二抢占了，这时 instance 已经是非 null
+了（但却没有初始化），所以线程二会直接返回
+instance，然后使用，然后顺理成章地报错。</p>
+<h3 id="参考文章">参考文章</h3>
+<p><a class="link" href="https://link.jianshu.com/?t=http://www.cnblogs.com/dolphin0520/p/3920373.html"  target="_blank" rel="noopener"
+    >Java并发编程：volatile关键字解析</a></p>
+<p><a class="link" href="https://link.jianshu.com/?t=http://jishu.y5y.com.cn/chenssy/article/details/54930081"  target="_blank" rel="noopener"
+    >[死磕Java并发]&mdash;&ndash;深入分析volatile的实现原理</a></p>
+<p><a class="link" href="https://link.jianshu.com/?t=https://cschenyuan.gitbooks.io/java/content/concurrent/2%20Java%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.html"  target="_blank" rel="noopener"
+    >Java并发机制的底层实现原理</a></p>
+<p><a class="link" href="https://link.jianshu.com/?t=http://keiwu.me/2016/04/28/Volatile%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/"  target="_blank" rel="noopener"
+    >Volatile的实现原理</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/java/">Java</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Apr 10, 2022 01:48 CST
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-contents--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-contents">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/java%E4%B8%AD%E7%9A%8423%E4%B8%AD%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java中的23中设计模式 (1)</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/java%E4%B8%AD%E7%9A%8423%E4%B8%AD%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-4/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java中的23中设计模式 (4)</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/jrebel%E6%BF%80%E6%B4%BB%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Jrebel激活服务器及使用方法</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/java%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E7%82%B9%E5%92%8C%E4%BB%A3%E7%A0%81%E5%8D%95%E5%85%83/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java中的代码点和代码单元</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/randomaccess%E6%8E%A5%E5%8F%A3%E7%90%86%E8%A7%A3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">RandomAccess接口理解</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="https://utteranc.es/client.js" 
+        repo="arkvaer/my-blog"
+        issue-term="title"
+        
+        label="Comment"
+        
+        crossorigin="anonymous"
+        async
+        >
+</script>
+
+<style>
+    .utterances {
+        max-width: unset;
+    }
+</style>
+
+<script>
+    function setUtterancesTheme(theme) {
+        let utterances = document.querySelector('.utterances iframe');
+        if (utterances) {
+            utterances.contentWindow.postMessage(
+                {
+                    type: 'set-theme',
+                    theme: `github-${theme}`
+                },
+                'https://utteranc.es'
+            );
+        }
+    }
+
+    addEventListener('message', event => {
+        if (event.origin !== 'https://utteranc.es') return;
+        setUtterancesTheme(document.documentElement.dataset.scheme)
+    });
+
+    window.addEventListener('onColorSchemeChange', (e) => {
+        setUtterancesTheme(e.detail)
+    })
+</script>
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 Waver&#39;s博客
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#volatile-关键字详解转-volatile-关键字详解转">volatile 关键字详解(转) {#volatile 关键字详解转}</a>
+      <ol>
+        <li><a href="#java-内存模型-java-内存模型">Java 内存模型 {#java 内存模型}</a></li>
+        <li><a href="#二原子性">二、原子性</a>
+          <ol>
+            <li><a href="#原子性-定义">原子性 定义</a></li>
+            <li><a href="#原子性-实例">原子性 实例</a></li>
+            <li><a href="#java-中的原子性-java-中的原子性">Java 中的原子性 {#java 中的原子性}</a></li>
+          </ol>
+        </li>
+        <li><a href="#三可见性">三、可见性</a>
+          <ol>
+            <li><a href="#可见性-定义">可见性 定义</a></li>
+            <li><a href="#可见性-实例">可见性 实例</a></li>
+          </ol>
+        </li>
+        <li><a href="#java-中的可见性-java-中的可见性">Java 中的可见性 {#java 中的可见性}</a></li>
+        <li><a href="#四有序性">四、有序性</a>
+          <ol>
+            <li><a href="#有序性定义">有序性定义</a></li>
+          </ol>
+        </li>
+        <li><a href="#有序性实例">有序性实例</a></li>
+        <li><a href="#3java-中的有序性-java-中的有序性">3.Java 中的有序性 {#java 中的有序性}</a>
+          <ol>
+            <li><a href="#下面就来具体介绍下-happens-before-原则先行发生原则-下面就来具体介绍下-happens-before-原则先行发生原则">下面就来具体介绍下 happens-before 原则(先行发生原则) {#下面就来具体介绍下 happens-before 原则先行发生原则}</a></li>
+          </ol>
+        </li>
+        <li><a href="#五深入理解-volatile-关键字-五深入理解-volatile-关键字">五、深入理解 volatile 关键字 {#五深入理解 volatile 关键字}</a>
+          <ol>
+            <li><a href="#1volatile-保证可见性-volatile-保证可见性">1.volatile 保证可见性 {#volatile 保证可见性}</a></li>
+            <li><a href="#2volatile-不能确保原子性-volatile-不能确保原子性">2.volatile 不能确保原子性 {#volatile 不能确保原子性}</a></li>
+            <li><a href="#3volatile-保证有序性-volatile-保证有序性">3.volatile 保证有序性 {#volatile 保证有序性}</a></li>
+          </ol>
+        </li>
+        <li><a href="#六volatile-的实现原理-六-volatile-的实现原理">六、volatile 的实现原理 {#六 volatile 的实现原理}</a></li>
+        <li><a href="#可见性">1.可见性</a></li>
+        <li><a href="#有序性">2.有序性</a></li>
+        <li><a href="#七volatile-的应用场景-七-volatile-的应用场景">七、volatile 的应用场景 {#七 volatile 的应用场景}</a>
+          <ol>
+            <li><a href="#为什么要使用-volatile-修饰-instance-为什么要使用-volatile-修饰-instance">为什么要使用 volatile 修饰 instance {#为什么要使用 volatile-修饰 instance}</a></li>
+          </ol>
+        </li>
+        <li><a href="#参考文章">参考文章</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

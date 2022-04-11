@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Configure on Waver&#39;s博客</title>
+        <link>https://arkvaer.io/categories/configure/</link>
+        <description>Recent content in Configure on Waver&#39;s博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Fri, 09 Aug 2019 23:13:00 +0800</lastBuildDate><atom:link href="https://arkvaer.io/categories/configure/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>禁用Gnome桌面Ctrl&#43;Alt&#43;S调整桌面快捷键</title>
+        <link>https://arkvaer.io/p/%E7%A6%81%E7%94%A8gnome%E6%A1%8C%E9%9D%A2ctrl-alt-s%E8%B0%83%E6%95%B4%E6%A1%8C%E9%9D%A2%E5%BF%AB%E6%8D%B7%E9%94%AE/</link>
+        <pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
+        
+        <guid>https://arkvaer.io/p/%E7%A6%81%E7%94%A8gnome%E6%A1%8C%E9%9D%A2ctrl-alt-s%E8%B0%83%E6%95%B4%E6%A1%8C%E9%9D%A2%E5%BF%AB%E6%8D%B7%E9%94%AE/</guid>
+        <description>&lt;h2 id=&#34;禁用-gnome-桌面-ctrlalts-调整桌面快捷键-禁用-gnome-桌面-ctrlalts-调整桌面快捷键&#34;&gt;禁用 Gnome 桌面 Ctrl+Alt+S 调整桌面快捷键 {#禁用 gnome 桌面 ctrlalts 调整桌面快捷键}&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;2019-08-09 23:13:04&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;正文&#34;&gt;正文&lt;/h3&gt;
+&lt;p&gt;久仰 Manjaro 大名很久,所以最近搞了个 Manjaro, 为了平滑过度, 所以选择了
+Gnome 版的, 本来以为可以开开心心的撸代码了, 但是当我在 IDEA 中按下快捷键
+备打开设置配置一下字体的时候, 我的 IDEA 竟然变小了??? 想都不用想,
+快捷键冲突, 改 IDEA 的快捷键是不可能的了, 毕竟我已经和 JetBarins
+开展了深度合作,这要改了,岂不是什么 WebStorm PyCharm CLion
+GoLand(虽然不经常用,但是据说多写几个显得牛逼:) )啥的全都得改? 然后&amp;hellip;&amp;hellip;
+我特么把快捷键列表翻了个遍也没找到一个对应的! Fuck!!!&lt;/p&gt;
+&lt;p&gt;但是,作为 Google(养大的)程序员怎么可能妥协, 然后在 Ubuntu
+论坛上找到了这篇帖子,但是我就啥都没找到&amp;hellip;&amp;hellip;
+&lt;img src=&#34;https://waver.me/album/images/post/2019/08/02.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt; 最后在 SuperUser
+找到了以下结果 &lt;img src=&#34;https://waver.me/album/images/post/2019/08/03.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;
+然后 &lt;img src=&#34;https://waver.me/album/images/post/2019/08/04.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt; 嗯??? Gnome
+扩展??? &lt;img src=&#34;https://waver.me/album/images/post/2019/08/01.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;
+特么要把这个叫 Screen Window sizer 的扩展禁用,
+就解决了!!!也不知到是不是自己手贱装上的, 就当不是吧.&lt;/p&gt;
+&lt;p&gt;又水了一篇博客,开心 -_-&lt;/p&gt;
+&lt;h3 id=&#34;参考链接&#34;&gt;参考链接&lt;/h3&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://superuser.com/questions/1352037/ctrl-alt-s-on-ubuntu-18-04-triggers-a-screen-size-toggle-but-is-not-listed-i&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;SuperUser&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://askubuntu.com/questions/74041/how-do-i-disable-ctrlalts-to-minimize-a-window?newreg=fd6736b0f20d4307ab995a5ba33a117d&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ask
+Ubuntu&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

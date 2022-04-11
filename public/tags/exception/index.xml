@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Exception on Waver&#39;s博客</title>
+        <link>https://arkvaer.io/tags/exception/</link>
+        <description>Recent content in Exception on Waver&#39;s博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Sat, 10 Mar 2018 17:31:00 +0800</lastBuildDate><atom:link href="https://arkvaer.io/tags/exception/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Mybatis 异常: Error parsing Mapper XML. Cause:java.lang.IllegalArgumentException: Result Maps collection already</title>
+        <link>https://arkvaer.io/p/mybatis-%E5%BC%82%E5%B8%B8-error-parsing-mapper-xml.-causejava.lang.illegalargumentexception-result-maps-collection-already/</link>
+        <pubDate>Sat, 10 Mar 2018 17:31:00 +0800</pubDate>
+        
+        <guid>https://arkvaer.io/p/mybatis-%E5%BC%82%E5%B8%B8-error-parsing-mapper-xml.-causejava.lang.illegalargumentexception-result-maps-collection-already/</guid>
+        <description>&lt;h2 id=&#34;mybatis-异常-error-parsing-mapper-xml-dot-cause&#34;&gt;Mybatis 异常: Error parsing Mapper XML. Cause:&lt;/h2&gt;
+&lt;p&gt;java.lang.IllegalArgumentException: Result Maps collection already&lt;/p&gt;
+&lt;p&gt;:CUSTOM_ID: mybatis-异常-error-parsing-mapper-xml.-cause-java.lang.illegalargumentexception-result-maps-collection-already&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2018-03-10 17:31:39&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;前几天遇到一个非常神奇的错误,Error parsing Mapper XML. Cause:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;java.lang.IllegalArgumentException: Result Maps collection already,
+搞了半天,也没搞明白,
+而且时有时无,很是神奇,最终发现最终原因是因为&amp;hellip;&amp;hellip;.懒!&lt;/p&gt;
+&lt;h3 id=&#34;错误描述&#34;&gt;错误描述&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;value for org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nestedexception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;sqlSessionFactory&amp;#39; defined in file [E:\16年文
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;件\JAVAdemo\jiankunking\jiankunking-web\target\jiankunking-web-1.0-SNAPSHOT\WEB-INF\classes\spring\spring-mybatis.xml]: Invocation of init method
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;failed; nested exception is org.springframework.core.NestedIOException:
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Failed to parse mapping resource: &amp;#39;URL [jar:file:/E:/16年文件/JAVAdemo/jiankunking/jiankunking-web/target/jiankunking-web-1.0-SNAPSHOT/
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;WEB-INF/lib/jiankunking-system-1.0-SNAPSHOT.jar!/mapper/OrderLogMapper.xml]&amp;#39;; nested exception is org.apache.ibatis.builder.BuilderException: Error
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;解决方式&#34;&gt;解决方式&lt;/h3&gt;
+&lt;p&gt;因为 Mybatis 官方提供了逆向工程的模块,
+所以平时开发几乎都用这个,可以省不少事, 但是 问题来了,
+在开发过程中有可能遇到数据库变动的情况, 所以这时就不得不重新生成 mapper
+和 pojo 文件, 但是! 如果原先的文件不删除的话, 新生成的文件不会覆盖旧文件,
+而是在旧 文件的结尾继续添加, 所以这也就是
+&lt;code&gt;Result Maps collection already&lt;/code&gt; 的原因了. 所以&amp;hellip;.这个懒还是不要偷的好,
+重新生成文件前一定要把旧文件清理干净. 在这里给自己踩踩坑-_-!&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Java 找不到或无法加载主类XXX终极解决方案</title>
+        <link>https://arkvaer.io/p/java-%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BBxxx%E7%BB%88%E6%9E%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</link>
+        <pubDate>Thu, 01 Feb 2018 23:47:00 +0800</pubDate>
+        
+        <guid>https://arkvaer.io/p/java-%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BBxxx%E7%BB%88%E6%9E%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</guid>
+        <description>&lt;h2 id=&#34;起因&#34;&gt;起因&lt;/h2&gt;
+&lt;p&gt;今天突发奇想用命令行运行 Java 文件,
+但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过,
+便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH,
+临时环境变量等所有可能的因素后,依然报这个错,
+好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后,
+但是结果又让人欲哭无泪&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案:&lt;/h2&gt;
+&lt;h3 id=&#34;配置错误&#34;&gt;配置错误&lt;/h3&gt;
+&lt;p&gt;入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和
+javac 都有提示出来，说明没问题了，&lt;/p&gt;
+&lt;p&gt;​ 主要是以下两点要注意：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;li&gt;更为重要的是，在 cmd 下运行 javac
+和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不
+会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径
+下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意
+到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以上解决方案转自
+&lt;a class=&#34;link&#34; href=&#34;http://blog.csdn.net/wangjiaweiwei/article/details/42212525&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;javac编译成功，用java运行class文件出现“找不到或无法加载主类”
+的问题&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;语法错误&#34;&gt;语法错误&lt;/h3&gt;
+&lt;p&gt;语法错误分两种:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;文件名与主类名不相同&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;package 包不存在&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二种错误很容易忽视.在这踩个坑&lt;/strong&gt;
+(笔者就是因为将 IDEA 中的文件直接考出来才&amp;hellip;&amp;hellip;.,一切尽在不言中,
+你们可能很难想象在半夜 12 点数次装 Java 配环境变量的紧张与刺激!)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

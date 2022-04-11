@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Archives on Waver&#39;s博客</title>
+        <link>https://arkvaer.io/tags/archives/</link>
+        <description>Recent content in Archives on Waver&#39;s博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Sat, 09 Apr 2022 23:20:00 +0800</lastBuildDate><atom:link href="https://arkvaer.io/tags/archives/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>2017 Index</title>
+        <link>https://arkvaer.io/post/2017/</link>
+        <pubDate>Sat, 09 Apr 2022 23:20:00 +0800</pubDate>
+        
+        <guid>https://arkvaer.io/post/2017/</guid>
+        <description>&lt;h2 id=&#34;年&#34;&gt;2017 年&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/Remember_a_Redis_connection_exhaustion_exception_solution.md&#34; &gt;记一次
+Redis 连接用尽异常解决&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/FTP_Client.storFile_return_false.md&#34; &gt;FTP storFile 返回
+false 解决方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/GitHub_Pages_bind_domain.md&#34; &gt;GitHub Pages 绑定域名&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/23_design_patterns_in_Java_part_one.md&#34; &gt;Java 中的 23
+种设计模式 (一)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/23_design_patterns_in_Java_part_two.md&#34; &gt;Java 中的 23
+中设计模式 (二)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/23_design_patterns_in_Java_part_three.md&#34; &gt;Java 中的 23
+中设计模式 (三)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/23_design_patterns_in_Java_part_four.md&#34; &gt;Java 中的 23
+中设计模式 (四)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_basic_syntax_1.md&#34; &gt;Java知识点总结-1-基础语法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_arrays_2.md&#34; &gt;Java知识点总结-2-数组&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_package_3.md&#34; &gt;Java知识点总结-3-封装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_static_4.md&#34; &gt;Java知识点总结-4-静态&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_extends_5.md&#34; &gt;Java知识点总结-5-继承&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_Polymorphism_6.md&#34; &gt;Java知识点总结-6-多态&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_inner_class_7.md&#34; &gt;Java知识点总结-7-内部类&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_exception_8.md&#34; &gt;Java知识点总结-8-异常&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_threads_9.md&#34; &gt;Java知识点总结-9-线程&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_Thread_communication_10.md&#34; &gt;Java知识点总结-10-线程通信&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_string_11.md&#34; &gt;Java知识点总结-11-String&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://arkvaer.io/posts/2017/summary_of_java_knowledge_points_collection_framework_12.md&#34; &gt;Java知识点总结-12-集合框架&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
