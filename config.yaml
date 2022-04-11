@@ -68,7 +68,7 @@ params:
     provider: disqus
 
     disqusjs:
-      shortname:
+      shortname: arkvaer
       apiUrl:
       apiKey:
       admin:
