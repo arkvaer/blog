@@ -4,9 +4,6 @@
 #+HUGO_CUSTOM_FRONT_MATTER: :toc true
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DRAFT: false
-:PROPERTIES:
-:EXPORT_FILE_NAME: first-blog-for-ox-hugo
-:END:
 #+DATE: [2022-04-10 日 00:55]
 #+TITLE: 使用Org-mode 和 hugo 搭建博客
 #+HUGO_TAGS: org-mode
@@ -43,6 +40,25 @@
    2) 进入到主题目录下的 exampleSite 文件夹下 =/blog/themes/hugo-theme-stack/exampleSite/= 将其中的 =content= 文件夹和 =config.yaml= 文件覆盖到博客根目录下.
 
    3) 根据自己的喜好修改配置文件
+
+最终的目录结构如下:
+#+begin_example
+ .
+├──  archetypes
+├──  config.yaml
+├──  content
+├──  data
+├──  layouts
+├──  LICENSE
+├──  org
+├──  public
+├──  README.org
+├──  resources
+├──  static
+└──  themes
+   └──  hugo-theme-stack
+#+end_example
+
 * 工具配置
 因为我使用的是 =Doom Emacs= 这里也就以此为例
 1. 安装 ox-hugo
@@ -56,7 +72,17 @@
    #+begin_src elisp
     ;; hugo org 转 markdown
     (use-package! ox-hugo
-      :after ox)
+      :after ox
+        :config
+    (setq
+   ;; 设置在文件导出到content下的哪个目录，我的这个是 content/post
+   org-hugo-section "post"
+   ;; 设置文章的最后修改时间为导出时间
+   org-hugo-auto-set-lastmod	t
+   )
+  ;; 设置在org文件保存的时候自动导出到org-hugo-section下
+    (org-hugo-auto-export-mode)
+      )
    #+end_src
 2. 添加代码片段(snippet), 方便以后创建文章使用
   在  =~/.doom.d/init.el= 中将 =:editor snippets= 注释去掉, 启用模块. 使用 =M-x doom/reload= 下载并重新加载模块
@@ -93,10 +119,40 @@
 建立成功后在 org 文件中 通过输入 =hugo= 关键字来快速插入代码片段
 效果如下:
 
-1[[file:./build_a_blog_use_hugo_and_org-mode-01.png]]
-[[file:./build_a_blog_use_hugo_and_org-mode-02.png]]
+[[file:./build_a_blog_use_hugo_and_org-mode/01.png]]
+[[file:./build_a_blog_use_hugo_and_org-mode/02.png]]
 也可以通过 =M-x yas-insert-snippet= 或通过快捷键 =C-c & C-s= 然后通过关键字 hugo 进行选用.
 
 * 文件转换和生成
 使用 =C-c C-e H A= 将文件转为 markdown 文件
-
+** 自动导出, 实时预览
+在 blog 根目录创建 =.dir-locals.el=
+文件内容如下:
+#+begin_src elisp
+;; .dir-locals.el
+(("org/"
+  . ((org-mode . ((eval . (org-hugo-auto-export-mode)))))))
+#+end_src
+其中 =org= 是你存放 org 文件的目录.
+* 生成静态文件和部署
+1. 生成:
+  在博客根目录使用命令 =hugo -D= 生成静态文件, 提交推送到 github 仓库
+2. 部署到 [[https://vercel.com][vercel]]:
+   1) 选择要部署的仓库
+     [[file:./build_a_blog_use_hugo_and_org-mode/03.png]]
+   2) 选择项目类型, 这里选择 Other 就行
+     [[file:./build_a_blog_use_hugo_and_org-mode/04.png]]
+   3) 选择发布根目录
+     [[file:./build_a_blog_use_hugo_and_org-mode/05.png]]
+   4) 自定义域名
+     [[file:./build_a_blog_use_hugo_and_org-mode/06.png]]
+   5) 修改 vervel 分配的域名
+     [[file:./build_a_blog_use_hugo_and_org-mode/07.png]]
+   6) 添加自定义域名
+     [[file:./build_a_blog_use_hugo_and_org-mode/08.png]]
+   7) 选择重定向方式
+      三种方式分别是:
+      - xxx.com --> www.xxx.com
+      - www.xxx.com --> xxx.com
+      - 只添加 xxx.com 不进行重定向
+     [[file:./build_a_blog_use_hugo_and_org-mode/09.png]]
