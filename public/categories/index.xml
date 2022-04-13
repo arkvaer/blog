@@ -23,14 +23,6 @@
         <description></description>
         </item>
         <item>
-        <title>Java</title>
-        <link>https://arkvaer.io/categories/java/</link>
-        <pubDate>Sat, 09 Apr 2022 23:40:00 +0800</pubDate>
-        
-        <guid>https://arkvaer.io/categories/java/</guid>
-        <description></description>
-        </item>
-        <item>
         <title>Archives</title>
         <link>https://arkvaer.io/categories/archives/</link>
         <pubDate>Sat, 09 Apr 2022 23:20:00 +0800</pubDate>
@@ -44,6 +36,14 @@
         <pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
         
         <guid>https://arkvaer.io/categories/configure/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Java</title>
+        <link>https://arkvaer.io/categories/java/</link>
+        <pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
+        
+        <guid>https://arkvaer.io/categories/java/</guid>
         <description></description>
         </item>
         <item>
