@@ -1,16 +1,16 @@
-baseurl: https://arkvaer.io
-languageCode: en-us
+baseurl: https://waver.me
+local: en-us
 theme: hugo-theme-stack
 paginate: 10
 title: Waver's Blog
 
 languages:
   zh-cn:
-    languageName: 中文
+    label: 中文
     title: Waver's博客
     weight: 2
   en:
-    languageName: English
+    label: English
     title: Waver's Blog
     weight: 1
 
@@ -198,7 +198,7 @@ menu:
 
     - identifier: twitter
       name: Twitter
-      url: https://twitter.com
+      url: https://x.com/arkvaer
       params:
         icon: brand-twitter
 
