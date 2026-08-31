@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Redis | Waver&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/tags/redis/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://waver.me/tags/redis/index.xml" title="rss">
+<link rel="alternate" hreflang="zh" href="https://waver.me/tags/redis/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/tags/redis/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="Redis">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Redis">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Redis
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">记一次 Redis 连接用尽异常解决
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>记一次 Redis 连接用尽异常解决 2017-12-01 11:04:30 不知怎么突然 jedis 出现 “Could not get a resource from the pool” 错误,错误原因是连接池中的连接用尽
+解决方法 redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool at redis.clients.util.Pool.getResource(Pool.java:22) at com.derbysoft.jredis.longkeytest.BorrowObject.run(BorrowObject.java:22) at java.lang.Thread.run(Thread.java:662) Caused by: java.util.NoSuchElementException: Timeout waiting for idle object at org.apache.commons.pool.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:1134) at redis.clients.util.Pool.getResource(Pool.java:20) ... 2 more 增加 Jedis 的活动连接数: &lt;bean id=&#34;jedisPoolConfig&#34; class=&#34;redis.clients.jedis.JedisPoolConfig&#34;&gt; &lt;!-- 最大连接数 --&gt; &lt;property name=&#34;maxTotal&#34; value=&#34;300&#34; /&gt; &lt;!-- 最大空闲连接数 --&gt; &lt;property name=&#34;maxIdle&#34; value=&#34;50&#34; /&gt; &lt;!-- 每次释放连接的最大数目 --&gt; &lt;property name=&#34;numTestsPerEvictionRun&#34; value=&#34;1024&#34; /&gt; &lt;!-- 释放连接的扫描间隔（毫秒） --&gt; &lt;property name=&#34;timeBetweenEvictionRunsMillis&#34; value=&#34;30000&#34; /&gt; &lt;!-- 连接最小空闲时间 --&gt; &lt;property name=&#34;minEvictableIdleTimeMillis&#34; value=&#34;1800000&#34; /&gt; &lt;!-- 连接空闲多久后释放, 当空闲时间&gt;该值 且 空闲连接&gt;最大空闲连接数 时直接释放 --&gt; &lt;property name=&#34;softMinEvictableIdleTimeMillis&#34; value=&#34;10000&#34; /&gt; &lt;!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 --&gt; &lt;property name=&#34;maxWaitMillis&#34; value=&#34;1500&#34; /&gt; &lt;!-- 在获取连接的时候检查有效性, 默认false --&gt; &lt;property name=&#34;testOnBorrow&#34; value=&#34;true&#34; /&gt; &lt;!-- 在空闲时检查有效性, 默认false --&gt; &lt;property name=&#34;testWhileIdle&#34; value=&#34;true&#34; /&gt; &lt;!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true --&gt; &lt;property name=&#34;blockWhenExhausted&#34; value=&#34;false&#34; /&gt; &lt;/bean&gt; 将最大连接数增加到 300, 但是错误仍然出现, 检查代码发现, 连接用完后并没有释放.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2017-12-17 13:11:00 +0800 CST'>2017年12月17日</span></footer>
+  <a class="entry-link" aria-label="post link to 记一次 Redis 连接用尽异常解决" href="https://waver.me/posts/2017/remember_a_redis_connection_exhaustion_exception_solution/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

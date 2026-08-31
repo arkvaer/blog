@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>JavaReview-day03-基础语法 | Waver&#39;s Blog</title>
+<meta name="keywords" content="Java">
+<meta name="description" content="
+Java
+
+运算符
+位运算符:
+
+右位移: 左右为数值的二进制进行左右移动,其结果等于原值 或 / 2 的所以为数的次幂 即 3 &laquo; 3 = 3 * 2 的三次幂 = 3 * 8 =24;
+无符号左移
+无符号右移
+
+异或(^)可以用于加密 &lsquo;&amp;&rsquo;, &lsquo;|&rsquo;, &lsquo;^&lsquo;的运算
+使两个变量互换值 m = 3; n = 8; n = n ^ m; m = n ^ m; n = n ^
+m;即可完成值互换而不引用第三方变量完成两个变量的值互换
+三元运算符 三元运算符会改变所运算元素的数据类型
+语句
+if&hellip;else:
+三元运算符 对比 if&hellip;else 的优缺点 缺点: 三元运算符必须有结果 优点:
+三元运算符比 if&hellip;else 简单, 可以简化 if&hellip;else
+二. switch 语句:">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2017/summary_of_java_knowledge_points_basic_syntax_1/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2017/summary_of_java_knowledge_points_basic_syntax_1/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2017/summary_of_java_knowledge_points_basic_syntax_1/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="JavaReview-day03-基础语法">
+  <meta property="og:description" content="Java
+运算符 位运算符: 右位移: 左右为数值的二进制进行左右移动,其结果等于原值 或 / 2 的所以为数的次幂 即 3 « 3 = 3 * 2 的三次幂 = 3 * 8 =24; 无符号左移 无符号右移 异或(^)可以用于加密 ‘&amp;’, ‘|’, ‘^‘的运算
+使两个变量互换值 m = 3; n = 8; n = n ^ m; m = n ^ m; n = n ^ m;即可完成值互换而不引用第三方变量完成两个变量的值互换
+三元运算符 三元运算符会改变所运算元素的数据类型
+语句 if…else:
+三元运算符 对比 if…else 的优缺点 缺点: 三元运算符必须有结果 优点: 三元运算符比 if…else 简单, 可以简化 if…else
+二. switch 语句:">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2017-11-28T15:04:00+08:00">
+    <meta property="article:modified_time" content="2022-04-10T01:43:55+08:00">
+    <meta property="article:tag" content="Java">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JavaReview-day03-基础语法">
+  <meta name="twitter:description" content="Java
+运算符 位运算符: 右位移: 左右为数值的二进制进行左右移动,其结果等于原值 或 / 2 的所以为数的次幂 即 3 « 3 = 3 * 2 的三次幂 = 3 * 8 =24; 无符号左移 无符号右移 异或(^)可以用于加密 ‘&amp;’, ‘|’, ‘^‘的运算
+使两个变量互换值 m = 3; n = 8; n = n ^ m; m = n ^ m; n = n ^ m;即可完成值互换而不引用第三方变量完成两个变量的值互换
+三元运算符 三元运算符会改变所运算元素的数据类型
+语句 if…else:
+三元运算符 对比 if…else 的优缺点 缺点: 三元运算符必须有结果 优点: 三元运算符比 if…else 简单, 可以简化 if…else
+二. switch 语句:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2017 Index",
+      "item": "https://waver.me/posts/2017/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "JavaReview-day03-基础语法",
+      "item": "https://waver.me/posts/2017/summary_of_java_knowledge_points_basic_syntax_1/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "JavaReview-day03-基础语法",
+  "name": "JavaReview-day03-基础语法",
+  "description": " Java\n运算符 位运算符: 右位移: 左右为数值的二进制进行左右移动,其结果等于原值 或 / 2 的所以为数的次幂 即 3 \u0026laquo; 3 = 3 * 2 的三次幂 = 3 * 8 =24; 无符号左移 无符号右移 异或(^)可以用于加密 \u0026lsquo;\u0026amp;\u0026rsquo;, \u0026lsquo;|\u0026rsquo;, \u0026lsquo;^\u0026lsquo;的运算\n使两个变量互换值 m = 3; n = 8; n = n ^ m; m = n ^ m; n = n ^ m;即可完成值互换而不引用第三方变量完成两个变量的值互换\n三元运算符 三元运算符会改变所运算元素的数据类型\n语句 if\u0026hellip;else:\n三元运算符 对比 if\u0026hellip;else 的优缺点 缺点: 三元运算符必须有结果 优点: 三元运算符比 if\u0026hellip;else 简单, 可以简化 if\u0026hellip;else\n二. switch 语句:\n",
+  "keywords": [
+    "Java"
+  ],
+  "articleBody": " Java\n运算符 位运算符: 右位移: 左右为数值的二进制进行左右移动,其结果等于原值 或 / 2 的所以为数的次幂 即 3 « 3 = 3 * 2 的三次幂 = 3 * 8 =24; 无符号左移 无符号右移 异或(^)可以用于加密 ‘\u0026’, ‘|’, ‘^‘的运算\n使两个变量互换值 m = 3; n = 8; n = n ^ m; m = n ^ m; n = n ^ m;即可完成值互换而不引用第三方变量完成两个变量的值互换\n三元运算符 三元运算符会改变所运算元素的数据类型\n语句 if…else:\n三元运算符 对比 if…else 的优缺点 缺点: 三元运算符必须有结果 优点: 三元运算符比 if…else 简单, 可以简化 if…else\n二. switch 语句:\nswitch 可以中可以接收 byte, short, int char 类型的数据;\njdk1.5 加入对枚举类型的支持, jdk1.7 加入了对 String 类型的支持;\nswitch 的各个 case 之间和 default 没有顺序,先执行第一个 case, 没有匹配的 case 执行 default;\n结束 switch 语句的两种情况: (1).遇到 break; (2). 执行到 switch 语句结束;\n:CUSTOM_ID: 结束-switch-语句的两种情况-1.遇到-break-2.-执行到-switch-语句结束\n如果匹配的 case 没有对应的 break, 那么程序会继续向下执行, 运行可以执行的语句,\n如果匹配的-case-没有对应的-break-那么程序会继续向下执行-运行可以执行的语句\n直到遇到 break 或程序结束;\nif … else 和 switch 语句的对比: switch 性能比 if…else 更高(if … else 只能顺序执行) {#switch-性能比-ifelse-更高 if-else-只能顺序执行} 对区间判断可以或对结果为 boolean 类型的判断使用 if, if 的使用范围更广\n对区间判断可以或对结果为-boolean-类型的判断使用-if-if-的使用范围更广\nwhile 语句 do..while 和 while 的区别 do…while 先执行循环体, 再判断条件(循环体至少执行一次); while 先判断再执行 for 语句 {#for 语句} 格式: for(初始化表达式; 循环条件表达式; 循环后表达式){ 执行语句; }\nfor 循环中的表达式只要为合法的表达式即可运行(循环表达式要有真或假的计算结果);\nfor 循环中的变量初始化语句只执行一次 for 循环中的语句不只是一句,多条语句可用 “,” 隔开,如下: for(int x = 0, y = 0, z = 0; x \u003c 4; x ++, y ++,z ++){ System.out.println(x+y+z); } for 和 while 的无限循环的表达形式 for: for(;;){ System.out.println(\"for无限循环\"); } 如果 for 循环的条件不声明, 默认为 true; while while(true){ System.out.println(\" while 无限循环\"); } break 和 continue 1) break 可以跳出指定循环, 只需要将循环命名即可,具体实现如下\nbreak-和-continue-1-break-可以跳出指定循环-只需要将循环命名即可具体实现如下\npublic void testBreak() { w: for (int x = 1; x \u003c 4; x++) { System.out.println(\"out\\t\"); q: for (int m = 0; m \u003c 3; m++){ if (m == 2){ break w; } System.out.print(\"in\\t\"); } } } 输出结果为: out in in\n若将 break 后的 w 删掉,结果为: out in in out in in out in in\n2). continue 作用:结束本次循环,继续下一次循环 # 如下代码可以打印 0~10 以内的 2 的倍数:\npublic void testContinue(){ for (int i = 0; i \u003c 11; i ++){ if (i%2 == 1){ continue; } System.out.println(i); } } 1) continue 可以继续指定循环, 只需要将循环命名即可,具体实现如下 {#continue 可以继续指定循环-只需要将循环命名即可具体实现如下} public void testContinue() { w: for (int i = 0; i \u003c 3; i++) { q: for (int k = 0; k \u003c 4; k++) { System.out.println(\"i = \" + i); continue w; } } } 输出结果为: i = 0 i = 1 i = 2 ### break 和 continue 语句单独存在时, 下面不可以有任何语句, 因为执行不到(编译报错);\nbreak 必须在 switch 或 loop(循环)语句内, continue 必须在 loop 语句内 {#break-必须在-switch-或-loop 循环语句内-continue 必须在-loop-语句内} 输出等腰三角形 public void testTriangle() { for (int x = 1; x \u003c= 5; x++) { for (int y = x; y \u003c 5; y++) { System.out.print(\" \"); } for (int z = 0; z \u003c x; z ++ ){ System.out.print(\"* \"); } System.out.println(); } } 结果如下:\n* * * * * * * * * * * * * * * 重载 方法名一致, 但参数列表不同的函数为重载; 名称相同, 参数列表相同, 但返回值类型不同的两个函数不是重载函数, 不能同时存在于一个类中;\n重载-方法名一致-但参数列表不同的函数为重载-名称相同-参数列表相同-但返回值类型不同的两个函数不是重载函数-不能同时存在于一个类中\n",
+  "wordCount" : "439",
+  "inLanguage": "zh",
+  "datePublished": "2017-11-28T15:04:00+08:00",
+  "dateModified": "2022-04-10T01:43:55+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2017/summary_of_java_knowledge_points_basic_syntax_1/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      JavaReview-day03-基础语法
+    </h1>
+    <div class="post-meta">
+
+<span title='2017-11-28 15:04:00 +0800 CST'>2017年11月28日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><blockquote>
+<p>Java</p>
+</blockquote>
+<h2 id="运算符">运算符<a hidden class="anchor" aria-hidden="true" href="#运算符">#</a></h2>
+<h3 id="位运算符">位运算符:<a hidden class="anchor" aria-hidden="true" href="#位运算符">#</a></h3>
+<ol>
+<li>右位移: 左右为数值的二进制进行左右移动,其结果等于原值 或 / 2 的所以为数的次幂 即 3 &laquo; 3 = 3 * 2 的三次幂 = 3 * 8 =24;</li>
+<li>无符号左移</li>
+<li>无符号右移</li>
+</ol>
+<p>异或(^)可以用于加密 &lsquo;&amp;&rsquo;, &lsquo;|&rsquo;, &lsquo;^&lsquo;的运算</p>
+<p>使两个变量互换值 m = 3; n = 8; n = n ^ m; m = n ^ m; n = n ^
+m;即可完成值互换而不引用第三方变量完成两个变量的值互换</p>
+<p>三元运算符 三元运算符会改变所运算元素的数据类型</p>
+<h3 id="语句">语句<a hidden class="anchor" aria-hidden="true" href="#语句">#</a></h3>
+<p>if&hellip;else:</p>
+<p>三元运算符 对比 if&hellip;else 的优缺点 缺点: 三元运算符必须有结果 优点:
+三元运算符比 if&hellip;else 简单, 可以简化 if&hellip;else</p>
+<p>二. switch 语句:</p>
+<ol>
+<li>
+<p>switch 可以中可以接收 byte, short, int char 类型的数据;</p>
+</li>
+<li>
+<p>jdk1.5 加入对枚举类型的支持, jdk1.7 加入了对 String 类型的支持;</p>
+</li>
+<li>
+<p>switch 的各个 case 之间和 default 没有顺序,先执行第一个 case,
+没有匹配的 case 执行 default;</p>
+</li>
+</ol>
+<h4 id="结束-switch-语句的两种情况--1--dot-遇到-break--2--dot-执行到-switch">结束 switch 语句的两种情况: (1).遇到 break; (2). 执行到 switch<a hidden class="anchor" aria-hidden="true" href="#结束-switch-语句的两种情况--1--dot-遇到-break--2--dot-执行到-switch">#</a></h4>
+<p>语句结束;</p>
+<p>:CUSTOM_ID: 结束-switch-语句的两种情况-1.遇到-break-2.-执行到-switch-语句结束</p>
+<h4 id="如果匹配的-case-没有对应的-break-那么程序会继续向下执行">如果匹配的 case 没有对应的 break, 那么程序会继续向下执行,<a hidden class="anchor" aria-hidden="true" href="#如果匹配的-case-没有对应的-break-那么程序会继续向下执行">#</a></h4>
+<p>运行可以执行的语句,</p>
+<p>如果匹配的-case-没有对应的-break-那么程序会继续向下执行-运行可以执行的语句</p>
+<p>直到遇到 break 或程序结束;</p>
+<ol start="4">
+<li>if &hellip; else 和 switch 语句的对比:</li>
+</ol>
+<h4 id="switch-性能比-ifelse-更高if--else-只能顺序执行-switch-性能比-ifelse-更高-if-else-只能顺序执行">switch 性能比 if&hellip;else 更高(if &hellip; else 只能顺序执行) {#switch-性能比-ifelse-更高 if-else-只能顺序执行}<a hidden class="anchor" aria-hidden="true" href="#switch-性能比-ifelse-更高if--else-只能顺序执行-switch-性能比-ifelse-更高-if-else-只能顺序执行">#</a></h4>
+<h4 id="对区间判断可以或对结果为-boolean-类型的判断使用-if-if">对区间判断可以或对结果为 boolean 类型的判断使用 if, if<a hidden class="anchor" aria-hidden="true" href="#对区间判断可以或对结果为-boolean-类型的判断使用-if-if">#</a></h4>
+<p>的使用范围更广</p>
+<p>对区间判断可以或对结果为-boolean-类型的判断使用-if-if-的使用范围更广</p>
+<h2 id="while-语句">while 语句<a hidden class="anchor" aria-hidden="true" href="#while-语句">#</a></h2>
+<h3 id="do..while-和-while-的区别">do..while 和 while 的区别<a hidden class="anchor" aria-hidden="true" href="#do..while-和-while-的区别">#</a></h3>
+<h4 id="dowhile-先执行循环体-再判断条件循环体至少执行一次">do&hellip;while 先执行循环体, 再判断条件(循环体至少执行一次);<a hidden class="anchor" aria-hidden="true" href="#dowhile-先执行循环体-再判断条件循环体至少执行一次">#</a></h4>
+<h4 id="while-先判断再执行">while 先判断再执行<a hidden class="anchor" aria-hidden="true" href="#while-先判断再执行">#</a></h4>
+<h2 id="for-语句-for-语句">for 语句 {#for 语句}<a hidden class="anchor" aria-hidden="true" href="#for-语句-for-语句">#</a></h2>
+<p>格式: for(初始化表达式; 循环条件表达式; 循环后表达式){ 执行语句; }</p>
+<p>for
+循环中的表达式只要为合法的表达式即可运行(循环表达式要有真或假的计算结果);</p>
+<h3 id="for-循环中的变量初始化语句只执行一次">for 循环中的变量初始化语句只执行一次<a hidden class="anchor" aria-hidden="true" href="#for-循环中的变量初始化语句只执行一次">#</a></h3>
+<h3 id="for-循环中的语句不只是一句多条语句可用-隔开如下">for 循环中的语句不只是一句,多条语句可用 &ldquo;,&rdquo; 隔开,如下:<a hidden class="anchor" aria-hidden="true" href="#for-循环中的语句不只是一句多条语句可用-隔开如下">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>  for(int x = 0, y = 0, z = 0; x &lt; 4; x ++, y ++,z ++){
+</span></span><span style="display:flex;"><span>    System.out.println(x+y+z);
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><h3 id="for-和-while-的无限循环的表达形式">for 和 while 的无限循环的表达形式<a hidden class="anchor" aria-hidden="true" href="#for-和-while-的无限循环的表达形式">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span> for:
+</span></span><span style="display:flex;"><span>  for(;;){
+</span></span><span style="display:flex;"><span>    System.out.println(&#34;for无限循环&#34;);
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><h3 id="如果-for-循环的条件不声明-默认为-true">如果 for 循环的条件不声明, 默认为 true;<a hidden class="anchor" aria-hidden="true" href="#如果-for-循环的条件不声明-默认为-true">#</a></h3>
+<h3 id="while">while<a hidden class="anchor" aria-hidden="true" href="#while">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>while(true){
+</span></span><span style="display:flex;"><span>  System.out.println(&#34; while 无限循环&#34;);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="break-和-continue-1-break-可以跳出指定循环">break 和 continue 1) break 可以跳出指定循环,<a hidden class="anchor" aria-hidden="true" href="#break-和-continue-1-break-可以跳出指定循环">#</a></h2>
+<p>只需要将循环命名即可,具体实现如下</p>
+<p>break-和-continue-1-break-可以跳出指定循环-只需要将循环命名即可具体实现如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>    public void testBreak() {
+</span></span><span style="display:flex;"><span>      w:
+</span></span><span style="display:flex;"><span>      for (int x = 1; x &lt; 4; x++) {
+</span></span><span style="display:flex;"><span>          System.out.println(&#34;out\t&#34;);
+</span></span><span style="display:flex;"><span>          q:
+</span></span><span style="display:flex;"><span>          for (int m = 0; m &lt; 3; m++){
+</span></span><span style="display:flex;"><span>              if (m == 2){
+</span></span><span style="display:flex;"><span>                  break w;
+</span></span><span style="display:flex;"><span>              }
+</span></span><span style="display:flex;"><span>              System.out.print(&#34;in\t&#34;);
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      }
+</span></span></code></pre></div><p>输出结果为: out in in</p>
+<p>若将 break 后的 w 删掉,结果为: out in in out in in out in in</p>
+<p>2). continue 作用:结束本次循环,继续下一次循环 # 如下代码可以打印 0~10
+以内的 2 的倍数:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>        public void testContinue(){
+</span></span><span style="display:flex;"><span>            for (int i = 0; i &lt; 11; i ++){
+</span></span><span style="display:flex;"><span>                if (i%2 == 1){
+</span></span><span style="display:flex;"><span>                    continue;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            System.out.println(i);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span></code></pre></div><h3 id="1-continue-可以继续指定循环-只需要将循环命名即可具体实现如下-continue-可以继续指定循环-只需要将循环命名即可具体实现如下">1) continue 可以继续指定循环, 只需要将循环命名即可,具体实现如下 {#continue 可以继续指定循环-只需要将循环命名即可具体实现如下}<a hidden class="anchor" aria-hidden="true" href="#1-continue-可以继续指定循环-只需要将循环命名即可具体实现如下-continue-可以继续指定循环-只需要将循环命名即可具体实现如下">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>        public void testContinue() {
+</span></span><span style="display:flex;"><span>          w:
+</span></span><span style="display:flex;"><span>          for (int i = 0; i &lt; 3; i++) {
+</span></span><span style="display:flex;"><span>            q:
+</span></span><span style="display:flex;"><span>            for (int k = 0; k &lt; 4; k++) {
+</span></span><span style="display:flex;"><span>              System.out.println(&#34;i = &#34; + i);
+</span></span><span style="display:flex;"><span>              continue w;
+</span></span><span style="display:flex;"><span>              }
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span></code></pre></div><p>输出结果为: <code>i = 0                i = 1                i = 2</code> ### break
+和 continue 语句单独存在时, 下面不可以有任何语句, 因为执行不到(编译报错);</p>
+<h3 id="break-必须在-switch-或-loop循环语句内-continue-必须在-loop-语句内-break-必须在-switch-或-loop-循环语句内-continue-必须在-loop-语句内">break 必须在 switch 或 loop(循环)语句内, continue 必须在 loop 语句内 {#break-必须在-switch-或-loop 循环语句内-continue 必须在-loop-语句内}<a hidden class="anchor" aria-hidden="true" href="#break-必须在-switch-或-loop循环语句内-continue-必须在-loop-语句内-break-必须在-switch-或-loop-循环语句内-continue-必须在-loop-语句内">#</a></h3>
+<h3 id="输出等腰三角形">输出等腰三角形<a hidden class="anchor" aria-hidden="true" href="#输出等腰三角形">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testTriangle</span>() {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 1; x <span style="color:#f92672">&lt;=</span> 5; x<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> x; y <span style="color:#f92672">&lt;</span> 5; y<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> z <span style="color:#f92672">=</span> 0; z <span style="color:#f92672">&lt;</span> x; z <span style="color:#f92672">++</span> ){
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;* &#34;</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>结果如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>      *
+</span></span><span style="display:flex;"><span>     * *
+</span></span><span style="display:flex;"><span>    * * *
+</span></span><span style="display:flex;"><span>   * * * *
+</span></span><span style="display:flex;"><span>  * * * * *
+</span></span></code></pre></div><h2 id="重载-方法名一致-但参数列表不同的函数为重载-名称相同-参数列表相同">重载 方法名一致, 但参数列表不同的函数为重载; 名称相同, 参数列表相同,<a hidden class="anchor" aria-hidden="true" href="#重载-方法名一致-但参数列表不同的函数为重载-名称相同-参数列表相同">#</a></h2>
+<p>但返回值类型不同的两个函数不是重载函数, 不能同时存在于一个类中;</p>
+<p>重载-方法名一致-但参数列表不同的函数为重载-名称相同-参数列表相同-但返回值类型不同的两个函数不是重载函数-不能同时存在于一个类中</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/java/">Java</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

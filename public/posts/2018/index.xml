@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>2018 Index on Waver&#39;s Blog</title>
+    <link>https://waver.me/posts/2018/</link>
+    <description>Recent content in 2018 Index on Waver&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 10 Apr 2022 01:52:34 +0800</lastBuildDate>
+    <atom:link href="https://waver.me/posts/2018/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常用 Git 命令清单</title>
+      <link>https://waver.me/posts/2018/common_git_command_list/</link>
+      <pubDate>Sat, 09 Apr 2022 23:42:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/common_git_command_list/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;本文转载自&lt;a href=&#34;http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html&#34;&gt;阮一峰的网络日志&amp;mdash;常用
+Git 命令清单&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;开篇&#34;&gt;开篇&lt;/h2&gt;
+&lt;p&gt;我每天使用 Git ，但是很多命令记不住。&lt;/p&gt;
+&lt;p&gt;一般来说，日常使用只要记住下图 6 个命令，就可以了。但是熟练使用，恐怕要记住 60～100 个命令。&lt;/p&gt;
+&lt;h3 id=&#34;下面是我整理的常用-git-命令清单几个专用名词的译名如下&#34;&gt;下面是我整理的常用 Git 命令清单。几个专用名词的译名如下。&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Workspace：工作区&lt;/li&gt;
+&lt;li&gt;Index / Stage：暂存区&lt;/li&gt;
+&lt;li&gt;Repository：仓库区（或本地仓库）&lt;/li&gt;
+&lt;li&gt;Remote：远程仓库&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;一新建代码库&#34;&gt;一、新建代码库&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 在当前目录新建一个Git代码库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git init
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个目录，将其初始化为Git代码库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git init &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;project-name&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 下载一个项目和它的整个代码历史&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git clone &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;url&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;二配置&#34;&gt;二、配置&lt;/h2&gt;
+&lt;p&gt;Git 的设置文件为.gitconfig，它可以在用户主目录下（全局配置），也可以在项目目录下（项目配置）。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示当前的Git配置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git config --list
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 编辑Git配置文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git config -e &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;--global&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 设置提交代码时的用户信息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git config &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;--global&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; user.name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;[name]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git config &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;--global&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; user.email &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;[email address]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;三增加删除文件&#34;&gt;三、增加/删除文件&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加指定文件到暂存区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git add &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file2&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加指定目录到暂存区，包括子目录&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git add &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;dir&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加当前目录的所有文件到暂存区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git add .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加每个变化前，都会要求确认&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 对于同一个文件的多处变化，可以实现分次提交&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git add -p
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除工作区文件，并且将这次删除放入暂存区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git rm &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file2&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 停止追踪指定文件，但该文件会保留在工作区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git rm --cached &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 改名文件，并且将这个改名放入暂存区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git mv &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file-original&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file-renamed&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;四代码提交&#34;&gt;四、代码提交&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 提交暂存区到仓库区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git commit -m &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;message&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 提交暂存区的指定文件到仓库区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git commit &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file2&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; ... -m &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;message&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 提交工作区自上次commit之后的变化，直接到仓库区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git commit -a
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 提交时显示所有diff信息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git commit -v
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 使用一次新的commit，替代上一次提交&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 如果代码没有任何新变化，则用来改写上一次commit的提交信息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git commit --amend -m &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;message&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 重做上一次commit，并包括指定文件的新变化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git commit --amend &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file2&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; ...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;五分支&#34;&gt;五、分支&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#列出所有本地分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 列出所有远程分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch -r
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 列出所有本地分支和远程分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch -a
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个分支，但依然停留在当前分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch-name&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个分支，并切换到该分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git checkout -b &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个分支，指向指定commit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个分支，与指定的远程分支建立追踪关系&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch --track &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote-branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 切换到指定分支，并更新工作区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git checkout &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch-name&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 切换到上一个分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git checkout -
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 建立追踪关系，在现有分支与指定的远程分支之间&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch --set-upstream &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote-branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 合并指定分支到当前分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git merge &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 选择一个commit，合并进当前分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git cherry-pick &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch -d &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch-name&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除远程分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git push origin --delete &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch-name&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git branch -dr &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote/branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;六标签&#34;&gt;六、标签&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 列出所有tag&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git tag
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个tag在当前commit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git tag &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个tag在指定commit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git tag &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除本地tag&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git tag -d &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除远程tag&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git push origin :refs/tags/&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tagName&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看tag信息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git show &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 提交指定tag&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git push &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 提交所有tag&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git push &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; --tags
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个分支，指向某个tag&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git checkout -b &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;七查看信息&#34;&gt;七、查看信息&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示有变更的文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git status
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示当前分支的版本历史&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示commit历史，以及每次commit发生变更的文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log --stat
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 搜索提交历史，根据关键词&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log -S &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;keyword&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示某个commit之后的所有变动，每个commit占据一行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; HEAD --pretty&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;format:%s
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示某个commit之后的所有变动，其&amp;#34;提交说明&amp;#34;必须符合搜索条件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;tag&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; HEAD --grep feature
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示某个文件的版本历史，包括文件改名&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log --follow &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git whatchanged &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示指定文件相关的每一次diff&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log -p &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示过去5次提交&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git log -5 --pretty --oneline
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示所有提交过的用户，按提交次数排序&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git shortlog -sn
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示指定文件是什么人在什么时间修改过&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git blame &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示暂存区和工作区的差异&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git diff
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示暂存区和上一个commit的差异&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git diff --cached &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示工作区与当前分支最新commit之间的差异&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git diff HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示两次提交之间的差异&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git diff &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;first-branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;...&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;second-branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示今天你写了多少行代码&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git diff --shortstat &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;@{0 day ago}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示某次提交的元数据和内容变化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git show &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示某次提交发生变化的文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git show --name-only &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示某次提交时，某个文件的内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git show &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;:&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;filename&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示当前分支的最近几次提交&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git reflog
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;八远程同步&#34;&gt;八、远程同步&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 下载远程仓库的所有变动&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git fetch &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示所有远程仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git remote -v
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 显示某个远程仓库的信息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git remote show &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 增加一个新的远程仓库，并命名&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git remote add &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;shortname&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;url&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 取回远程仓库的变化，并与本地分支合并&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git pull &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 上传本地指定分支到远程仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git push &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;branch&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 强行推送当前分支到远程仓库，即使有冲突&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git push &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; --force
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 推送所有分支到远程仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git push &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;remote&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; --all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;九撤销&#34;&gt;九、撤销&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 恢复暂存区的指定文件到工作区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git checkout &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 恢复某个commit的指定文件到暂存区和工作区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git checkout &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 恢复暂存区的所有文件到工作区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git checkout .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git reset &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;file&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 重置暂存区与工作区，与上一次commit保持一致&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git reset --hard
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git reset &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git reset --hard &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 重置当前HEAD为指定commit，但保持暂存区和工作区不变&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git reset --keep &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 新建一个commit，用来撤销指定commit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 后者的所有变化都将被前者抵消，并且应用到当前分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git revert &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commit&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 暂时将未提交的变化移除，稍后再移入&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git stash
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git stash pop
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;十其他&#34;&gt;十、其他&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 生成一个可供发布的压缩包&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git archive
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>volatile关键字详解(转)</title>
+      <link>https://waver.me/posts/2018/volatile_keyword_detailed/</link>
+      <pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/volatile_keyword_detailed/</guid>
+      <description>&lt;h2 id=&#34;volatile-关键字详解转-volatile-关键字详解转&#34;&gt;volatile 关键字详解(转) {#volatile 关键字详解转}&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;2019-08-09 23:13:04&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本文转自&lt;a href=&#34;https://www.jianshu.com/p/7798161d7472&#34;&gt;Ruheng的简书&amp;ndash;你真的了解volatile关键字吗？&lt;/a&gt;
+volatile 关键字经常在并发编程中使用，其特性是保证可见性以及有序性，但是关于 volatile 的使用仍然要小心，这需要明白 volatile 关键字的特性及实现的原理，这也是本篇文章的主要内容。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/06/title.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h3 id=&#34;java-内存模型-java-内存模型&#34;&gt;Java 内存模型 {#java 内存模型}&lt;/h3&gt;
+&lt;p&gt;想要理解 volatile 为什么能确保可见性，就要先理解 Java 中的内存模型是什么样的。&lt;/p&gt;
+&lt;p&gt;Java 内存模型规定了所有的变量都存储在主内存中。每条线程中还有自己的工作内存，线程的工作内存中保存了被该线程所使用到的变量（这些变量是从主内存中拷贝而来）。线程对变量的所有操作（读取，赋值）都必须在工作内存中进行。不同线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成。
+&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/06/jvm_ram.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;基于此种内存模型，便产生了多线程编程中的数据“脏读”等问题。&lt;/p&gt;
+&lt;p&gt;举个简单的例子：在 java 中，执行下面这个语句:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;i  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 10;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;执行线程必须先在自己的工作线程中对变量 i 所在的缓存行进行赋值操作，然后再写入主存当中。而不是直接将数值 10 写入主存当中。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;比如同时有 2 个线程执行这段代码，假如初始时 i 的值为 10，那么我们希望两个线程执行完之后 i 的值变为 12。但是事实会是这样吗？&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;可能存在下面一种情况：初始时，两个线程分别读取 i 的值存入各自所在的工作内存当中，然后线程 1 进行加 1 操作，然后把 i 的最新值 11 写入到内存。此时线程 2 的工作内存当中 i 的值还是 10，进行加 1 操作之后，i的值为 11，然后线程 2 把 i 的值写入内存。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;最终结果 i 的值是 11，而不是 12。这就是著名的缓存一致性问题。通常称这种被多个线程访问的变量为共享变量。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Navicat Data Modeler 破解</title>
+      <link>https://waver.me/posts/2018/navicat_data_modeler_crack/</link>
+      <pubDate>Sun, 23 Sep 2018 16:02:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/navicat_data_modeler_crack/</guid>
+      <description>&lt;h2 id=&#34;navicat-data-modeler-破解&#34;&gt;Navicat Data Modeler 破解&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2018-09-23 16:02:47&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;起因&#34;&gt;起因&lt;/h3&gt;
+&lt;p&gt;最近发现 &lt;code&gt;Navicat Data Modeler&lt;/code&gt; 设计起数据库来特别顺手, 但是,
+它和其他 Navicat 家的工具一样, 只有 14 天的试用期&lt;/p&gt;
+&lt;p&gt;激活工具下载地址
+[[&lt;a href=&#34;https://waver.me/resource/Files/resource/Navicat_Keygen_Patch_v3.7_By_DFoX_URET.rar&#34;&gt;https://waver.me/resource/Files/resource/Navicat_Keygen_Patch_v3.7_By_DFoX_URET.rar&lt;/a&gt;][]]&lt;/p&gt;
+&lt;h4 id=&#34;破解工具&#34;&gt;破解工具&lt;/h4&gt;
+&lt;p&gt;虽然知道破解软件是不对的, 但奈何作为无产阶级的我又家境贫寒, 无钱购买,
+终于在我的坚持下发现了一款神奇的破解工具, 那下面就说说我的励志故事吧!&lt;/p&gt;
+&lt;h4 id=&#34;破解步骤&#34;&gt;破解步骤&lt;/h4&gt;
+&lt;p&gt;工具解压后的样子如下:
+&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-1.png&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;具体步骤&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;打开 &lt;em&gt;Navicat_Keygen_Patch_v3.7_By_DFoX_URET.exe&lt;/em&gt; 按照图中标出的选,
+点击 &lt;em&gt;patch&lt;/em&gt; 按钮, 选择自己的 &lt;code&gt;Navicat Data Modeler&lt;/code&gt; 后, 提示如下
+&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-2.png&#34;&gt;&lt;/li&gt;
+&lt;li&gt;然后点击 &lt;em&gt;Generate&lt;/em&gt;, 会在 &lt;code&gt;Navicat Data Modeler&lt;/code&gt; 生成 &lt;em&gt;Serial Keygen&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-3.png&#34;&gt; 3.
+后点击激活工具最下方的 &lt;em&gt;Generate&lt;/em&gt; (图上忘标了), 然后选择 &lt;code&gt;Modeler&lt;/code&gt;
+的安装目录,选择后将会在安装目录下生成 &lt;em&gt;license_file&lt;/em&gt; 文件
+&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-2-2.png&#34;&gt; 4.
+在激活之前, 先确保你的电脑是离线的, 否则将会激活失败
+&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-disable-net.png&#34;&gt; 5.
+然后打开 &lt;code&gt;Navicat Data Modeler&lt;/code&gt; 依次点击 帮助 &amp;gt; 注册 将刚刚复制的
+&lt;em&gt;Serial Keygen&lt;/em&gt; 粘上去
+&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-4.png&#34;&gt; 6. 注意!
+不要直接点击激活按钮, 要按住 &lt;code&gt;Ctrl + Shift&lt;/code&gt; 然后点击激活, 然后会让你选择
+&lt;em&gt;license_file&lt;/em&gt;, 选择第三步生成的文件, 然后&amp;hellip;..
+&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-6.png&#34;&gt; 7.
+大功告成 &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/09/20180924-7.png&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>通过一次IDEA Spring Boot 启动报错深入理解maven scope标签</title>
+      <link>https://waver.me/posts/2018/idea_maven_bug_fix/</link>
+      <pubDate>Sat, 18 Aug 2018 10:25:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/idea_maven_bug_fix/</guid>
+      <description>&lt;h2 id=&#34;起因&#34;&gt;起因&lt;/h2&gt;
+&lt;p&gt;昨天同事突然告诉我项目无法启动了, 但是神奇的是我也在用一样的代码,
+但是在我的机器上并没有出现这个问题, 所以我就开始 fuck
+bug 了,报错信息大概是下面这个样子&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Caused by: java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;IllegalStateException&lt;/span&gt;: Failed to introspect annotated methods on &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;org&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;boot&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;web&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;support&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;SpringBootServletInitializer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at org.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;core&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;StandardAnnotationMetadata&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;getAnnotatedMethods&lt;/span&gt;(StandardAnnotationMetadata.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:163) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;spring&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;core&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jar&lt;/span&gt;:4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at org.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;annotation&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ConfigurationClassParser&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;retrieveBeanMethodMetadata&lt;/span&gt;(ConfigurationClassParser.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:380) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;spring&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;context&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jar&lt;/span&gt;:4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at org.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;annotation&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ConfigurationClassParser&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;doProcessConfigurationClass&lt;/span&gt;(ConfigurationClassParser.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:314) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;spring&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;context&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jar&lt;/span&gt;:4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at org.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;annotation&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ConfigurationClassParser&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;processConfigurationClass&lt;/span&gt;(ConfigurationClassParser.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:245) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;spring&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;context&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jar&lt;/span&gt;:4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at org.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;annotation&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ConfigurationClassParser&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;parse&lt;/span&gt;(ConfigurationClassParser.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:198) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;spring&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;context&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jar&lt;/span&gt;:4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at org.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;context&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;annotation&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ConfigurationClassParser&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;parse&lt;/span&gt;(ConfigurationClassParser.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:167) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;spring&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;context&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jar&lt;/span&gt;:4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ... 17 common frames omitted
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Caused by: java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;NoClassDefFoundError&lt;/span&gt;: javax&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;servlet&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;ServletContext
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Class&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getDeclaredMethods0&lt;/span&gt;(Native Method) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;na:1.&lt;span style=&#34;color:#a6e22e&#34;&gt;8&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;0_111&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Class&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;privateGetDeclaredMethods&lt;/span&gt;(Class.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:2701) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;na:1.&lt;span style=&#34;color:#a6e22e&#34;&gt;8&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;0_111&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Class&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getDeclaredMethods&lt;/span&gt;(Class.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:1975) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;na:1.&lt;span style=&#34;color:#a6e22e&#34;&gt;8&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;0_111&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at org.&lt;span style=&#34;color:#a6e22e&#34;&gt;springframework&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;core&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;StandardAnnotationMetadata&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getAnnotatedMethods&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (StandardAnnotationMetadata.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:152) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;spring&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;core&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;jar&lt;/span&gt;:4.&lt;span style=&#34;color:#a6e22e&#34;&gt;3&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;10&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RELEASE&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ... 22 common frames omitted
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Caused by: java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ClassNotFoundException&lt;/span&gt;: javax.&lt;span style=&#34;color:#a6e22e&#34;&gt;servlet&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ServletContext&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at java.&lt;span style=&#34;color:#a6e22e&#34;&gt;net&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;URLClassLoader&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;findClass&lt;/span&gt;(URLClassLoader.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:381) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;na:1.&lt;span style=&#34;color:#a6e22e&#34;&gt;8&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;0_111&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ClassLoader&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;loadClass&lt;/span&gt;(ClassLoader.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:424) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;na:1.&lt;span style=&#34;color:#a6e22e&#34;&gt;8&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;0_111&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at sun.&lt;span style=&#34;color:#a6e22e&#34;&gt;misc&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Launcher$AppClassLoader&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;loadClass&lt;/span&gt;(Launcher.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:331) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;na:1.&lt;span style=&#34;color:#a6e22e&#34;&gt;8&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;0_111&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        at java.&lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ClassLoader&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;loadClass&lt;/span&gt;(ClassLoader.&lt;span style=&#34;color:#a6e22e&#34;&gt;java&lt;/span&gt;:357) &lt;span style=&#34;color:#f92672&#34;&gt;~[&lt;/span&gt;na:1.&lt;span style=&#34;color:#a6e22e&#34;&gt;8&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;0_111&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ... 26 common frames omitted
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;解决方法&#34;&gt;解决方法&lt;/h2&gt;
+&lt;p&gt;通过网上一番 Goolge, 答案如下&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Jrebel激活服务器及使用方法</title>
+      <link>https://waver.me/posts/2018/jrebel_activation_server_and_how_to_use_it/</link>
+      <pubDate>Thu, 12 Jul 2018 14:19:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/jrebel_activation_server_and_how_to_use_it/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://ckey.run/&#34;&gt;ckey.run&lt;/a&gt;
+&lt;a href=&#34;https://helper.idejihuo.com/#home&#34;&gt;https://helper.idejihuo.com/#home&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Java中的代码点和代码单元</title>
+      <link>https://waver.me/posts/2018/code_points_and_code_units_in_java/</link>
+      <pubDate>Sun, 20 May 2018 20:27:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/code_points_and_code_units_in_java/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;本文转自&lt;a href=&#34;https://blog.csdn.net/weizhaozhe/article/details/3909079&#34;&gt;Java中的代码点和代码单元&lt;/a&gt;,原出处没找到,对不起原作者了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;摘要&#34;&gt;摘要&lt;/h3&gt;
+&lt;p&gt;本文介绍 Java 平台支持增补字符的方式。增补字符是 Unicode
+标准中代码点超出 U+FFFF 的字符,因此它们无法在 Java
+编程语言中描述为单个的 16
+位实体(例如 char 数据类型)。这些字符一般极少用,但是,有些会在诸如中文或日文人名中用到,因此,在东亚国家,政府应用程序通常会要求支持这些字符。&lt;/p&gt;
+&lt;p&gt;Java
+平台目前正在改进,以便支持对增补字符的处理,这种改进对现有的应用程序影响微乎其微。新的低层
+API 在需要时能够使用单个的字符运行。不过,大多数文本处理 API
+均使用字符序列,例如 String 类或字符数组。现在,这些均解释为 UTF-16
+序列,而且,这些 API 实现已转变为正确地处理增补字符。这些改进已融入 Java 2
+平台 5.0 版,标准版 (J2SE)。&lt;/p&gt;
+&lt;p&gt;除详细解释这些改进之外,本文同时为应用程序开发人员确定和实现必要的更改提供指导,以支持整个
+Unicode 字符集的使用。&lt;/p&gt;
+&lt;h3 id=&#34;背景&#34;&gt;背景&lt;/h3&gt;
+&lt;p&gt;Unicode 最初设计是作为一种固定宽度的 16 位字符编码。在 Java
+编程语言中,基本数据类型 char 初衷是通过提供一种简单的、能够包含任何字符的数据类型来充分利用这种设计的优点。不过,现在看来,16
+位编码的所有 65,536
+个字符并不能完全表示全世界所有正在使用或曾经使用的字符。于是,Unicode
+标准已扩展到包含多达 1,112,064 个字符。那些超出原来的 16
+位限制的字符被称作增补字符。Unicode 标准 2.0
+版是第一个包含启用增补字符设计的版本,但是,直到 3.1
+版才收入第一批增补字符集。由于 J2SE 的 5.0 版必须支持 Unicode 标准 4.0
+版,因此它必须支持增补字符。&lt;/p&gt;
+&lt;p&gt;对增补字符的支持也可能会成为东亚市场的一个普遍商业要求。政府应用程序会需要这些增补字符,以正确表示一些包含罕见中文字符的姓名。出版应用程序可能会需要这些增补字符,以表示所有的古代字符和变体字符。中国政府要求支持
+GB18030(一种对整个 Unicode 字符集进行编码的字符编码标准),因此,如果是
+Unicode 3.1 版或更新版本,则将包括增补字符。台湾标准 CNS-11643
+包含的许多字符在 Unicode 3.1
+中列为增补字符。香港政府定义了一种针对粤语的字符集,其中的一些字符是
+Unicode
+中的增补字符。最后,日本的一些供应商正计划利用增补字符空间中大量的专用空间收入
+50,000 多个日文汉字字符变体,以便从其专有系统迁移至基于 Java
+平台的解决方案。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>RandomAccess接口理解</title>
+      <link>https://waver.me/posts/2018/randomaccess_interface_detailed/</link>
+      <pubDate>Sun, 01 Apr 2018 22:47:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/randomaccess_interface_detailed/</guid>
+      <description>&lt;h2 id=&#34;randomaccess-接口理解&#34;&gt;RandomAccess 接口理解&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本文转自
+&lt;a href=&#34;https://blog.csdn.net/stick2it/article/details/53469910&#34;&gt;Stick2It
+&amp;mdash; RandomAccess接口理解&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;根据 javadoc 上面的的解释是：&lt;/p&gt;
+&lt;p&gt;RandomAccess
+是一个标记接口，用于标明实现该接口的 List 支持快速随机访问，主要目的是使算法能够在随机和顺序访问的 list 中表现的更加高效。&lt;/p&gt;
+&lt;p&gt;我们可以简单的看下 Collections 下的 binarySearch 方法的源码:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;view plain copy
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;binarySearch&lt;/span&gt;(List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extends&lt;/span&gt; Comparable&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;super&lt;/span&gt; T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; list, T key) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (list &lt;span style=&#34;color:#66d9ef&#34;&gt;instanceof&lt;/span&gt; RandomAccess &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; list.&lt;span style=&#34;color:#a6e22e&#34;&gt;size&lt;/span&gt;()&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;BINARYSEARCH_THRESHOLD)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Collections.&lt;span style=&#34;color:#a6e22e&#34;&gt;indexedBinarySearch&lt;/span&gt;(list, key);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Collections.&lt;span style=&#34;color:#a6e22e&#34;&gt;iteratorBinarySearch&lt;/span&gt;(list, key);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;从源码中我们可以看到，在进行二分查找的时候，list 会先判断是否是 RandomAccess 也即是否实现了 RandomAccess 接口，接着在调用想用的二分查找算法来进行，（其中:
+BINARYSEARCH_THRESHOLD
+Collections 的一个常量（5000），它是二分查找的阀值。）如果实现了 RandomAccess 接口的 List，执行 indexedBinarySearch 方法，否则执行
+iteratorBinarySearch 方法。&lt;/p&gt;
+&lt;p&gt;分别看下这两个方法的实现:&lt;/p&gt;
+&lt;h3 id=&#34;indexedbinarysearch-方法&#34;&gt;indexedBinarySearch 方法&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;view plain copy
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;indexedBinarySearch&lt;/span&gt;(List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extends&lt;/span&gt; Comparable&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;super&lt;/span&gt; T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; list, T key) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 0;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; list.&lt;span style=&#34;color:#a6e22e&#34;&gt;size&lt;/span&gt;()&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;1;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (low &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; high) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; mid &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (low &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; high) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; 1;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            Comparable&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;super&lt;/span&gt; T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; midVal &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; list.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(mid);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; cmp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; midVal.&lt;span style=&#34;color:#a6e22e&#34;&gt;compareTo&lt;/span&gt;(key);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cmp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; 0)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mid &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; 1;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cmp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; 0)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mid &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; 1;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; mid; &lt;span style=&#34;color:#75715e&#34;&gt;// key found&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;(low &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; 1);  &lt;span style=&#34;color:#75715e&#34;&gt;// key not found&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;indexedBinarySearch 方法是直接通过 get 来访问元素&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>IDEA性能调优</title>
+      <link>https://waver.me/posts/2018/idea_performance_optimization/</link>
+      <pubDate>Fri, 30 Mar 2018 22:15:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/idea_performance_optimization/</guid>
+      <description>&lt;p&gt;优化参数如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-server
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-Xms1024m
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-Xmx4096m
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:NewRatio=3
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-Xss16m
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:+UseConcMarkSweepGC
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:+CMSParallelRemarkEnabled
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:ConcGCThreads=4
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:ReservedCodeCacheSize=1024m
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:+AlwaysPreTouch
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:+TieredCompilation
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:+UseCompressedOops
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-XX:SoftRefLRUPolicyMSPerMB=50
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-Dsun.io.useCanonCaches=false
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-Djava.net.preferIPv4Stack=true
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-Djsse.enableSNIExtension=false
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-ea
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;-Dide.no.platform.update=true
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>Struts2 下载文件异常解决</title>
+      <link>https://waver.me/posts/2018/struts2_download_file_abnormal_solution/</link>
+      <pubDate>Mon, 19 Mar 2018 22:16:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/struts2_download_file_abnormal_solution/</guid>
+      <description>&lt;h2 id=&#34;异常描述&#34;&gt;异常描述&lt;/h2&gt;
+&lt;h3 id=&#34;异常截图&#34;&gt;异常截图&lt;/h3&gt;
+&lt;figure&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2018/2018_03_19_Srtuts2_Exception.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h3 id=&#34;java-代码如下-java-代码如下&#34;&gt;Java 代码如下 {#java 代码如下}&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; action.upload;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; com.opensymphony.xwork2.ActionContext;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; com.opensymphony.xwork2.ActionSupport;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.io.File;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.io.FileInputStream;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.io.FileNotFoundException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.io.InputStream;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.Map;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * @author : Waver
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * @date : 2018/3/19 20:35
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DownloadAction&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extends&lt;/span&gt; ActionSupport {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 获取文件路径
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; String savePath;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 接收的文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; String name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;getName&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setName&lt;/span&gt;(String name) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;getSavePath&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; savePath;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setSavePath&lt;/span&gt;(String savePath) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;savePath&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; savePath;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        File file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; File(savePath);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; list &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; file.&lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ActionContext context &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ActionContext.&lt;span style=&#34;color:#a6e22e&#34;&gt;getContext&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Map&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;String, Object&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; contextMap &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; context.&lt;span style=&#34;color:#a6e22e&#34;&gt;getContextMap&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        contextMap.&lt;span style=&#34;color:#a6e22e&#34;&gt;put&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;list&amp;#34;&lt;/span&gt;, list);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;list&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; InputStream &lt;span style=&#34;color:#a6e22e&#34;&gt;getInputStream&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            FileInputStream fileInputStream &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; FileInputStream(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; File(savePath &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; name));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; fileInputStream;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        } &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; (FileNotFoundException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            e.&lt;span style=&#34;color:#a6e22e&#34;&gt;printStackTrace&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; RuntimeException(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;下载异常!!!&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;down&lt;/span&gt;(){
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;down&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;xml-配置信息-xml-配置信息&#34;&gt;xml 配置信息 {#xml 配置信息}&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;struts&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;package name=&amp;#34;upload&amp;#34; extends=&amp;#34;struts-default&amp;#34; namespace=&amp;#34;/upload&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;action name=&amp;#34;upload&amp;#34; class=&amp;#34;action.upload.UploadAction&amp;#34; method=&amp;#34;execute&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;interceptor-ref name=&amp;#34;defaultStack&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;param name=&amp;#34;fileUpload.allowedTypes&amp;#34;&amp;gt;image/jpeg,image/jpg&amp;lt;/param&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;/interceptor-ref&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;param name=&amp;#34;savePath&amp;#34;&amp;gt;e:/upload/&amp;lt;/param&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;result&amp;gt;/login.jsp&amp;lt;/result&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;result name=&amp;#34;input&amp;#34;&amp;gt;/error.jsp&amp;lt;/result&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;/action&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;action name=&amp;#34;down_*&amp;#34; class=&amp;#34;action.upload.DownloadAction&amp;#34; method=&amp;#34;{1}&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;param name=&amp;#34;savePath&amp;#34;&amp;gt;e:/upload&amp;lt;/param&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;result name=&amp;#34;list&amp;#34;&amp;gt;/listFile.jsp&amp;lt;/result&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;result type=&amp;#34;stream&amp;#34; name=&amp;#34;down&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;!--返回给浏览器的文件类型, 返回通常用二进制--&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;param name=&amp;#34;contentType&amp;#34;&amp;gt;applicantion/octet-stream&amp;lt;/param&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;!--返回给浏览器的输入流--&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;param name=&amp;#34;inputName&amp;#34;&amp;gt;inputStream&amp;lt;/param&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;!--告诉浏览器以下载的方式下载资源--&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;param name=&amp;#34;contentDisposition&amp;#34;&amp;gt;attachment=${name}&amp;lt;/param&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;!--缓存大小--&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;param name=&amp;#34;bufferSize&amp;#34;&amp;gt;1024&amp;lt;/param&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;/result&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;/action&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;/package&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/struts&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;错误原因及解决方案&#34;&gt;错误原因及解决方案&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;param name&lt;/code&gt;&amp;ldquo;savePath&amp;rdquo;&amp;gt;e:/upload&amp;lt;/param&amp;gt;= 项后没有加 &lt;strong&gt;&amp;quot;/&amp;quot;&lt;/strong&gt;
+与文件名组合后无法找到文件名应改为
+&lt;code&gt;&amp;lt;param name&lt;/code&gt;&amp;ldquo;savePath&amp;rdquo;&amp;gt;e:/upload/&amp;lt;/param&amp;gt;=&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Struts2 参数转换异常处理</title>
+      <link>https://waver.me/posts/2018/struts2_parameter_conversion_exception/</link>
+      <pubDate>Sun, 18 Mar 2018 19:51:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/struts2_parameter_conversion_exception/</guid>
+      <description>&lt;h2 id=&#34;struts2-参数转换异常处理&#34;&gt;Struts2 参数转换异常处理&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2018-03-18 19:51:33&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;异常描述&#34;&gt;异常描述&lt;/h3&gt;
+&lt;p&gt;无法获取参数值,但也不报错, 只是警告 异常描述如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;18-Mar-2018 19:44:20.974 警告 [http-apr-8080-exec-1] com.opensymphony.xwork2.util.logging.jdk.JdkLogger.warn Error setting expression &amp;#39;user.score&amp;#39; with value &amp;#39;[Ljava.lang.String;@6b961655&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;User 类具体代码如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; action.convert;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.Date;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * @author : Creeper
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * @date : 2018/3/18 15:53
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; String name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; age;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; score;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; Date birthday;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;getName&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setName&lt;/span&gt;(String name) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getAge&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; age;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setAge&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; age) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;age&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; age;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getscore&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; score;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setscore&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; score) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;score&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; score;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; Date &lt;span style=&#34;color:#a6e22e&#34;&gt;getBirthday&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; birthday;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setBirthday&lt;/span&gt;(Date birthday) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;birthday&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; birthday;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Override&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; String &lt;span style=&#34;color:#a6e22e&#34;&gt;toString&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;User{&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;name=&amp;#39;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\&amp;#39;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;, age=&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; age &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;, score=&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; score &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;, birthday=&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; birthday &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;}&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;异常原因&#34;&gt;异常原因&lt;/h4&gt;
+&lt;p&gt;因为 User 的 score 属性的 set,get 防范书写不规范, 所以导致获取不到值,
+将方法名改为 &lt;code&gt;setScore&lt;/code&gt; 和 &lt;code&gt;getScore&lt;/code&gt; 即可&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Mybatis 异常: Error parsing Mapper XML</title>
+      <link>https://waver.me/posts/2018/mybatis_error_parsing_mapper_xml_cause_java_lang_illegalargumentexception_result_maps_collection_already/</link>
+      <pubDate>Sat, 10 Mar 2018 17:31:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/mybatis_error_parsing_mapper_xml_cause_java_lang_illegalargumentexception_result_maps_collection_already/</guid>
+      <description>&lt;h2 id=&#34;mybatis-异常-error-parsing-mapper-xml-dot&#34;&gt;Mybatis 异常: Error parsing Mapper XML.&lt;/h2&gt;
+&lt;p&gt;Cause:java.lang.IllegalArgumentException: Result Maps collection already&lt;/p&gt;
+&lt;p&gt;:CUSTOM_ID: mybatis-异常-error-parsing-mapper-xml.-causejava.lang.illegalargumentexception-result-maps-collection-already&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;前几天遇到一个非常神奇的错误,Error parsing Mapper XML. Cause:
+java.lang.IllegalArgumentException: Result Maps collection already,
+搞了半天,也没搞明白,
+而且时有时无,很是神奇,最终发现最终原因是因为&amp;hellip;&amp;hellip;.懒!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;错误描述&#34;&gt;错误描述&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;value for org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nestedexception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;sqlSessionFactory&amp;#39; defined in file [E:\16年文
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;件\JAVAdemo\jiankunking\jiankunking-web\target\jiankunking-web-1.0-SNAPSHOT\WEB-INF\classes\spring\spring-mybatis.xml]: Invocation of init method
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;failed; nested exception is org.springframework.core.NestedIOException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Failed to parse mapping resource: &amp;#39;URL [jar:file:/E:/16年文件/JAVAdemo/jiankunking/jiankunking-web/target/jiankunking-web-1.0-SNAPSHOT/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WEB-INF/lib/jiankunking-system-1.0-SNAPSHOT.jar!/mapper/OrderLogMapper.xml]&amp;#39;; nested exception is org.apache.ibatis.builder.BuilderException: Error
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;解决方式&#34;&gt;解决方式&lt;/h3&gt;
+&lt;p&gt;因为 Mybatis 官方提供了逆向工程的模块,
+所以平时开发几乎都用这个,可以省不少事, 但是 问题来了,
+在开发过程中有可能遇到数据库变动的情况, 所以这时就不得不重新生成 mapper
+和 pojo 文件, 但是! 如果原先的文件不删除的话, 新生成的文件不会覆盖旧文件,
+而是在旧 文件的结尾继续添加, 所以这也就是
+&lt;code&gt;Result Maps collection already&lt;/code&gt; 的原因了.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Mybatis 异常: Error parsing Mapper XML. Cause:java.lang.IllegalArgumentException: Result Maps collection already</title>
+      <link>https://waver.me/posts/2018/mybatis_exception_error_parsing_mapper_xml_cause_java_lang_illegalargumentexception_result_maps_collection_already/</link>
+      <pubDate>Sat, 10 Mar 2018 17:31:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/mybatis_exception_error_parsing_mapper_xml_cause_java_lang_illegalargumentexception_result_maps_collection_already/</guid>
+      <description>&lt;h2 id=&#34;mybatis-异常-error-parsing-mapper-xml-dot-cause&#34;&gt;Mybatis 异常: Error parsing Mapper XML. Cause:&lt;/h2&gt;
+&lt;p&gt;java.lang.IllegalArgumentException: Result Maps collection already&lt;/p&gt;
+&lt;p&gt;:CUSTOM_ID: mybatis-异常-error-parsing-mapper-xml.-cause-java.lang.illegalargumentexception-result-maps-collection-already&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2018-03-10 17:31:39&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;前几天遇到一个非常神奇的错误,Error parsing Mapper XML. Cause:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;java.lang.IllegalArgumentException: Result Maps collection already,
+搞了半天,也没搞明白,
+而且时有时无,很是神奇,最终发现最终原因是因为&amp;hellip;&amp;hellip;.懒!&lt;/p&gt;
+&lt;h3 id=&#34;错误描述&#34;&gt;错误描述&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;value for org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nestedexception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;sqlSessionFactory&amp;#39; defined in file [E:\16年文
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;件\JAVAdemo\jiankunking\jiankunking-web\target\jiankunking-web-1.0-SNAPSHOT\WEB-INF\classes\spring\spring-mybatis.xml]: Invocation of init method
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;failed; nested exception is org.springframework.core.NestedIOException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Failed to parse mapping resource: &amp;#39;URL [jar:file:/E:/16年文件/JAVAdemo/jiankunking/jiankunking-web/target/jiankunking-web-1.0-SNAPSHOT/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WEB-INF/lib/jiankunking-system-1.0-SNAPSHOT.jar!/mapper/OrderLogMapper.xml]&amp;#39;; nested exception is org.apache.ibatis.builder.BuilderException: Error
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;解决方式&#34;&gt;解决方式&lt;/h3&gt;
+&lt;p&gt;因为 Mybatis 官方提供了逆向工程的模块,
+所以平时开发几乎都用这个,可以省不少事, 但是 问题来了,
+在开发过程中有可能遇到数据库变动的情况, 所以这时就不得不重新生成 mapper
+和 pojo 文件, 但是! 如果原先的文件不删除的话, 新生成的文件不会覆盖旧文件,
+而是在旧 文件的结尾继续添加, 所以这也就是
+&lt;code&gt;Result Maps collection already&lt;/code&gt; 的原因了. 所以&amp;hellip;.这个懒还是不要偷的好,
+重新生成文件前一定要把旧文件清理干净. 在这里给自己踩踩坑-_-!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>深入分析Java的序列化与反序列化</title>
+      <link>https://waver.me/posts/2018/in-depth_analysis_of_java_serialization_and_deserialization/</link>
+      <pubDate>Thu, 08 Feb 2018 21:33:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/in-depth_analysis_of_java_serialization_and_deserialization/</guid>
+      <description>&lt;h3 id=&#34;javaapi-中的定义-javaapi-中的定义&#34;&gt;JavaAPI 中的定义: {#javaapi 中的定义}&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;public interface Serializable&lt;/code&gt; 类通过实现 &lt;code&gt;java.io.Serializable&lt;/code&gt;
+接口以启用其序列化功能。未实现此接口的类将无法使其任何状态序列化或反序列化。可序列化类的所有子类型本身都是可序列化的。序列化接口没有方法或字段，仅用于标识可序列化的语义。&lt;/p&gt;
+&lt;p&gt;要允许不可序列化类的子类型序列化，可以假定该子类型负责保存和恢复超类型的公用
+&lt;code&gt;(public)&lt;/code&gt;. 受保护的 &lt;code&gt;(protected)&lt;/code&gt; 和（如果可访问）包 &lt;code&gt;(package)&lt;/code&gt;
+字段的状态。仅在子类型扩展的类有一个可访问的无参数构造方法来初始化该类的状态时，才可以假定子类型有此职责。如果不是这种情况，则声明一个类为可序列化类是错误的。该错误将在运行时检测到。&lt;/p&gt;
+&lt;p&gt;在反序列化过程中，将使用该类的公用或受保护的无参数构造方法初始化不可序列化类的字段。可序列化的子类必须能够访问无参数构造方法。可序列化子类的字段将从该流中恢复。&lt;/p&gt;
+&lt;p&gt;当遍历一个图形时，可能会遇到不支持 Serializable
+接口的对象。在此情况下，将抛出
+=NotSerializableException=，并将标识不可序列化对象的类。&lt;/p&gt;
+&lt;p&gt;在序列化和反序列化过程中需要特殊处理的类必须使用下列准确签名来实现特殊方法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;writeObject&lt;/span&gt;(java.&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ObjectOutputStream&lt;/span&gt; out)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; IOException
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;readObject&lt;/span&gt;(java.&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ObjectInputStream&lt;/span&gt; in)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; IOException, ClassNotFoundException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;readObjectNoData&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; ObjectStreamException;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;writeObject&lt;/code&gt; 方法负责写入特定类的对象的状态，以便相应的 readObject
+方法可以恢复它。通过调用 &lt;code&gt;out.defaultWriteObject&lt;/code&gt; 可以调用保存 &lt;code&gt;Object&lt;/code&gt;
+的字段的默认机制。该方法本身不需要涉及属于其超类或子类的状态。通过使用
+&lt;code&gt;writeObject&lt;/code&gt; 方法或使用 &lt;code&gt;DataOutput&lt;/code&gt;
+支持的用于基本数据类型的方法将各个字段写入
+=ObjectOutputStream=，状态可以被保存。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;readObject&lt;/code&gt; 方法负责从流中读取并恢复类字段。它可以调用
+&lt;code&gt;in.defaultReadObject&lt;/code&gt;
+来调用默认机制，以恢复对象的非静态和非瞬态字段。=defaultReadObject=方法使用流中的信息来分配流中通过当前对象中相应指定字段保存的对象的字段。这用于处理类演化后需要添加新字段的情形。该方法本身不需要涉及属于其超类或子类的状态。通过使用
+writeObject 方法或使用 &lt;code&gt;DataOutput&lt;/code&gt;
+支持的用于基本数据类型的方法将各个字段写入
+=ObjectOutputStream=，状态可以被保存。&lt;/p&gt;
+&lt;p&gt;在序列化流不列出给定类作为将被反序列化对象的超类的情况下，=readObjectNoData=
+方法负责初始化特定类的对象状态。这在接收方使用的反序列化实例类的版本不同于发送方，并且接收者版本扩展的类不是发送者版本扩展的类时发生。在序列化流已经被篡改时也将发生；因此，不管源流是“敌意的”还是不完整的，=readObjectNoData=
+方法都可以用来正确地初始化反序列化的对象。&lt;/p&gt;
+&lt;p&gt;将对象写入流时需要指定要使用的替代对象的可序列化类，应使用准确的签名来实现此特殊方法：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ANY-ACCESS-MODIFIER Object writeReplace() throws ObjectStreamException;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;此 &lt;code&gt;writeReplace&lt;/code&gt;
+方法将由序列化调用，前提是如果此方法存在，而且它可以通过被序列化对象的类中定义的一个方法访问。因此，该方法可以拥有私有
+&lt;code&gt;(private)&lt;/code&gt;. 受保护的 (protected) 和包私有 &lt;code&gt;(package-private)&lt;/code&gt;
+访问。子类对此方法的访问遵循 java 访问规则。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Java 找不到或无法加载主类XXX终极解决方案</title>
+      <link>https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/</link>
+      <pubDate>Thu, 01 Feb 2018 23:47:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/</guid>
+      <description>&lt;h2 id=&#34;起因&#34;&gt;起因&lt;/h2&gt;
+&lt;p&gt;今天突发奇想用命令行运行 Java 文件,
+但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过,
+便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH,
+临时环境变量等所有可能的因素后,依然报这个错,
+好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后,
+但是结果又让人欲哭无泪&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案:&lt;/h2&gt;
+&lt;h3 id=&#34;配置错误&#34;&gt;配置错误&lt;/h3&gt;
+&lt;p&gt;入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和
+javac 都有提示出来，说明没问题了，&lt;/p&gt;
+&lt;p&gt;主要是以下两点要注意：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。&lt;/li&gt;
+&lt;li&gt;更为重要的是，在 cmd 下运行 javac
+和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不
+会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径
+下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意
+到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以上解决方案转自
+&lt;a href=&#34;http://blog.csdn.net/wangjiaweiwei/article/details/42212525&#34;&gt;javac编译成功，用java运行class文件出现“找不到或无法加载主类”
+的问题&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;语法错误&#34;&gt;语法错误&lt;/h3&gt;
+&lt;p&gt;语法错误分两种:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>工具推荐-第一期-AutoHotKey</title>
+      <link>https://waver.me/posts/2018/tool_recommendation_autohotkey/</link>
+      <pubDate>Sun, 28 Jan 2018 17:32:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/tool_recommendation_autohotkey/</guid>
+      <description>&lt;p&gt;最近发现一款高(neng)大(zhuang)上(bi)的神器&amp;mdash;&amp;mdash;-AutoHotKey,
+可以自定义 Windows 的快捷键, 可以使你彻底脱离鼠标, 这酸爽, 谁用谁知道.&lt;/p&gt;
+&lt;p&gt;下载地址: &lt;a href=&#34;https://www.autohotkey.com/&#34;&gt;www.autohotkey.com&lt;/a&gt;
+中文帮助文档下载:
+&lt;a href=&#34;https://waver.me/Resource/Files/AutoHotkey.chm&#34;&gt;帮助文档&lt;/a&gt;
+最后附上 ChinaUnix 博主 xiaogangzgg 写的教程:
+&lt;a href=&#34;http://blog.chinaunix.net/uid-26811377-id-3166486.html&#34;&gt;AutoHotkey的几个入门级应用&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;入门教程&#34;&gt;入门教程&lt;/h2&gt;
+&lt;h3 id=&#34;创建第一个-ahk-脚本-创建第一个-ahk-脚本&#34;&gt;创建第一个 AHK 脚本 {#创建第一个 ahk 脚本}&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;在桌面或您选择的文件夹中右键点击空白处.&lt;/li&gt;
+&lt;li&gt;在菜单中, 选择 新建-&amp;gt; 文本文档.&lt;/li&gt;
+&lt;li&gt;输入文件名, 将=.txt=后缀修改成=.ahk=. 例如：Test.ahk。
+若没有后缀,请参见&lt;a href=&#34;https://jingyan.baidu.com/article/ff42efa920b7f3c19e220283.html&#34;&gt;win10文件后缀名怎么显示&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;右键点击此文件并选择 Edit Script.&lt;/li&gt;
+&lt;li&gt;在新的空行中，输入下列内容：#space::Run &lt;a href=&#34;https://www.google.com&#34;&gt;www.google.com&lt;/a&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在上面的语句行中, 首个字符 &amp;ldquo;#&amp;rdquo; 表示 Windows 键; 所以 #space 表示按住
+Windows 键然后按下空格键来激活热键. 双冒号 ::
+表示每次按下此热键时会执行其后续命令, 这里是转到 Google 网站.
+要试用此脚本, 请继续下列操作: 1. 保存并关闭此文件. 2. 双击此文件来运行.
+在任务栏通知区域会出现新的图标. 3. 按住 Windows 键并按下空格键.
+在默认浏览器中会打开网页. 4. 要退出或编辑此脚本,
+则在任务栏通知区域的绿色 &amp;ldquo;H&amp;rdquo; 图标上点击右键.&lt;/p&gt;
+&lt;p&gt;注意: - 多个脚本可以同时运行,
+其中的每个脚本在任务栏通知区域使用自己的图标. -
+每个脚本可以包含多个[热键]和[热字串]. -
+要让您的脚本在启动计算机时自动运行,
+请在开始菜单的启动文件夹中给您的脚本创建快捷方式.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>微信跳一跳高分攻(外)略(挂)</title>
+      <link>https://waver.me/posts/2018/wechat_jump_cheat/</link>
+      <pubDate>Tue, 02 Jan 2018 13:39:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/wechat_jump_cheat/</guid>
+      <description>&lt;p&gt;最近看微信的跳一跳特别火, 作为一名程序员,
+感觉有必要运用一下自己的专(找)业(挂)知(能)识(力), 搞一个高分外挂.
+具体流程请参考&lt;a href=&#34;https://github.com/wavejoker/wechat_jump_game&#34;&gt;传送门&lt;/a&gt;,
+本文只介绍环境搭建过程; ## Python 笔者只用过 3.6 其他版本, 推荐使用&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Result Maps collection already contains value for xxx.xxx.Mapper.BaseResultMap异常解决</title>
+      <link>https://waver.me/posts/2018/result_maps_collection_already_contains_value-for_xxx.xxx.mapper.baseresultmap/</link>
+      <pubDate>Fri, 29 Dec 2017 20:02:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/result_maps_collection_already_contains_value-for_xxx.xxx.mapper.baseresultmap/</guid>
+      <description>&lt;h2 id=&#34;result-maps-collection-already-contains-value-for-xxx-dot-xxx-dot-mapper-dot-baseresultmap-异常解决&#34;&gt;Result Maps collection already contains value for xxx.xxx.Mapper.BaseResultMap 异常解决&lt;/h2&gt;
+&lt;p&gt;突然项目启动时报出以下错误: 百度上的所有答案没能解决,
+最终索性重新把 mapper 文件重新生成了一遍, 结果令人感到意外, 竟然不报错了,
+至于原因好像是运行过一个 mybatis-gen&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userServiceImpl&amp;#39;: Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire field: private com.bobo.mapper.UserMapper com.bobo.service.impl.UserServiceImpl.userMapper; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type [com.bobo.mapper.UserMapper] found for dependency: expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;avisMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\AvisMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.AvisMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;avisMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\AvisMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.AvisMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &amp;#39;userMapper&amp;#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Related cause: org.springframework.beans.factory.BeanCreationException: Error
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>maven管理SSM时xml和properties文件丢失异常</title>
+      <link>https://waver.me/posts/2018/maven_manager_ssm_xml_and_properties_file_not_found_exception/</link>
+      <pubDate>Thu, 28 Dec 2017 18:52:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/maven_manager_ssm_xml_and_properties_file_not_found_exception/</guid>
+      <description>&lt;h2 id=&#34;classpath-resource-com-qinkangdeid-mapping-cannot-be-resolved-to&#34;&gt;classpath resource [com/qinkangdeid/mapping/] cannot be resolved to&lt;/h2&gt;
+&lt;p&gt;URL because it does not exist 和
+org.apache.ibatis.binding.BindingException: Invalid bound statement (not
+found)异常解决&lt;/p&gt;
+&lt;p&gt;:CUSTOM_ID: classpath-resource-comqinkangdeidmapping-cannot-be-resolved-to-url-because-it-does-not-exist-和-org.apache.ibatis.binding.bindingexception-invalid-bound-statement-not-found 异常解决&lt;/p&gt;
+&lt;p&gt;项目结构如图所示: &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/images/post_images/20171228ResourceException.jpg&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;build&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &amp;lt;resources&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &amp;lt;resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;directory&amp;gt;src/main/java&amp;lt;/directory&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.properties&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.xml&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;/includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;filtering&amp;gt;false&amp;lt;/filtering&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;/resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;directory&amp;gt;src/main/resources&amp;lt;/directory&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.properties&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.xml&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;/includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;filtering&amp;gt;false&amp;lt;/filtering&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;/resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &amp;lt;/resources&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/build&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如上图所示, 将 com.bobo.mapper 和 resource 目录配置到 pom 文件的 bulid 中即可&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

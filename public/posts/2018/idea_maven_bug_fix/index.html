@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>通过一次IDEA Spring Boot 启动报错深入理解maven scope标签 | Waver&#39;s Blog</title>
+<meta name="keywords" content="IDE, Bug">
+<meta name="description" content="起因
+昨天同事突然告诉我项目无法启动了, 但是神奇的是我也在用一样的代码,
+但是在我的机器上并没有出现这个问题, 所以我就开始 fuck
+bug 了,报错信息大概是下面这个样子
+    Caused by: java.lang.IllegalStateException: Failed to introspect annotated methods on class
+    org.springframework.boot.web.support.SpringBootServletInitializer
+        at org.springframework.core.type.StandardAnnotationMetadata.
+    getAnnotatedMethods(StandardAnnotationMetadata.java:163) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+        at org.springframework.context.annotation.ConfigurationClassParser.
+    retrieveBeanMethodMetadata(ConfigurationClassParser.java:380) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+        at org.springframework.context.annotation.ConfigurationClassParser.
+    doProcessConfigurationClass(ConfigurationClassParser.java:314) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+        at org.springframework.context.annotation.ConfigurationClassParser.
+    processConfigurationClass(ConfigurationClassParser.java:245) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+        at org.springframework.context.annotation.ConfigurationClassParser.
+    parse(ConfigurationClassParser.java:198) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+        at org.springframework.context.annotation.ConfigurationClassParser.
+    parse(ConfigurationClassParser.java:167) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+        ... 17 common frames omitted
+    Caused by: java.lang.NoClassDefFoundError: javax/servlet/ServletContext
+        at java.lang.Class.getDeclaredMethods0(Native Method) ~[na:1.8.0_111]
+        at java.lang.Class.privateGetDeclaredMethods(Class.java:2701) ~[na:1.8.0_111]
+        at java.lang.Class.getDeclaredMethods(Class.java:1975) ~[na:1.8.0_111]
+        at org.springframework.core.type.StandardAnnotationMetadata.getAnnotatedMethods
+    (StandardAnnotationMetadata.java:152) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+        ... 22 common frames omitted
+    Caused by: java.lang.ClassNotFoundException: javax.servlet.ServletContext
+        at java.net.URLClassLoader.findClass(URLClassLoader.java:381) ~[na:1.8.0_111]
+        at java.lang.ClassLoader.loadClass(ClassLoader.java:424) ~[na:1.8.0_111]
+        at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331) ~[na:1.8.0_111]
+        at java.lang.ClassLoader.loadClass(ClassLoader.java:357) ~[na:1.8.0_111]
+        ... 26 common frames omitted
+解决方法
+通过网上一番 Goolge, 答案如下">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2018/idea_maven_bug_fix/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2018/idea_maven_bug_fix/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2018/idea_maven_bug_fix/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="通过一次IDEA Spring Boot 启动报错深入理解maven scope标签">
+  <meta property="og:description" content="起因 昨天同事突然告诉我项目无法启动了, 但是神奇的是我也在用一样的代码, 但是在我的机器上并没有出现这个问题, 所以我就开始 fuck bug 了,报错信息大概是下面这个样子
+Caused by: java.lang.IllegalStateException: Failed to introspect annotated methods on class org.springframework.boot.web.support.SpringBootServletInitializer at org.springframework.core.type.StandardAnnotationMetadata. getAnnotatedMethods(StandardAnnotationMetadata.java:163) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. retrieveBeanMethodMetadata(ConfigurationClassParser.java:380) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. doProcessConfigurationClass(ConfigurationClassParser.java:314) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. processConfigurationClass(ConfigurationClassParser.java:245) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:198) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:167) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 17 common frames omitted Caused by: java.lang.NoClassDefFoundError: javax/servlet/ServletContext at java.lang.Class.getDeclaredMethods0(Native Method) ~[na:1.8.0_111] at java.lang.Class.privateGetDeclaredMethods(Class.java:2701) ~[na:1.8.0_111] at java.lang.Class.getDeclaredMethods(Class.java:1975) ~[na:1.8.0_111] at org.springframework.core.type.StandardAnnotationMetadata.getAnnotatedMethods (StandardAnnotationMetadata.java:152) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 22 common frames omitted Caused by: java.lang.ClassNotFoundException: javax.servlet.ServletContext at java.net.URLClassLoader.findClass(URLClassLoader.java:381) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:424) ~[na:1.8.0_111] at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:357) ~[na:1.8.0_111] ... 26 common frames omitted 解决方法 通过网上一番 Goolge, 答案如下">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-08-18T10:25:00+08:00">
+    <meta property="article:modified_time" content="2022-04-10T01:46:55+08:00">
+    <meta property="article:tag" content="IDE">
+    <meta property="article:tag" content="Bug">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="通过一次IDEA Spring Boot 启动报错深入理解maven scope标签">
+  <meta name="twitter:description" content="起因 昨天同事突然告诉我项目无法启动了, 但是神奇的是我也在用一样的代码, 但是在我的机器上并没有出现这个问题, 所以我就开始 fuck bug 了,报错信息大概是下面这个样子
+Caused by: java.lang.IllegalStateException: Failed to introspect annotated methods on class org.springframework.boot.web.support.SpringBootServletInitializer at org.springframework.core.type.StandardAnnotationMetadata. getAnnotatedMethods(StandardAnnotationMetadata.java:163) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. retrieveBeanMethodMetadata(ConfigurationClassParser.java:380) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. doProcessConfigurationClass(ConfigurationClassParser.java:314) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. processConfigurationClass(ConfigurationClassParser.java:245) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:198) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:167) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 17 common frames omitted Caused by: java.lang.NoClassDefFoundError: javax/servlet/ServletContext at java.lang.Class.getDeclaredMethods0(Native Method) ~[na:1.8.0_111] at java.lang.Class.privateGetDeclaredMethods(Class.java:2701) ~[na:1.8.0_111] at java.lang.Class.getDeclaredMethods(Class.java:1975) ~[na:1.8.0_111] at org.springframework.core.type.StandardAnnotationMetadata.getAnnotatedMethods (StandardAnnotationMetadata.java:152) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 22 common frames omitted Caused by: java.lang.ClassNotFoundException: javax.servlet.ServletContext at java.net.URLClassLoader.findClass(URLClassLoader.java:381) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:424) ~[na:1.8.0_111] at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:357) ~[na:1.8.0_111] ... 26 common frames omitted 解决方法 通过网上一番 Goolge, 答案如下">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2018 Index",
+      "item": "https://waver.me/posts/2018/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "通过一次IDEA Spring Boot 启动报错深入理解maven scope标签",
+      "item": "https://waver.me/posts/2018/idea_maven_bug_fix/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "通过一次IDEA Spring Boot 启动报错深入理解maven scope标签",
+  "name": "通过一次IDEA Spring Boot 启动报错深入理解maven scope标签",
+  "description": "起因 昨天同事突然告诉我项目无法启动了, 但是神奇的是我也在用一样的代码, 但是在我的机器上并没有出现这个问题, 所以我就开始 fuck bug 了,报错信息大概是下面这个样子\nCaused by: java.lang.IllegalStateException: Failed to introspect annotated methods on class org.springframework.boot.web.support.SpringBootServletInitializer at org.springframework.core.type.StandardAnnotationMetadata. getAnnotatedMethods(StandardAnnotationMetadata.java:163) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. retrieveBeanMethodMetadata(ConfigurationClassParser.java:380) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. doProcessConfigurationClass(ConfigurationClassParser.java:314) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. processConfigurationClass(ConfigurationClassParser.java:245) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:198) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:167) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 17 common frames omitted Caused by: java.lang.NoClassDefFoundError: javax/servlet/ServletContext at java.lang.Class.getDeclaredMethods0(Native Method) ~[na:1.8.0_111] at java.lang.Class.privateGetDeclaredMethods(Class.java:2701) ~[na:1.8.0_111] at java.lang.Class.getDeclaredMethods(Class.java:1975) ~[na:1.8.0_111] at org.springframework.core.type.StandardAnnotationMetadata.getAnnotatedMethods (StandardAnnotationMetadata.java:152) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 22 common frames omitted Caused by: java.lang.ClassNotFoundException: javax.servlet.ServletContext at java.net.URLClassLoader.findClass(URLClassLoader.java:381) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:424) ~[na:1.8.0_111] at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:357) ~[na:1.8.0_111] ... 26 common frames omitted 解决方法 通过网上一番 Goolge, 答案如下\n",
+  "keywords": [
+    "IDE", "Bug"
+  ],
+  "articleBody": "起因 昨天同事突然告诉我项目无法启动了, 但是神奇的是我也在用一样的代码, 但是在我的机器上并没有出现这个问题, 所以我就开始 fuck bug 了,报错信息大概是下面这个样子\nCaused by: java.lang.IllegalStateException: Failed to introspect annotated methods on class org.springframework.boot.web.support.SpringBootServletInitializer at org.springframework.core.type.StandardAnnotationMetadata. getAnnotatedMethods(StandardAnnotationMetadata.java:163) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. retrieveBeanMethodMetadata(ConfigurationClassParser.java:380) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. doProcessConfigurationClass(ConfigurationClassParser.java:314) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. processConfigurationClass(ConfigurationClassParser.java:245) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:198) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] at org.springframework.context.annotation.ConfigurationClassParser. parse(ConfigurationClassParser.java:167) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 17 common frames omitted Caused by: java.lang.NoClassDefFoundError: javax/servlet/ServletContext at java.lang.Class.getDeclaredMethods0(Native Method) ~[na:1.8.0_111] at java.lang.Class.privateGetDeclaredMethods(Class.java:2701) ~[na:1.8.0_111] at java.lang.Class.getDeclaredMethods(Class.java:1975) ~[na:1.8.0_111] at org.springframework.core.type.StandardAnnotationMetadata.getAnnotatedMethods (StandardAnnotationMetadata.java:152) ~[spring-core-4.3.10.RELEASE.jar:4.3.10.RELEASE] ... 22 common frames omitted Caused by: java.lang.ClassNotFoundException: javax.servlet.ServletContext at java.net.URLClassLoader.findClass(URLClassLoader.java:381) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:424) ~[na:1.8.0_111] at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331) ~[na:1.8.0_111] at java.lang.ClassLoader.loadClass(ClassLoader.java:357) ~[na:1.8.0_111] ... 26 common frames omitted 解决方法 通过网上一番 Goolge, 答案如下\norg.springframework.boot spring-boot-starter-tomcat provided 将 pom.xml 文件中 tomcat 依赖中的 scope 注掉, 问题解决.\nscope 标签的作用 {#scope 标签的作用} Maven 官网中是这么介绍 scope 的 传送门\nDependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.\nThere are 6 scopes available:\ncompile This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects. provided This is much like compile, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope provided because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive. runtime This scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath. test This scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases. This scope is not transitive. system This scope is similar to provided except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository. import (only available in Maven 2.0.9 or later) This scope is only supported on a dependency of type pom in the section. It indicates the dependency to be replaced with the effective list of dependencies in the specified POM’s section. Since they are replaced, dependencies with a scope of import do not actually participate in limiting the transitivity of a dependency. 通过上面的解释我们可以发现=provided=属性是可以在编译和运行期间引入的啊, 但是为啥会报错呢, 难道是 Maven 的 Bug? 还是别的原因, 这里我又深究了一下, 结果如下:\n研究结果 现在几乎可以确认应该不是 Maven 的, 在William_Cheung 的博客 的文章中提到这个是 IDEA 的一个 Bug, IDEA 不会将标有=provided=加入到 classpath 中, 详细信息查看Add an option to provide runtime classpath with dependencies in provided scope 那么现在问题来了…..为啥我的 IDEA 可以呢??? 从 youtrack 的评论中我找到了这条评论: Guillaume Simard的评论 在评论中提到,这个 bug 已经在新版中得到解决, 这里我就不搬运了, 附上连接IntelliJ IDEA 2018.1 Public Preview\n结论 现在看来, 已经非常明了了, 这个异常的原因是低版本 IDEA 的 Bug 导致的, 所以你可以不修改 maven 的配置, 换一个新版本的 IDEA 一样可以结局问题, 至于不想换 IDEA 也不想改配置的人….. 也有解决方案William_Cheung 的博客中已经很明了了,我也不在此多说了.\n",
+  "wordCount" : "473",
+  "inLanguage": "zh",
+  "datePublished": "2018-08-18T10:25:00+08:00",
+  "dateModified": "2022-04-10T01:46:55+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2018/idea_maven_bug_fix/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      通过一次IDEA Spring Boot 启动报错深入理解maven scope标签
+    </h1>
+    <div class="post-meta">
+
+<span title='2018-08-18 10:25:00 +0800 CST'>2018年8月18日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="起因">起因<a hidden class="anchor" aria-hidden="true" href="#起因">#</a></h2>
+<p>昨天同事突然告诉我项目无法启动了, 但是神奇的是我也在用一样的代码,
+但是在我的机器上并没有出现这个问题, 所以我就开始 fuck
+bug 了,报错信息大概是下面这个样子</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    Caused by: java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">IllegalStateException</span>: Failed to introspect annotated methods on <span style="color:#66d9ef">class</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">boot</span>.<span style="color:#a6e22e">web</span>.<span style="color:#a6e22e">support</span>.<span style="color:#a6e22e">SpringBootServletInitializer</span>
+</span></span><span style="display:flex;"><span>        at org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">core</span>.<span style="color:#a6e22e">type</span>.<span style="color:#a6e22e">StandardAnnotationMetadata</span>.
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">getAnnotatedMethods</span>(StandardAnnotationMetadata.<span style="color:#a6e22e">java</span>:163) <span style="color:#f92672">~[</span>spring<span style="color:#f92672">-</span>core<span style="color:#f92672">-</span>4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span>.<span style="color:#a6e22e">jar</span>:4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">annotation</span>.<span style="color:#a6e22e">ConfigurationClassParser</span>.
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">retrieveBeanMethodMetadata</span>(ConfigurationClassParser.<span style="color:#a6e22e">java</span>:380) <span style="color:#f92672">~[</span>spring<span style="color:#f92672">-</span>context<span style="color:#f92672">-</span>4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span>.<span style="color:#a6e22e">jar</span>:4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">annotation</span>.<span style="color:#a6e22e">ConfigurationClassParser</span>.
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">doProcessConfigurationClass</span>(ConfigurationClassParser.<span style="color:#a6e22e">java</span>:314) <span style="color:#f92672">~[</span>spring<span style="color:#f92672">-</span>context<span style="color:#f92672">-</span>4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span>.<span style="color:#a6e22e">jar</span>:4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">annotation</span>.<span style="color:#a6e22e">ConfigurationClassParser</span>.
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">processConfigurationClass</span>(ConfigurationClassParser.<span style="color:#a6e22e">java</span>:245) <span style="color:#f92672">~[</span>spring<span style="color:#f92672">-</span>context<span style="color:#f92672">-</span>4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span>.<span style="color:#a6e22e">jar</span>:4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">annotation</span>.<span style="color:#a6e22e">ConfigurationClassParser</span>.
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">parse</span>(ConfigurationClassParser.<span style="color:#a6e22e">java</span>:198) <span style="color:#f92672">~[</span>spring<span style="color:#f92672">-</span>context<span style="color:#f92672">-</span>4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span>.<span style="color:#a6e22e">jar</span>:4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">annotation</span>.<span style="color:#a6e22e">ConfigurationClassParser</span>.
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">parse</span>(ConfigurationClassParser.<span style="color:#a6e22e">java</span>:167) <span style="color:#f92672">~[</span>spring<span style="color:#f92672">-</span>context<span style="color:#f92672">-</span>4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span>.<span style="color:#a6e22e">jar</span>:4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        ... 17 common frames omitted
+</span></span><span style="display:flex;"><span>    Caused by: java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">NoClassDefFoundError</span>: javax<span style="color:#f92672">/</span>servlet<span style="color:#f92672">/</span>ServletContext
+</span></span><span style="display:flex;"><span>        at java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">Class</span>.<span style="color:#a6e22e">getDeclaredMethods0</span>(Native Method) <span style="color:#f92672">~[</span>na:1.<span style="color:#a6e22e">8</span>.<span style="color:#a6e22e">0_111</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">Class</span>.<span style="color:#a6e22e">privateGetDeclaredMethods</span>(Class.<span style="color:#a6e22e">java</span>:2701) <span style="color:#f92672">~[</span>na:1.<span style="color:#a6e22e">8</span>.<span style="color:#a6e22e">0_111</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">Class</span>.<span style="color:#a6e22e">getDeclaredMethods</span>(Class.<span style="color:#a6e22e">java</span>:1975) <span style="color:#f92672">~[</span>na:1.<span style="color:#a6e22e">8</span>.<span style="color:#a6e22e">0_111</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">core</span>.<span style="color:#a6e22e">type</span>.<span style="color:#a6e22e">StandardAnnotationMetadata</span>.<span style="color:#a6e22e">getAnnotatedMethods</span>
+</span></span><span style="display:flex;"><span>    (StandardAnnotationMetadata.<span style="color:#a6e22e">java</span>:152) <span style="color:#f92672">~[</span>spring<span style="color:#f92672">-</span>core<span style="color:#f92672">-</span>4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span>.<span style="color:#a6e22e">jar</span>:4.<span style="color:#a6e22e">3</span>.<span style="color:#a6e22e">10</span>.<span style="color:#a6e22e">RELEASE</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        ... 22 common frames omitted
+</span></span><span style="display:flex;"><span>    Caused by: java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">ClassNotFoundException</span>: javax.<span style="color:#a6e22e">servlet</span>.<span style="color:#a6e22e">ServletContext</span>
+</span></span><span style="display:flex;"><span>        at java.<span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">URLClassLoader</span>.<span style="color:#a6e22e">findClass</span>(URLClassLoader.<span style="color:#a6e22e">java</span>:381) <span style="color:#f92672">~[</span>na:1.<span style="color:#a6e22e">8</span>.<span style="color:#a6e22e">0_111</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">ClassLoader</span>.<span style="color:#a6e22e">loadClass</span>(ClassLoader.<span style="color:#a6e22e">java</span>:424) <span style="color:#f92672">~[</span>na:1.<span style="color:#a6e22e">8</span>.<span style="color:#a6e22e">0_111</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at sun.<span style="color:#a6e22e">misc</span>.<span style="color:#a6e22e">Launcher$AppClassLoader</span>.<span style="color:#a6e22e">loadClass</span>(Launcher.<span style="color:#a6e22e">java</span>:331) <span style="color:#f92672">~[</span>na:1.<span style="color:#a6e22e">8</span>.<span style="color:#a6e22e">0_111</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        at java.<span style="color:#a6e22e">lang</span>.<span style="color:#a6e22e">ClassLoader</span>.<span style="color:#a6e22e">loadClass</span>(ClassLoader.<span style="color:#a6e22e">java</span>:357) <span style="color:#f92672">~[</span>na:1.<span style="color:#a6e22e">8</span>.<span style="color:#a6e22e">0_111</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        ... 26 common frames omitted
+</span></span></code></pre></div><h2 id="解决方法">解决方法<a hidden class="anchor" aria-hidden="true" href="#解决方法">#</a></h2>
+<p>通过网上一番 Goolge, 答案如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>    &lt;dependency&gt;
+</span></span><span style="display:flex;"><span>       &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+</span></span><span style="display:flex;"><span>       &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+</span></span><span style="display:flex;"><span>       &lt;scope&gt;provided&lt;/scope&gt;
+</span></span><span style="display:flex;"><span>    &lt;/dependency&gt;
+</span></span></code></pre></div><p>将 pom.xml 文件中 tomcat 依赖中的 <code>scope</code> 注掉, 问题解决.</p>
+<h2 id="scope-标签的作用-scope-标签的作用">scope 标签的作用 {#scope 标签的作用}<a hidden class="anchor" aria-hidden="true" href="#scope-标签的作用-scope-标签的作用">#</a></h2>
+<p>Maven 官网中是这么介绍 scope 的
+<a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html">传送门</a></p>
+<p>Dependency scope is used to limit the transitivity of a dependency, and
+also to affect the classpath used for various build tasks.</p>
+<p>There are 6 scopes available:</p>
+<ul>
+<li>compile This is the default scope, used if none is specified. Compile
+dependencies are available in all classpaths of a project.
+Furthermore, those dependencies are propagated to dependent projects.</li>
+<li>provided This is much like <code>compile</code>, but indicates you expect the JDK
+or a container to provide the dependency at runtime. For example, when
+building a web application for the Java Enterprise Edition, you would
+set the dependency on the Servlet API and related Java EE APIs to
+scope <code>provided</code> because the web container provides those classes.
+This scope is only available on the compilation and test classpath,
+and is not transitive.</li>
+<li>runtime This scope indicates that the dependency is not required for
+compilation, but is for execution. It is in the runtime and test
+classpaths, but not the compile classpath.</li>
+<li>test This scope indicates that the dependency is not required for
+normal use of the application, and is only available for the test
+compilation and execution phases. This scope is not transitive.</li>
+<li>system This scope is similar to <code>provided</code> except that you have to
+provide the JAR which contains it explicitly. The artifact is always
+available and is not looked up in a repository.</li>
+<li>import (only available in Maven 2.0.9 or later) This scope is only
+supported on a dependency of type <code>pom</code> in the
+<code>&lt;dependencyManagement&gt;</code> section. It indicates the dependency to be
+replaced with the effective list of dependencies in the specified
+POM&rsquo;s <code>&lt;dependencyManagement&gt;</code> section. Since they are replaced,
+dependencies with a scope of <code>import</code> do not actually participate in
+limiting the transitivity of a dependency.</li>
+</ul>
+<blockquote>
+<p>通过上面的解释我们可以发现=provided=属性是可以在编译和运行期间引入的啊,
+但是为啥会报错呢, 难道是 Maven 的 Bug? 还是别的原因, 这里我又深究了一下,
+结果如下:</p>
+</blockquote>
+<h3 id="研究结果">研究结果<a hidden class="anchor" aria-hidden="true" href="#研究结果">#</a></h3>
+<p>现在几乎可以确认应该不是 Maven 的,
+在<a href="https://blog.csdn.net/qq496013218/article/details/76241027">William_Cheung 的博客</a>
+的文章中提到这个是 IDEA 的一个 Bug,
+IDEA 不会将标有=provided=加入到 classpath 中,
+详细信息查看<a href="https://youtrack.jetbrains.com/issue/IDEA-107048">Add an
+option to provide runtime classpath with dependencies in provided
+scope</a> 那么现在问题来了&hellip;..为啥我的 IDEA 可以呢???
+从 youtrack 的评论中我找到了这条评论:
+<a href="https://youtrack.jetbrains.com/issue/IDEA-107048#focus=streamItem-27-2726337-0-0">Guillaume
+Simard的评论</a> 在评论中提到,这个 bug 已经在新版中得到解决,
+这里我就不搬运了,
+附上连接<a href="https://blog.jetbrains.com/idea/2018/02/intellij-idea-2018-1-public-preview/">IntelliJ
+IDEA 2018.1 Public Preview</a></p>
+<h3 id="结论">结论<a hidden class="anchor" aria-hidden="true" href="#结论">#</a></h3>
+<p>现在看来, 已经非常明了了, 这个异常的原因是低版本 IDEA 的 Bug 导致的,
+所以你可以不修改 maven 的配置, 换一个新版本的 IDEA 一样可以结局问题,
+至于不想换 IDEA 也不想改配置的人&hellip;..
+也有解决方案<a href="https://blog.csdn.net/qq496013218/article/details/76241027">William_Cheung 的博客</a>中已经很明了了,我也不在此多说了.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/ide/">IDE</a></li>
+      <li><a href="https://waver.me/tags/bug/">Bug</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

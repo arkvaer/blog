@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>JavaReview-day10-异常 | Waver&#39;s Blog</title>
+<meta name="keywords" content="Java">
+<meta name="description" content="异常的格式
+
+第一种:
+
+经典格式
+try{
+
+}catch(Exception e){
+
+}
+
+第二种:
+
+带有 finally 的格式
+try{
+
+}catch(Exception e){
+
+}finally{
+
+}
+
+第三种:
+
+特殊格式
+try{
+
+}finally{
+
+}
+
+第三种格式的特点及作用
+
+class ExceptionDemo{
+  public void function(){
+    throw new Exception();
+  }
+}
+以上代码会编译失败 但添加=finally=语句后即可编译成功, 如下:
+class ExceptionDemo{
+  public void function(){
+    try{
+    throw new Exception();
+  }finally{
+
+  }
+  }
+}
+异常在子父类覆盖中的体现
+
+子类在覆盖父类时,如果父类的方法抛出异常,
+那么子类的覆盖方法只能抛出父类的异常, 或该异常的子类;
+如果父类方法抛出多个异常, 那么子类方法在覆盖该方法时,
+只能抛出父类异常的子集;
+如果父类或接口的方法中没有抛出异常, 那么子类在覆盖该方法时,
+也不能抛出异常, 如果子类方法发生类异常, 就必须进行=try=处理,
+绝对不能抛出;
+
+interface  Inter
+{
+    void function();
+}
+
+class D implements Inter
+{
+    public void function()//throws Exception
+  {
+
+  }
+}
+
+class A extends Exception{
+
+}
+
+class B extends A{
+
+}
+class C extends Exception{
+
+}
+
+
+// Exception
+//  |--A
+//      |--B
+//  |--C
+
+
+class Fu
+{
+    void show()throws A{
+
+  }
+}
+
+
+class Test
+{
+    void method(Fu f)//Fu f  = new Zi();
+    {
+        try
+        {
+            f.show();
+
+        }
+        catch (A  a)
+        {
+        }
+    }
+}
+
+
+class Zi extends Fu
+{
+    void show()throws C
+    {
+
+    }
+}
+
+class ExceptionDemo
+{
+    public static void main(String[] args)
+    {
+        Test t = new Test();
+        t.show(new Zi());
+    }
+}
+总结
+异常： 是什么？是对问题的描述。将问题进行对象的封装。 &mdash;&mdash;&mdash;&mdash;
+异常体系： Throwable |&ndash;Error |&ndash;Exception |&ndash;RuntimeException">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2017/summary_of_java_knowledge_points_exception_8/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2017/summary_of_java_knowledge_points_exception_8/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2017/summary_of_java_knowledge_points_exception_8/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="JavaReview-day10-异常">
+  <meta property="og:description" content="异常的格式 第一种: 经典格式
+try{ }catch(Exception e){ } 第二种: 带有 finally 的格式
+try{ }catch(Exception e){ }finally{ } 第三种: 特殊格式
+try{ }finally{ } 第三种格式的特点及作用 class ExceptionDemo{ public void function(){ throw new Exception(); } } 以上代码会编译失败 但添加=finally=语句后即可编译成功, 如下:
+class ExceptionDemo{ public void function(){ try{ throw new Exception(); }finally{ } } } 异常在子父类覆盖中的体现 子类在覆盖父类时,如果父类的方法抛出异常, 那么子类的覆盖方法只能抛出父类的异常, 或该异常的子类; 如果父类方法抛出多个异常, 那么子类方法在覆盖该方法时, 只能抛出父类异常的子集; 如果父类或接口的方法中没有抛出异常, 那么子类在覆盖该方法时, 也不能抛出异常, 如果子类方法发生类异常, 就必须进行=try=处理, 绝对不能抛出; interface Inter { void function(); } class D implements Inter { public void function()//throws Exception { } } class A extends Exception{ } class B extends A{ } class C extends Exception{ } // Exception // |--A // |--B // |--C class Fu { void show()throws A{ } } class Test { void method(Fu f)//Fu f = new Zi(); { try { f.show(); } catch (A a) { } } } class Zi extends Fu { void show()throws C { } } class ExceptionDemo { public static void main(String[] args) { Test t = new Test(); t.show(new Zi()); } } 总结 异常： 是什么？是对问题的描述。将问题进行对象的封装。 ———— 异常体系： Throwable |–Error |–Exception |–RuntimeException">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-01-17T11:54:00+08:00">
+    <meta property="article:modified_time" content="2022-04-10T01:44:39+08:00">
+    <meta property="article:tag" content="Java">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JavaReview-day10-异常">
+  <meta name="twitter:description" content="异常的格式 第一种: 经典格式
+try{ }catch(Exception e){ } 第二种: 带有 finally 的格式
+try{ }catch(Exception e){ }finally{ } 第三种: 特殊格式
+try{ }finally{ } 第三种格式的特点及作用 class ExceptionDemo{ public void function(){ throw new Exception(); } } 以上代码会编译失败 但添加=finally=语句后即可编译成功, 如下:
+class ExceptionDemo{ public void function(){ try{ throw new Exception(); }finally{ } } } 异常在子父类覆盖中的体现 子类在覆盖父类时,如果父类的方法抛出异常, 那么子类的覆盖方法只能抛出父类的异常, 或该异常的子类; 如果父类方法抛出多个异常, 那么子类方法在覆盖该方法时, 只能抛出父类异常的子集; 如果父类或接口的方法中没有抛出异常, 那么子类在覆盖该方法时, 也不能抛出异常, 如果子类方法发生类异常, 就必须进行=try=处理, 绝对不能抛出; interface Inter { void function(); } class D implements Inter { public void function()//throws Exception { } } class A extends Exception{ } class B extends A{ } class C extends Exception{ } // Exception // |--A // |--B // |--C class Fu { void show()throws A{ } } class Test { void method(Fu f)//Fu f = new Zi(); { try { f.show(); } catch (A a) { } } } class Zi extends Fu { void show()throws C { } } class ExceptionDemo { public static void main(String[] args) { Test t = new Test(); t.show(new Zi()); } } 总结 异常： 是什么？是对问题的描述。将问题进行对象的封装。 ———— 异常体系： Throwable |–Error |–Exception |–RuntimeException">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2017 Index",
+      "item": "https://waver.me/posts/2017/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "JavaReview-day10-异常",
+      "item": "https://waver.me/posts/2017/summary_of_java_knowledge_points_exception_8/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "JavaReview-day10-异常",
+  "name": "JavaReview-day10-异常",
+  "description": "异常的格式 第一种: 经典格式\ntry{ }catch(Exception e){ } 第二种: 带有 finally 的格式\ntry{ }catch(Exception e){ }finally{ } 第三种: 特殊格式\ntry{ }finally{ } 第三种格式的特点及作用 class ExceptionDemo{ public void function(){ throw new Exception(); } } 以上代码会编译失败 但添加=finally=语句后即可编译成功, 如下:\nclass ExceptionDemo{ public void function(){ try{ throw new Exception(); }finally{ } } } 异常在子父类覆盖中的体现 子类在覆盖父类时,如果父类的方法抛出异常, 那么子类的覆盖方法只能抛出父类的异常, 或该异常的子类; 如果父类方法抛出多个异常, 那么子类方法在覆盖该方法时, 只能抛出父类异常的子集; 如果父类或接口的方法中没有抛出异常, 那么子类在覆盖该方法时, 也不能抛出异常, 如果子类方法发生类异常, 就必须进行=try=处理, 绝对不能抛出; interface Inter { void function(); } class D implements Inter { public void function()//throws Exception { } } class A extends Exception{ } class B extends A{ } class C extends Exception{ } // Exception // |--A // |--B // |--C class Fu { void show()throws A{ } } class Test { void method(Fu f)//Fu f = new Zi(); { try { f.show(); } catch (A a) { } } } class Zi extends Fu { void show()throws C { } } class ExceptionDemo { public static void main(String[] args) { Test t = new Test(); t.show(new Zi()); } } 总结 异常： 是什么？是对问题的描述。将问题进行对象的封装。 \u0026mdash;\u0026mdash;\u0026mdash;\u0026mdash; 异常体系： Throwable |\u0026ndash;Error |\u0026ndash;Exception |\u0026ndash;RuntimeException\n",
+  "keywords": [
+    "Java"
+  ],
+  "articleBody": "异常的格式 第一种: 经典格式\ntry{ }catch(Exception e){ } 第二种: 带有 finally 的格式\ntry{ }catch(Exception e){ }finally{ } 第三种: 特殊格式\ntry{ }finally{ } 第三种格式的特点及作用 class ExceptionDemo{ public void function(){ throw new Exception(); } } 以上代码会编译失败 但添加=finally=语句后即可编译成功, 如下:\nclass ExceptionDemo{ public void function(){ try{ throw new Exception(); }finally{ } } } 异常在子父类覆盖中的体现 子类在覆盖父类时,如果父类的方法抛出异常, 那么子类的覆盖方法只能抛出父类的异常, 或该异常的子类; 如果父类方法抛出多个异常, 那么子类方法在覆盖该方法时, 只能抛出父类异常的子集; 如果父类或接口的方法中没有抛出异常, 那么子类在覆盖该方法时, 也不能抛出异常, 如果子类方法发生类异常, 就必须进行=try=处理, 绝对不能抛出; interface Inter { void function(); } class D implements Inter { public void function()//throws Exception { } } class A extends Exception{ } class B extends A{ } class C extends Exception{ } // Exception // |--A // |--B // |--C class Fu { void show()throws A{ } } class Test { void method(Fu f)//Fu f = new Zi(); { try { f.show(); } catch (A a) { } } } class Zi extends Fu { void show()throws C { } } class ExceptionDemo { public static void main(String[] args) { Test t = new Test(); t.show(new Zi()); } } 总结 异常： 是什么？是对问题的描述。将问题进行对象的封装。 ———— 异常体系： Throwable |–Error |–Exception |–RuntimeException\n异常体系的特点：异常体系中的所有类以及建立的对象都具备可抛性。 也就是说可以被 throw 和 throws 关键字所操作。 只有异常体系具备这个特点。\nthrow 和 throws 的用法： throw 定义在函数内，用于抛出异常对象。 throws 定义在函数上，用于抛出异常类，可以抛出多个用逗号隔开。 当函数内容有 throw 抛出异常对象，并未进行 try 处理。必须要在函数上声明，都在编译失败。 注意，RuntimeException 除外。也就说，函数内如果抛出的 RuntimeExcpetion 异常，函数上可以不用声明。 如果函数声明了异常，调用者需要进行处理。处理方法可以 throws 可以 try。\n异常有两种： 编译时被检测异常 该异常在编译时，如果没有处理(没有抛也没有 try)，编译失败。 该异常被标识，代表这可以被处理。 运行时异常(编译时不检测) 在编译时，不需要处理，编译器不检查。 该异常的发生，建议不处理，让程序停止。需要对代码进行修正。\n异常处理语句： try { 需要被检测的代码； } catch () { 处理异常的代码； } finally { 一定会执行的代码； } 有三个结合格式： 1. 第一种 ```java try { } catch () { } =2. 第二种=java try { } finally { } ``` 3. 第三种 ```java try { } catch () { } finally { } ``` ## 注意: 1. finally 中定义的通常是 关闭资源代码。因为资源必须释放。 2. finally 只有一种情况不会执行。当执行到 System.exit(0);fianlly 不会执行。 自定义异常： 定义类继承Exception或者RuntimeException 1. 为了让该自定义类具备可抛性。 2. 让该类具备操作异常的共性方法。 当要定义自定义异常的信息时，可以使用父类已经定义好的功能。 异常异常信息传递给父类的构造函数。 class MyException extends Exception { MyException(String message) { super(message); } } 自定义异常: 按照 java 的面向对象思想，将程序中出现的特有问题进行封装。 {#按照 java 的面向对象思想将程序中出现的特有问题进行封装} 异常的好处： 1. 将问题进行封装。 2. 将正常流程代码和问题处理代码相分离，方便于阅读。 异常的处理原则： 1. 处理方式有两种：try 或者 throws。 2. 调用到抛出异常的功能时，抛出几个，就处理几个。 一个try对应多个catch。 3. 多个catch，父类的catch放到最下面。 4. catch内，需要定义针对性的处理方式。不要简单的定义printStackTrace，输出语句。 也不要不写。 当捕获到的异常，本功能处理不了时，可以继续在catch中抛出。 try { throw new AException(); } catch (AException e) { throw e; } 如果该异常处理不了，但并不属于该功能出现的异常。 可以将异常转换后，在抛出和该功能相关的异常。\n或者异常可以处理，当需要将异常产生的和本功能相关的问题提供出去， 当调用者知道。并处理。也可以将捕获异常处理后，转换新的异常。\ntry { throw new AException(); } catch (AException e) { // 对AException处理。 throw new BException(); } 比如，汇款的例子。 异常的注意事项： 在子父类覆盖时： 1，子类抛出的异常必须是父类的异常的子类或者子集。 2，如果父类或者接口没有异常抛出时，子类覆盖出现异常，只能 try 不能抛。\n参阅 ExceptionTest.java 老师用电脑上课 ExceptionTest1.java 图形面积。\nclass { public static void main(String[] args) { int x = 0; try { x = 4; } catch () { } finally { System.out.println(\"x=\"+x); } } } ",
+  "wordCount" : "383",
+  "inLanguage": "zh",
+  "datePublished": "2018-01-17T11:54:00+08:00",
+  "dateModified": "2022-04-10T01:44:39+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2017/summary_of_java_knowledge_points_exception_8/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      JavaReview-day10-异常
+    </h1>
+    <div class="post-meta">
+
+<span title='2018-01-17 11:54:00 +0800 CST'>2018年1月17日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="异常的格式">异常的格式<a hidden class="anchor" aria-hidden="true" href="#异常的格式">#</a></h2>
+<ol>
+<li>第一种:</li>
+</ol>
+<p>经典格式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">try</span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}<span style="color:#66d9ef">catch</span>(Exception e){
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ol start="2">
+<li>第二种:</li>
+</ol>
+<p>带有 finally 的格式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">try</span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}<span style="color:#66d9ef">catch</span>(Exception e){
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}<span style="color:#66d9ef">finally</span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ol start="3">
+<li>第三种:</li>
+</ol>
+<p>特殊格式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">try</span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}<span style="color:#66d9ef">finally</span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>第三种格式的特点及作用</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExceptionDemo</span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">function</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Exception();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>以上代码会编译失败 但添加=finally=语句后即可编译成功, 如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExceptionDemo</span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">function</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Exception();
+</span></span><span style="display:flex;"><span>  }<span style="color:#66d9ef">finally</span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="异常在子父类覆盖中的体现">异常在子父类覆盖中的体现<a hidden class="anchor" aria-hidden="true" href="#异常在子父类覆盖中的体现">#</a></h3>
+<ol>
+<li>子类在覆盖父类时,如果父类的方法抛出异常,
+那么子类的覆盖方法只能抛出父类的异常, 或该异常的子类;</li>
+<li>如果父类方法抛出多个异常, 那么子类方法在覆盖该方法时,
+只能抛出父类异常的子集;</li>
+<li>如果父类或接口的方法中没有抛出异常, 那么子类在覆盖该方法时,
+也不能抛出异常, 如果子类方法发生类异常, 就必须进行=try=处理,
+绝对不能抛出;</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">interface</span>  <span style="color:#a6e22e">Inter</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">function</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">D</span> <span style="color:#66d9ef">implements</span> Inter
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">function</span>()<span style="color:#75715e">//throws Exception</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> <span style="color:#66d9ef">extends</span> Exception{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span> <span style="color:#66d9ef">extends</span> A{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">C</span> <span style="color:#66d9ef">extends</span> Exception{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Exception</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//  |--A</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      |--B</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//  |--C</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Fu</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">show</span>()<span style="color:#66d9ef">throws</span> A{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">method</span>(Fu f)<span style="color:#75715e">//Fu f  = new Zi();</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            f.<span style="color:#a6e22e">show</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">catch</span> (A  a)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Zi</span> <span style="color:#66d9ef">extends</span> Fu
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">show</span>()<span style="color:#66d9ef">throws</span> C
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExceptionDemo</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Test t <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Test();
+</span></span><span style="display:flex;"><span>        t.<span style="color:#a6e22e">show</span>(<span style="color:#66d9ef">new</span> Zi());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="总结">总结<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h2>
+<p>异常： 是什么？是对问题的描述。将问题进行对象的封装。 &mdash;&mdash;&mdash;&mdash;
+异常体系： Throwable |&ndash;Error |&ndash;Exception |&ndash;RuntimeException</p>
+<p>异常体系的特点：异常体系中的所有类以及建立的对象都具备可抛性。
+也就是说可以被 throw 和 throws 关键字所操作。 只有异常体系具备这个特点。</p>
+<table>
+	<thead>
+			<tr>
+					<th>throw 和 throws 的用法：</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>throw 定义在函数内，用于抛出异常对象。 throws 定义在函数上，用于抛出异常类，可以抛出多个用逗号隔开。</td>
+			</tr>
+			<tr>
+					<td>当函数内容有 throw 抛出异常对象，并未进行 try 处理。必须要在函数上声明，都在编译失败。 注意，RuntimeException 除外。也就说，函数内如果抛出的 RuntimeExcpetion 异常，函数上可以不用声明。</td>
+			</tr>
+	</tbody>
+</table>
+<p>如果函数声明了异常，调用者需要进行处理。处理方法可以 throws 可以 try。</p>
+<p>异常有两种： 编译时被检测异常
+该异常在编译时，如果没有处理(没有抛也没有 try)，编译失败。
+该异常被标识，代表这可以被处理。 运行时异常(编译时不检测)
+在编译时，不需要处理，编译器不检查。
+该异常的发生，建议不处理，让程序停止。需要对代码进行修正。</p>
+<table>
+	<thead>
+			<tr>
+					<th>异常处理语句： try { 需要被检测的代码； } catch () { 处理异常的代码； } finally { 一定会执行的代码； }</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>有三个结合格式： 1. 第一种 ```java try {</td>
+			</tr>
+			<tr>
+					<td>} catch () { } =2. 第二种=java try {</td>
+			</tr>
+			<tr>
+					<td>} finally {</td>
+			</tr>
+			<tr>
+					<td>} ```</td>
+			</tr>
+			<tr>
+					<td>3. 第三种 ```java try {</td>
+			</tr>
+			<tr>
+					<td>} catch () { } finally {</td>
+			</tr>
+			<tr>
+					<td>} ```</td>
+			</tr>
+			<tr>
+					<td>## 注意: 1. finally 中定义的通常是 关闭资源代码。因为资源必须释放。 2. finally 只有一种情况不会执行。当执行到 System.exit(0);fianlly 不会执行。</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="自定义异常">自定义异常：<a hidden class="anchor" aria-hidden="true" href="#自定义异常">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>定义类继承Exception或者RuntimeException
+</span></span><span style="display:flex;"><span>1. 为了让该自定义类具备可抛性。
+</span></span><span style="display:flex;"><span>2. 让该类具备操作异常的共性方法。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>当要定义自定义异常的信息时，可以使用父类已经定义好的功能。
+</span></span><span style="display:flex;"><span>异常异常信息传递给父类的构造函数。
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyException</span> <span style="color:#66d9ef">extends</span> Exception
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        MyException(String message)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span>(message);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><h2 id="自定义异常-1">自定义异常:<a hidden class="anchor" aria-hidden="true" href="#自定义异常-1">#</a></h2>
+<h2 id="按照-java-的面向对象思想将程序中出现的特有问题进行封装-按照-java-的面向对象思想将程序中出现的特有问题进行封装">按照 java 的面向对象思想，将程序中出现的特有问题进行封装。 {#按照 java 的面向对象思想将程序中出现的特有问题进行封装}<a hidden class="anchor" aria-hidden="true" href="#按照-java-的面向对象思想将程序中出现的特有问题进行封装-按照-java-的面向对象思想将程序中出现的特有问题进行封装">#</a></h2>
+<h2 id="异常的好处">异常的好处：<a hidden class="anchor" aria-hidden="true" href="#异常的好处">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>1. 将问题进行封装。
+</span></span><span style="display:flex;"><span>2. 将正常流程代码和问题处理代码相分离，方便于阅读。
+</span></span></code></pre></div><h2 id="异常的处理原则">异常的处理原则：<a hidden class="anchor" aria-hidden="true" href="#异常的处理原则">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>1. 处理方式有两种：try 或者 throws。
+</span></span><span style="display:flex;"><span>2. 调用到抛出异常的功能时，抛出几个，就处理几个。
+</span></span><span style="display:flex;"><span>    一个try对应多个catch。
+</span></span><span style="display:flex;"><span>3. 多个catch，父类的catch放到最下面。
+</span></span><span style="display:flex;"><span>4. catch内，需要定义针对性的处理方式。不要简单的定义printStackTrace，输出语句。
+</span></span><span style="display:flex;"><span>    也不要不写。
+</span></span><span style="display:flex;"><span>    当捕获到的异常，本功能处理不了时，可以继续在catch中抛出。
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> AException();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">catch</span> (AException e)
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> e;
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>如果该异常处理不了，但并不属于该功能出现的异常。
+可以将异常转换后，在抛出和该功能相关的异常。</p>
+<p>或者异常可以处理，当需要将异常产生的和本功能相关的问题提供出去，
+当调用者知道。并处理。也可以将捕获异常处理后，转换新的异常。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">try</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> AException();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">catch</span> (AException e)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 对AException处理。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> BException();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>    比如，汇款的例子。
+</span></span></code></pre></div><p>异常的注意事项： 在子父类覆盖时：
+1，子类抛出的异常必须是父类的异常的子类或者子集。
+2，如果父类或者接口没有异常抛出时，子类覆盖出现异常，只能 try 不能抛。</p>
+<p>参阅 ExceptionTest.java 老师用电脑上课 ExceptionTest1.java 图形面积。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            x <span style="color:#f92672">=</span> 4;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">catch</span> ()
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">finally</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;x=&#34;</span><span style="color:#f92672">+</span>x);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/java/">Java</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

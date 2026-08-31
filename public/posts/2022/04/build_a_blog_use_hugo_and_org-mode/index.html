@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>使用Org-mode 和 hugo 搭建博客 | Waver&#39;s Blog</title>
+<meta name="keywords" content="org-mode">
+<meta name="description" content="开篇
+最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了),
+下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.
+环境搭建
+
+hugo Install Hugo
+hugo 主题 Hugo theme Stack
+ox-hugo
+pandoc (用于博客迁移, 将 markdown 转为 org 文件)
+
+搭建步骤
+
+
+通过 hugo 初始化一个目录
+     # blog 为你的博客目录名称
+     hugo new site blog
+
+
+将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了
+
+
+挑选博客主题我这里选用的是: Hugo theme Stack
+根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了
+
+
+进入到博客根目录下的 themes 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块
+        git submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack
+
+
+进入到主题目录下的 exampleSite 文件夹下 /blog/themes/hugo-theme-stack/exampleSite/ 将其中的 content 文件夹和 config.yaml 文件覆盖到博客根目录下.">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="使用Org-mode 和 hugo 搭建博客">
+  <meta property="og:description" content="开篇 最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了), 下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.
+环境搭建 hugo Install Hugo hugo 主题 Hugo theme Stack ox-hugo pandoc (用于博客迁移, 将 markdown 转为 org 文件) 搭建步骤 通过 hugo 初始化一个目录
+# blog 为你的博客目录名称 hugo new site blog 将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了
+挑选博客主题我这里选用的是: Hugo theme Stack 根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了
+进入到博客根目录下的 themes 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块
+git submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack 进入到主题目录下的 exampleSite 文件夹下 /blog/themes/hugo-theme-stack/exampleSite/ 将其中的 content 文件夹和 config.yaml 文件覆盖到博客根目录下.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-04-10T00:55:00+08:00">
+    <meta property="article:modified_time" content="2022-04-11T17:27:47+08:00">
+    <meta property="article:tag" content="Org-Mode">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="使用Org-mode 和 hugo 搭建博客">
+  <meta name="twitter:description" content="开篇 最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了), 下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.
+环境搭建 hugo Install Hugo hugo 主题 Hugo theme Stack ox-hugo pandoc (用于博客迁移, 将 markdown 转为 org 文件) 搭建步骤 通过 hugo 初始化一个目录
+# blog 为你的博客目录名称 hugo new site blog 将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了
+挑选博客主题我这里选用的是: Hugo theme Stack 根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了
+进入到博客根目录下的 themes 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块
+git submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack 进入到主题目录下的 exampleSite 文件夹下 /blog/themes/hugo-theme-stack/exampleSite/ 将其中的 content 文件夹和 config.yaml 文件覆盖到博客根目录下.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "2019 Index",
+      "item": "https://waver.me/posts/2022/04/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "使用Org-mode 和 hugo 搭建博客",
+      "item": "https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "使用Org-mode 和 hugo 搭建博客",
+  "name": "使用Org-mode 和 hugo 搭建博客",
+  "description": "开篇 最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了), 下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.\n环境搭建 hugo Install Hugo hugo 主题 Hugo theme Stack ox-hugo pandoc (用于博客迁移, 将 markdown 转为 org 文件) 搭建步骤 通过 hugo 初始化一个目录\n# blog 为你的博客目录名称 hugo new site blog 将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了\n挑选博客主题我这里选用的是: Hugo theme Stack 根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了\n进入到博客根目录下的 themes 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块\ngit submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack 进入到主题目录下的 exampleSite 文件夹下 /blog/themes/hugo-theme-stack/exampleSite/ 将其中的 content 文件夹和 config.yaml 文件覆盖到博客根目录下.\n",
+  "keywords": [
+    "org-mode"
+  ],
+  "articleBody": "开篇 最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了), 下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.\n环境搭建 hugo Install Hugo hugo 主题 Hugo theme Stack ox-hugo pandoc (用于博客迁移, 将 markdown 转为 org 文件) 搭建步骤 通过 hugo 初始化一个目录\n# blog 为你的博客目录名称 hugo new site blog 将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了\n挑选博客主题我这里选用的是: Hugo theme Stack 根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了\n进入到博客根目录下的 themes 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块\ngit submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack 进入到主题目录下的 exampleSite 文件夹下 /blog/themes/hugo-theme-stack/exampleSite/ 将其中的 content 文件夹和 config.yaml 文件覆盖到博客根目录下.\n根据自己的喜好修改配置文件\n最终的目录结构如下:\n . ├──  archetypes ├──  config.yaml ├──  content ├──  data ├──  layouts ├──  LICENSE ├──  org ├──  public ├──  README.org ├──  resources ├──  static └──  themes └──  hugo-theme-stack 工具配置 因为我使用的是 Doom Emacs 这里也就以此为例\n安装 ox-hugo 在 ~/.doom.d/packages.el 中添加下面代码, 以引入 ox-hugo 依赖\n;; 添加 ox-hugo (package! ox-hugo) 在 ~/.doom.d/config.el 文件中加入以下代码, 配置 ox-hugo 加载的时间\n;; hugo org 转 markdown (use-package! ox-hugo :after ox :config (setq ;; 设置在文件导出到content下的哪个目录，我的这个是 content/post org-hugo-section \"post\" ;; 设置文章的最后修改时间为导出时间 org-hugo-auto-set-lastmod\tt ) ;; 设置在org文件保存的时候自动导出到org-hugo-section下 (org-hugo-auto-export-mode) ) 添加代码片段(snippet), 方便以后创建文章使用在 ~/.doom.d/init.el 中将 :editor snippets 注释去掉, 启用模块. 使用 M-x doom/reload 下载并重新加载模块然后使用 M-x yas-new-snippet 创建一个 snippet 将下面代码片段复制到 snippet 编辑区\n# -*- mode: snippet -*- # name: hugo # uuid: edb130fa-6a6c-452b-8d2d-52b0400241fe # key: hugo # condition: t # -- #+OPTIONS: author:nil ^:{} #+HUGO_BASE_DIR: ../../../blog #+HUGO_SECTION: post/`(format-time-string \"%Y/%m\")` #+HUGO_CUSTOM_FRONT_MATTER: :toc true #+HUGO_AUTO_SET_LASTMOD: t #+HUGO_DRAFT: false #+DATE: `(format-time-string \"[%Y-%m-%d %a %H:%M]\")` #+TITLE: $1 #+HUGO_TAGS: $2 #+HUGO_CATEGORIES: $3 $0 注意:\n#+HUGO_BASE_DIR 的值以自己的为准, 也可以使用绝对路径, 指定的目录就是你的博客根目录 #+DATE 的时间格式最好不要改动, 中间的 %a 代表的是周几, 而且当光标处于日期上时, 通过快捷键 Shift+左/右方向键 可以以天为单位前后调整日期. 编辑好 snippet 后通过快捷键 C-c C-c 来创建在 Choose or enter a table (yas guesses nothing): 中输入 org-mode 然后在 File to save snippet in: ~/.doom.d/snippets/org-mode/ 后面输入 __hugo.org 保存结束即可建立成功后在 org 文件中 通过输入 hugo 关键字来快速插入代码片段效果如下:\n也可以通过 M-x yas-insert-snippet 或通过快捷键 C-c \u0026 C-s 然后通过关键字 hugo 进行选用.\n文件转换和生成 使用 C-c C-e H A 将文件转为 markdown 文件\n自动导出, 实时预览 在 blog 根目录创建 .dir-locals.el 文件内容如下:\n;; .dir-locals.el ((\"org/\" . ((org-mode . ((eval . (org-hugo-auto-export-mode))))))) 其中 org 是你存放 org 文件的目录.\n生成静态文件和部署 生成: 在博客根目录使用命令 hugo -D 生成静态文件, 提交推送到 github 仓库 部署到 vercel: 选择要部署的仓库 选择项目类型, 这里选择 Other 就行 选择发布根目录 自定义域名 修改 vervel 分配的域名 添加自定义域名 选择重定向方式三种方式分别是:\nxxx.com –\u003e www.xxx.com www.xxx.com –\u003e xxx.com 只添加 xxx.com 不进行重定向 ",
+  "wordCount" : "349",
+  "inLanguage": "zh",
+  "datePublished": "2022-04-10T00:55:00+08:00",
+  "dateModified": "2022-04-11T17:27:47+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      使用Org-mode 和 hugo 搭建博客
+    </h1>
+    <div class="post-meta">
+
+<span title='2022-04-10 00:55:00 +0800 CST'>2022年4月10日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="开篇">开篇<a hidden class="anchor" aria-hidden="true" href="#开篇">#</a></h2>
+<p>最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了),
+下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.</p>
+<h2 id="环境搭建">环境搭建<a hidden class="anchor" aria-hidden="true" href="#环境搭建">#</a></h2>
+<ol>
+<li>hugo <a href="https://gohugo.io/getting-started/installing/">Install Hugo</a></li>
+<li>hugo 主题 <a href="https://docs.stack.jimmycai.com/">Hugo theme Stack</a></li>
+<li>ox-hugo</li>
+<li>pandoc (用于博客迁移, 将 markdown 转为 org 文件)</li>
+</ol>
+<h3 id="搭建步骤">搭建步骤<a hidden class="anchor" aria-hidden="true" href="#搭建步骤">#</a></h3>
+<ol>
+<li>
+<p>通过 hugo 初始化一个目录</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>     <span style="color:#75715e"># blog 为你的博客目录名称</span>
+</span></span><span style="display:flex;"><span>     hugo new site blog
+</span></span></code></pre></div></li>
+<li>
+<p>将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了</p>
+</li>
+<li>
+<p>挑选博客主题我这里选用的是: <a href="https://docs.stack.jimmycai.com/">Hugo theme Stack</a>
+根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了</p>
+<ol>
+<li>
+<p>进入到博客根目录下的 <code>themes</code> 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>        git submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack
+</span></span></code></pre></div></li>
+<li>
+<p>进入到主题目录下的 exampleSite 文件夹下 <code>/blog/themes/hugo-theme-stack/exampleSite/</code> 将其中的 <code>content</code> 文件夹和 <code>config.yaml</code> 文件覆盖到博客根目录下.</p>
+</li>
+<li>
+<p>根据自己的喜好修改配置文件</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>最终的目录结构如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span> .
+</span></span><span style="display:flex;"><span>├──  archetypes
+</span></span><span style="display:flex;"><span>├──  config.yaml
+</span></span><span style="display:flex;"><span>├──  content
+</span></span><span style="display:flex;"><span>├──  data
+</span></span><span style="display:flex;"><span>├──  layouts
+</span></span><span style="display:flex;"><span>├──  LICENSE
+</span></span><span style="display:flex;"><span>├──  org
+</span></span><span style="display:flex;"><span>├──  public
+</span></span><span style="display:flex;"><span>├──  README.org
+</span></span><span style="display:flex;"><span>├──  resources
+</span></span><span style="display:flex;"><span>├──  static
+</span></span><span style="display:flex;"><span>└──  themes
+</span></span><span style="display:flex;"><span>   └──  hugo-theme-stack
+</span></span></code></pre></div><h2 id="工具配置">工具配置<a hidden class="anchor" aria-hidden="true" href="#工具配置">#</a></h2>
+<p>因为我使用的是 <code>Doom Emacs</code> 这里也就以此为例</p>
+<ol>
+<li>
+<p>安装 ox-hugo
+在 <code>~/.doom.d/packages.el</code> 中添加下面代码, 以引入 ox-hugo 依赖</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-elisp" data-lang="elisp"><span style="display:flex;"><span>    <span style="color:#75715e">;; 添加 ox-hugo</span>
+</span></span><span style="display:flex;"><span>    (package! ox-hugo)
+</span></span></code></pre></div><p>在 <code>~/.doom.d/config.el</code> 文件中加入以下代码, 配置 ox-hugo 加载的时间</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-elisp" data-lang="elisp"><span style="display:flex;"><span>    <span style="color:#75715e">;; hugo org 转 markdown</span>
+</span></span><span style="display:flex;"><span>    (use-package! ox-hugo
+</span></span><span style="display:flex;"><span>      :after ox
+</span></span><span style="display:flex;"><span>        :config
+</span></span><span style="display:flex;"><span>    (setq
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">;; 设置在文件导出到content下的哪个目录，我的这个是 content/post</span>
+</span></span><span style="display:flex;"><span>   org-hugo-section <span style="color:#e6db74">&#34;post&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">;; 设置文章的最后修改时间为导出时间</span>
+</span></span><span style="display:flex;"><span>   org-hugo-auto-set-lastmod	<span style="color:#66d9ef">t</span>
+</span></span><span style="display:flex;"><span>   )
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">;; 设置在org文件保存的时候自动导出到org-hugo-section下</span>
+</span></span><span style="display:flex;"><span>    (org-hugo-auto-export-mode)
+</span></span><span style="display:flex;"><span>      )
+</span></span></code></pre></div></li>
+<li>
+<p>添加代码片段(snippet), 方便以后创建文章使用在  <code>~/.doom.d/init.el</code> 中将 <code>:editor snippets</code> 注释去掉, 启用模块. 使用 <code>M-x doom/reload</code> 下载并重新加载模块然后使用 <code>M-x yas-new-snippet</code> 创建一个 snippet
+将下面代码片段复制到 snippet 编辑区</p>
+<pre tabindex="0"><code class="language-nil" data-lang="nil">    # -*- mode: snippet -*-
+    # name: hugo
+    # uuid: edb130fa-6a6c-452b-8d2d-52b0400241fe
+    # key: hugo
+    # condition: t
+    # --
+    #+OPTIONS: author:nil ^:{}
+    #+HUGO_BASE_DIR: ../../../blog
+    #+HUGO_SECTION: post/`(format-time-string &#34;%Y/%m&#34;)`
+    #+HUGO_CUSTOM_FRONT_MATTER: :toc true
+    #+HUGO_AUTO_SET_LASTMOD: t
+    #+HUGO_DRAFT: false
+    #+DATE: `(format-time-string &#34;[%Y-%m-%d %a %H:%M]&#34;)`
+    #+TITLE: $1
+    #+HUGO_TAGS: $2
+    #+HUGO_CATEGORIES: $3
+
+    $0
+</code></pre></li>
+</ol>
+<p>注意:</p>
+<ol>
+<li><code>#+HUGO_BASE_DIR</code> 的值以自己的为准, 也可以使用绝对路径, 指定的目录就是你的博客根目录</li>
+<li><code>#+DATE</code> 的时间格式最好不要改动, 中间的 <code>%a</code> 代表的是周几, 而且当光标处于日期上时, 通过快捷键 <code>Shift+左/右方向键</code> 可以以天为单位前后调整日期.</li>
+</ol>
+<p>编辑好 snippet 后通过快捷键 <code>C-c C-c</code> 来创建在 <code>Choose or enter a table (yas guesses nothing):</code> 中输入 <code>org-mode</code>
+然后在 <code>File to save snippet in: ~/.doom.d/snippets/org-mode/</code> 后面输入 <code>__hugo.org</code> 保存结束即可建立成功后在 org 文件中 通过输入 <code>hugo</code> 关键字来快速插入代码片段效果如下:</p>
+<p><img loading="lazy" src="/ox-hugo/01.png">
+<img loading="lazy" src="/ox-hugo/02.png">
+也可以通过 <code>M-x yas-insert-snippet</code> 或通过快捷键 <code>C-c &amp; C-s</code> 然后通过关键字 hugo 进行选用.</p>
+<h2 id="文件转换和生成">文件转换和生成<a hidden class="anchor" aria-hidden="true" href="#文件转换和生成">#</a></h2>
+<p>使用 <code>C-c C-e H A</code> 将文件转为 markdown 文件</p>
+<h3 id="自动导出-实时预览">自动导出, 实时预览<a hidden class="anchor" aria-hidden="true" href="#自动导出-实时预览">#</a></h3>
+<p>在 blog 根目录创建 <code>.dir-locals.el</code>
+文件内容如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-elisp" data-lang="elisp"><span style="display:flex;"><span><span style="color:#75715e">;; .dir-locals.el</span>
+</span></span><span style="display:flex;"><span>((<span style="color:#e6db74">&#34;org/&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">.</span> ((org-mode <span style="color:#f92672">.</span> ((<span style="color:#a6e22e">eval</span> <span style="color:#f92672">.</span> (org-hugo-auto-export-mode)))))))
+</span></span></code></pre></div><p>其中 <code>org</code> 是你存放 org 文件的目录.</p>
+<h2 id="生成静态文件和部署">生成静态文件和部署<a hidden class="anchor" aria-hidden="true" href="#生成静态文件和部署">#</a></h2>
+<ol>
+<li>生成:
+在博客根目录使用命令 <code>hugo -D</code> 生成静态文件, 提交推送到 github 仓库</li>
+<li>部署到 <a href="https://vercel.com">vercel</a>:
+<ol>
+<li>
+<p>选择要部署的仓库
+<img loading="lazy" src="/ox-hugo/03.png"></p>
+</li>
+<li>
+<p>选择项目类型, 这里选择 Other 就行
+<img loading="lazy" src="/ox-hugo/04.png"></p>
+</li>
+<li>
+<p>选择发布根目录
+<img loading="lazy" src="/ox-hugo/05.png"></p>
+</li>
+<li>
+<p>自定义域名
+<img loading="lazy" src="/ox-hugo/06.png"></p>
+</li>
+<li>
+<p>修改 vervel 分配的域名
+<img loading="lazy" src="/ox-hugo/07.png"></p>
+</li>
+<li>
+<p>添加自定义域名
+<img loading="lazy" src="/ox-hugo/08.png"></p>
+</li>
+<li>
+<p>选择重定向方式三种方式分别是:</p>
+<ul>
+<li>xxx.com &ndash;&gt; <a href="https://www.xxx.com">www.xxx.com</a></li>
+<li><a href="https://www.xxx.com">www.xxx.com</a> &ndash;&gt; xxx.com</li>
+<li>只添加 xxx.com 不进行重定向</li>
+</ul>
+<figure>
+            <img loading="lazy" src="/ox-hugo/09.png"/> 
+        </figure>
+
+</li>
+</ol>
+</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/org-mode/">Org-Mode</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

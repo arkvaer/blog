@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>使用 Kind &#43; Podman 搭建本地 Kubernetes 多节点集群 | Waver&#39;s Blog</title>
+<meta name="keywords" content="云原生">
+<meta name="description" content="想系统学习 Kubernetes，单节点环境只能解决最基础的 Pod、Deployment 和 Service 实验。当开始涉及 Node、Service、负载均衡、滚动更新、扩缩容以及容器网络时，一个多节点 Kubernetes 集群会更有价值。
+生产环境通常使用 kubeadm、RKE2、K3s 或云厂商 Kubernetes 服务，但对于本地学习和实验，直接部署完整 Kubernetes 集群成本较高。
+本文采用：
+
+Fedora Linux
+Podman
+Kind
+kubectl
+
+搭建一个包含 1 个 Control Plane &#43; 2 个 Worker 的本地 Kubernetes 集群，并在此基础上完成镜像管理、Service 暴露、负载均衡、Deployment 扩缩容和滚动更新。
+
+一、为什么选择 Kind &#43; Podman
+Kind（Kubernetes IN Docker）本质上是一个用于创建 Kubernetes 测试集群的工具。
+它与传统 Kubernetes 部署方式最大的区别是：
+
+Kind 不需要为每个 Kubernetes Node 创建完整虚拟机，而是直接将 Kubernetes Node 运行在容器中。
+
+因此，一个三节点 Kubernetes 集群可以抽象成：
+┌──────────────────────────────────────────┐
+│                Fedora Host               │
+│                                          │
+│                 Podman                   │
+│                    │                     │
+│        ┌───────────┼───────────┐         │
+│        │           │           │         │
+│   control-plane  worker      worker      │
+│        │           │           │         │
+│     Kubernetes  Kubernetes  Kubernetes   │
+│        Node        Node        Node      │
+└──────────────────────────────────────────┘
+这种架构非常适合学习 Kubernetes，因为 Kubernetes 的 Node、Pod、Service、Deployment 等核心概念依然存在，只是 Node 的物理载体从虚拟机变成了容器。">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2026/08/building_a_local_kubernetes_multi-node_cluster_using_kind_and_podman/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2026/08/building_a_local_kubernetes_multi-node_cluster_using_kind_and_podman/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2026/08/building_a_local_kubernetes_multi-node_cluster_using_kind_and_podman/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="使用 Kind &#43; Podman 搭建本地 Kubernetes 多节点集群">
+  <meta property="og:description" content="想系统学习 Kubernetes，单节点环境只能解决最基础的 Pod、Deployment 和 Service 实验。当开始涉及 Node、Service、负载均衡、滚动更新、扩缩容以及容器网络时，一个多节点 Kubernetes 集群会更有价值。
+生产环境通常使用 kubeadm、RKE2、K3s 或云厂商 Kubernetes 服务，但对于本地学习和实验，直接部署完整 Kubernetes 集群成本较高。
+本文采用：
+Fedora Linux Podman Kind kubectl 搭建一个包含 1 个 Control Plane &#43; 2 个 Worker 的本地 Kubernetes 集群，并在此基础上完成镜像管理、Service 暴露、负载均衡、Deployment 扩缩容和滚动更新。
+一、为什么选择 Kind &#43; Podman Kind（Kubernetes IN Docker）本质上是一个用于创建 Kubernetes 测试集群的工具。
+它与传统 Kubernetes 部署方式最大的区别是：
+Kind 不需要为每个 Kubernetes Node 创建完整虚拟机，而是直接将 Kubernetes Node 运行在容器中。
+因此，一个三节点 Kubernetes 集群可以抽象成：
+┌──────────────────────────────────────────┐ │ Fedora Host │ │ │ │ Podman │ │ │ │ │ ┌───────────┼───────────┐ │ │ │ │ │ │ │ control-plane worker worker │ │ │ │ │ │ │ Kubernetes Kubernetes Kubernetes │ │ Node Node Node │ └──────────────────────────────────────────┘ 这种架构非常适合学习 Kubernetes，因为 Kubernetes 的 Node、Pod、Service、Deployment 等核心概念依然存在，只是 Node 的物理载体从虚拟机变成了容器。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2017-12-25T19:25:00+08:00">
+    <meta property="article:modified_time" content="2022-04-13T09:04:59+08:00">
+    <meta property="article:tag" content="云原生">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="使用 Kind &#43; Podman 搭建本地 Kubernetes 多节点集群">
+  <meta name="twitter:description" content="想系统学习 Kubernetes，单节点环境只能解决最基础的 Pod、Deployment 和 Service 实验。当开始涉及 Node、Service、负载均衡、滚动更新、扩缩容以及容器网络时，一个多节点 Kubernetes 集群会更有价值。
+生产环境通常使用 kubeadm、RKE2、K3s 或云厂商 Kubernetes 服务，但对于本地学习和实验，直接部署完整 Kubernetes 集群成本较高。
+本文采用：
+Fedora Linux Podman Kind kubectl 搭建一个包含 1 个 Control Plane &#43; 2 个 Worker 的本地 Kubernetes 集群，并在此基础上完成镜像管理、Service 暴露、负载均衡、Deployment 扩缩容和滚动更新。
+一、为什么选择 Kind &#43; Podman Kind（Kubernetes IN Docker）本质上是一个用于创建 Kubernetes 测试集群的工具。
+它与传统 Kubernetes 部署方式最大的区别是：
+Kind 不需要为每个 Kubernetes Node 创建完整虚拟机，而是直接将 Kubernetes Node 运行在容器中。
+因此，一个三节点 Kubernetes 集群可以抽象成：
+┌──────────────────────────────────────────┐ │ Fedora Host │ │ │ │ Podman │ │ │ │ │ ┌───────────┼───────────┐ │ │ │ │ │ │ │ control-plane worker worker │ │ │ │ │ │ │ Kubernetes Kubernetes Kubernetes │ │ Node Node Node │ └──────────────────────────────────────────┘ 这种架构非常适合学习 Kubernetes，因为 Kubernetes 的 Node、Pod、Service、Deployment 等核心概念依然存在，只是 Node 的物理载体从虚拟机变成了容器。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2026 Index",
+      "item": "https://waver.me/posts/2026/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "使用 Kind + Podman 搭建本地 Kubernetes 多节点集群",
+      "item": "https://waver.me/posts/2026/08/building_a_local_kubernetes_multi-node_cluster_using_kind_and_podman/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "使用 Kind + Podman 搭建本地 Kubernetes 多节点集群",
+  "name": "使用 Kind \u002b Podman 搭建本地 Kubernetes 多节点集群",
+  "description": "想系统学习 Kubernetes，单节点环境只能解决最基础的 Pod、Deployment 和 Service 实验。当开始涉及 Node、Service、负载均衡、滚动更新、扩缩容以及容器网络时，一个多节点 Kubernetes 集群会更有价值。\n生产环境通常使用 kubeadm、RKE2、K3s 或云厂商 Kubernetes 服务，但对于本地学习和实验，直接部署完整 Kubernetes 集群成本较高。\n本文采用：\nFedora Linux Podman Kind kubectl 搭建一个包含 1 个 Control Plane + 2 个 Worker 的本地 Kubernetes 集群，并在此基础上完成镜像管理、Service 暴露、负载均衡、Deployment 扩缩容和滚动更新。\n一、为什么选择 Kind + Podman Kind（Kubernetes IN Docker）本质上是一个用于创建 Kubernetes 测试集群的工具。\n它与传统 Kubernetes 部署方式最大的区别是：\nKind 不需要为每个 Kubernetes Node 创建完整虚拟机，而是直接将 Kubernetes Node 运行在容器中。\n因此，一个三节点 Kubernetes 集群可以抽象成：\n┌──────────────────────────────────────────┐ │ Fedora Host │ │ │ │ Podman │ │ │ │ │ ┌───────────┼───────────┐ │ │ │ │ │ │ │ control-plane worker worker │ │ │ │ │ │ │ Kubernetes Kubernetes Kubernetes │ │ Node Node Node │ └──────────────────────────────────────────┘ 这种架构非常适合学习 Kubernetes，因为 Kubernetes 的 Node、Pod、Service、Deployment 等核心概念依然存在，只是 Node 的物理载体从虚拟机变成了容器。\n",
+  "keywords": [
+    "云原生"
+  ],
+  "articleBody": "想系统学习 Kubernetes，单节点环境只能解决最基础的 Pod、Deployment 和 Service 实验。当开始涉及 Node、Service、负载均衡、滚动更新、扩缩容以及容器网络时，一个多节点 Kubernetes 集群会更有价值。\n生产环境通常使用 kubeadm、RKE2、K3s 或云厂商 Kubernetes 服务，但对于本地学习和实验，直接部署完整 Kubernetes 集群成本较高。\n本文采用：\nFedora Linux Podman Kind kubectl 搭建一个包含 1 个 Control Plane + 2 个 Worker 的本地 Kubernetes 集群，并在此基础上完成镜像管理、Service 暴露、负载均衡、Deployment 扩缩容和滚动更新。\n一、为什么选择 Kind + Podman Kind（Kubernetes IN Docker）本质上是一个用于创建 Kubernetes 测试集群的工具。\n它与传统 Kubernetes 部署方式最大的区别是：\nKind 不需要为每个 Kubernetes Node 创建完整虚拟机，而是直接将 Kubernetes Node 运行在容器中。\n因此，一个三节点 Kubernetes 集群可以抽象成：\n┌──────────────────────────────────────────┐ │ Fedora Host │ │ │ │ Podman │ │ │ │ │ ┌───────────┼───────────┐ │ │ │ │ │ │ │ control-plane worker worker │ │ │ │ │ │ │ Kubernetes Kubernetes Kubernetes │ │ Node Node Node │ └──────────────────────────────────────────┘ 这种架构非常适合学习 Kubernetes，因为 Kubernetes 的 Node、Pod、Service、Deployment 等核心概念依然存在，只是 Node 的物理载体从虚拟机变成了容器。\n而 Podman 本身支持 Rootless Container，因此可以进一步降低本地实验环境对 root 权限的依赖。\n二、安装基础环境 首先安装 Podman、网络相关组件、kubectl 和 Docker Compose：\nsudo dnf install podman passt kubectl docker-compose podman-docker 然后安装 Kind：\ngo install sigs.k8s.io/kind@v0.33.0 确认安装：\npodman --version kubectl version --client kind version 这里有一个容易忽略的问题：\nKind 的容器运行时和 Kubernetes 本身是两个不同层次的概念。\n可以简单理解为：\nkubectl │ ▼ Kubernetes API Server │ ▼ Kubernetes Cluster │ ▼ Kind Node │ ▼ Podman Container Runtime kubectl 操作的是 Kubernetes API，而 Podman 负责承载 Kind Node 容器。\n三、创建多节点 Kubernetes 集群 3.1 创建 Kind 配置文件 创建 kind.yaml：\nkind: Cluster apiVersion: kind.x-k8s.io/v1alpha4 nodes: - role: control-plane extraPortMappings: - containerPort: 80 hostPort: 8080 protocol: TCP - containerPort: 443 hostPort: 8443 protocol: TCP - role: worker - role: worker 这个配置创建：\nControl Plane × 1 Worker × 2 同时把 Control Plane 容器的：\n80 → 宿主机 8080 443 → 宿主机 8443 进行端口映射。\n需要注意：\nextraPortMappings 是 Kind Node 容器与宿主机之间的端口映射，并不等同于 Kubernetes Service 的 NodePort。\n这是 Kind 使用过程中非常容易混淆的两个概念。\n3.2 创建集群 执行：\nkind create cluster \\ --name dev \\ --config kind.yaml 如果使用 Podman 作为 Kind Provider，可以看到类似：\nusing podman due to KIND_EXPERIMENTAL_PROVIDER enabling experimental podman provider 创建完成后查看集群：\nkind get clusters 查看 Kubernetes Node：\nkubectl get nodes -o wide 正常情况下可以看到：\nNAME STATUS ROLES AGE dev-control-plane Ready control-plane ... dev-worker Ready ... dev-worker2 Ready ... 至此，一个三节点 Kubernetes 集群已经运行起来。\n四、Kind 中的镜像管理 在本地使用 Kind 时，一个非常常见的问题是：\n宿主机明明已经有这个镜像，为什么 Kubernetes 创建 Pod 时仍然需要拉取镜像？\n原因在于：\n宿主机的容器镜像存储与 Kind Node 内部的容器镜像存储并不是同一个环境。\n架构可以理解为：\nFedora Host │ └── Podman Image Store │ │ podman pull ▼ Kubernetes Image Kind Cluster │ ├── dev-control-plane ├── dev-worker └── dev-worker2 │ └── Node 内部的 Container Runtime 因此：\npodman pull xxx 只是将镜像拉到了宿主机的镜像存储中。\nKubernetes Pod 真正启动时，需要 Node 内部能够访问这个镜像。\n五、使用 kind load 加载本地镜像 对于无法直接访问 Docker Hub、GCR 等公网 Registry 的环境，一个非常实用的方法是：\n先在宿主机拉取镜像，再使用 kind load docker-image 将镜像加载到 Kind 集群。\n例如：\npodman pull gcr.io/google-samples/kubernetes-bootcamp:v1 然后：\nkind load docker-image \\ gcr.io/google-samples/kubernetes-bootcamp:v1 \\ --name dev 最后创建 Deployment：\nkubectl create deployment kubernetes-bootcamp \\ --image=gcr.io/google-samples/kubernetes-bootcamp:v1 这种方式特别适合以下场景：\n国内网络环境无法直接访问海外 Registry 本地开发镜像 Kubernetes 实验环境 CI/CD 测试 不希望搭建私有 Registry 的临时实验 5.1 为什么不要使用 latest 这里有一个非常重要的实践原则：\nKind 加载本地镜像时，尽量使用明确的版本 Tag，不要使用 latest。\n例如：\n推荐： kubernetes-bootcamp:v1 不推荐： kubernetes-bootcamp:latest 原因在于 latest 并不是一个稳定的版本标识。\n如果 Kubernetes 认为本地镜像不可用，或者 Pod 的 imagePullPolicy 导致重新拉取镜像，就可能再次访问远程 Registry。\n因此，在本地实验环境中，最好始终使用明确版本：\nimage: kubernetes-bootcamp:v1 而不是：\nimage: kubernetes-bootcamp:latest 版本化镜像 Tag 是可重复实验的重要基础。\n六、解决 Kind 节点无法拉取镜像的问题 如果希望 Kubernetes Node 自己通过网络拉取镜像，就需要解决 Kind Node 的网络访问问题。\n例如：\nkind create cluster \\ --name dev \\ --config kind.yaml 进入 Control Plane：\npodman exec -it dev-control-plane bash 然后为 containerd 配置代理：\nmkdir -p /etc/systemd/system/containerd.service.d 创建：\ncat \u003e/etc/systemd/system/containerd.service.d/proxy.conf \u003c\u003c'EOF' [Service] Environment=\"HTTP_PROXY=http://host.containers.internal:10808\" Environment=\"HTTPS_PROXY=http://host.containers.internal:10808\" Environment=\"NO_PROXY=localhost,127.0.0.1,10.88.0.0/16,10.96.0.0/12,10.244.0.0/16,.svc,.svc.cluster.local\" EOF 这里有几个关键点。\nhost.containers.internal 这是容器访问宿主机的一种特殊主机名。\n在本例中：\nKind Node │ │ HTTP_PROXY ▼ host.containers.internal:10808 │ ▼ Fedora Host │ ▼ 代理服务 这样 Kind Node 内部的 containerd 就可以通过宿主机代理访问外部 Registry。\n6.1 NO_PROXY 为什么重要 代理配置不能简单地写成：\n所有流量 → Proxy Kubernetes 集群内部存在大量不应该经过外部代理的地址，例如：\nlocalhost 127.0.0.1 Service CIDR Pod CIDR .svc .svc.cluster.local 因此需要配置：\nNO_PROXY 例如：\n10.96.0.0/12 通常对应 Kubernetes Service 网络。\n而：\n10.244.0.0/16 则可以对应 Pod 网络。\n实际 CIDR 应以当前 Kind/Kubernetes 集群配置为准。\n七、系统重启后如何恢复 Kind 集群 Kind Node 本质上是 Podman 容器。\n因此系统重启之后，如果容器没有自动启动，可以手动启动：\npodman start dev-control-plane podman start dev-worker podman start dev-worker2 然后检查：\nkubectl get nodes 如果 Node 状态恢复为：\nReady 说明 Kubernetes 集群已经恢复。\n这里需要注意：\n不要把 kind create cluster 当成集群启动命令。\nkind create cluster 用于创建集群，而已经存在的 Kind Node 可以直接通过容器运行时重新启动。\n八、kubectl 默认 Namespace 由于每次重启后 Kubernetes 都会使用default 作为默认Namespace, 为避免后续频繁切换Namespace, 可以修改默认的Namespeace\nKubernetes 中的资源默认属于当前 Namespace。\n查看所有 Namespace：\nkubectl get namespaces 查看所有 Namespace 中的 Pod：\nkubectl get pods -A 修改当前 kubectl Context 的默认 Namespace：\nkubectl config set-context \\ --current \\ --namespace=kube-system 之后：\nkubectl get pods 默认查询的就是：\nkube-system 而不是：\ndefault 可以通过：\nkubectl config view --minify 检查当前 Context 配置。\n需要明确：\nNamespace 是 Kubernetes API 资源的逻辑隔离边界，不是网络隔离边界。\n因此修改默认 Namespace 只是改变 kubectl 的默认操作范围，并不会改变 Pod 的网络拓扑。\n九、使用 Service 暴露 Deployment 创建 Deployment 后，可以通过 Service 为 Pod 提供稳定的访问入口。\n例如：\nkubectl expose deployment kubernetes-bootcamp \\ --type=NodePort \\ --port=8080 查看 Service：\nkubectl get service 此时 Kubernetes 会创建一个 Service。\nService 的核心价值是：\n为一组动态变化的 Pod 提供稳定的虚拟访问入口。\nPod IP 会随着 Pod 创建、删除、重启而变化。\n例如：\nPod A 10.244.0.5 Pod B 10.244.1.8 Pod C 10.244.2.4 客户端不应该直接依赖这些 Pod IP。\n而应该访问：\nService │ ├── Pod A ├── Pod B └── Pod C Service 通过 Selector 选择后端 Pod，并维护对应的 EndpointSlice。\n十、使用 port-forward 访问 Service 开发和调试过程中，可以直接使用：\nkubectl port-forward \\ service/kubernetes-bootcamp \\ 8080:8080 默认情况下，kubectl port-forward 通常只监听本机回环地址。\n如果希望其他机器也能够访问，可以指定：\nkubectl port-forward \\ service/kubernetes-bootcamp \\ --address 0.0.0.0 \\ 18080:8080 此时访问：\n宿主机IP:18080 即可转发到 Kubernetes Service。\n需要强调：\nkubectl port-forward 更适合开发、调试和临时访问，不应该作为生产环境的服务暴露方案。\n它建立的是：\n客户端 │ ▼ kubectl │ ▼ Kubernetes API │ ▼ Service / Pod 而不是典型的生产流量入口架构。\n十一、为什么宿主机测试 Service 负载均衡可能产生误导 这是本实验中比较容易踩坑的一点。\n在：\nRootless Podman + Kind 环境下，宿主机、Kind Node 和 Kubernetes Pod 实际处于不同的网络层。\n可以抽象为：\nFedora Host │ Podman Network │ ┌────────────┼────────────┐ │ │ │ Control Plane Worker Worker │ │ │ └──────── Kubernetes ─────┘ │ Service │ ┌───────┼───────┐ ▼ ▼ ▼ Pod Pod Pod 因此：\n宿主机访问 Service 所经过的网络路径，与 Kubernetes 集群内部 Pod 访问 Service 并不完全相同。\n如果实验目标是验证 Kubernetes Service 的后端 Pod 分发，最直接的方法是：\n从集群内部发起请求。\n这样可以避免宿主机到 Kind Node 的额外网络路径对实验结果造成干扰。\n十二、从集群内部验证 Service 负载均衡 首先准备一个 curl 镜像：\npodman pull curlimages/curl:8.21.0 加载到 Kind：\nkind load docker-image \\ docker.io/curlimages/curl:8.21.0 \\ --name dev 创建测试 Pod：\nkubectl run test-curl \\ --image=curlimages/curl:8.21.0 \\ -it --rm -- sh 进入 Pod 后执行：\ncurl http://kubernetes-bootcamp:8080 这里直接使用：\nkubernetes-bootcamp 而不是 ClusterIP。\n原因是 Kubernetes 默认提供 Service DNS。\n因此：\nkubernetes-bootcamp │ ▼ Kubernetes DNS │ ▼ Service ClusterIP │ ▼ EndpointSlice │ ▼ Backend Pods 多次执行：\ncurl http://kubernetes-bootcamp:8080 即可观察请求是否被分发到不同的 Pod。\n十三、Service 到底是如何实现负载均衡的？ 从 Kubernetes 的抽象模型来看：\nDeployment │ ▼ ReplicaSet │ ▼ Pods │ ▼ Service Selector │ ▼ EndpointSlice │ ▼ Service 假设 Deployment 有三个 Pod：\nkubernetes-bootcamp-xxx-1 kubernetes-bootcamp-xxx-2 kubernetes-bootcamp-xxx-3 Service 通过 Selector 找到这些 Pod，并将其作为后端 Endpoint。\n客户端访问：\nkubernetes-bootcamp:8080 首先通过 Kubernetes DNS 解析 Service。\n然后由 Kubernetes 节点侧的数据平面组件将 Service 流量转发到对应的后端 Pod。\n因此 Service 最重要的价值并不是简单的“负载均衡器”，而是提供：\n稳定的虚拟 IP 稳定的 DNS 名称 Pod 后端动态发现 后端 Endpoint 生命周期管理 流量转发 这也是为什么客户端不应该直接依赖 Pod IP。\n十四、Deployment 扩容与缩容 当业务流量增加时，可以增加 Deployment 的 Pod 副本数。\n例如扩容到 4 个副本：\nkubectl scale deployments/kubernetes-bootcamp \\ --replicas=4 查看：\nkubectl get pods 缩容到 2 个副本：\nkubectl scale deployments/kubernetes-bootcamp \\ --replicas=2 Deployment 并不是直接管理 Pod，而是通过 ReplicaSet 管理 Pod。\n整体关系：\nDeployment │ ▼ ReplicaSet │ ┌───┼────┐ ▼ ▼ ▼ Pod Pod Pod 执行：\nkubectl scale 本质上是在修改 Deployment 的期望副本数。\n例如：\nreplicas = 4 表示 Kubernetes Controller 希望集群最终保持：\n4 个符合条件的 Pod 如果当前只有 2 个：\nCurrent = 2 Desired = 4 Controller 就会创建新的 Pod。\n反之：\nCurrent = 4 Desired = 2 Controller 就会删除多余 Pod。\n这体现了 Kubernetes 最核心的设计思想之一：\n声明式 API + Controller Reconciliation。\n用户声明“我希望有多少个副本”，Controller 负责不断将实际状态向期望状态收敛。\n十五、Deployment 滚动更新 Kubernetes 不仅可以扩缩容，还可以在不中断业务的情况下更新应用版本。\n例如当前使用：\nkubernetes-bootcamp:v1 准备更新到：\nkubernetes-bootcamp:v2 首先准备镜像：\npodman pull docker.io/jocatalin/kubernetes-bootcamp:v2 然后加载到 Kind：\nkind load docker-image \\ docker.io/jocatalin/kubernetes-bootcamp:v2 \\ --name dev 修改 Deployment：\nkubectl set image deployments/kubernetes-bootcamp \\ kubernetes-bootcamp=docker.io/jocatalin/kubernetes-bootcamp:v2 查看 Pod：\nkubectl get pods 也可以进一步：\nkubectl describe pods 观察 Pod 的镜像版本变化。\n十六、Rolling Update 的工作机制 Deployment 默认采用 RollingUpdate 策略。\n它不是简单地：\n删除所有旧 Pod ↓ 创建所有新 Pod 而是：\n旧版本 Pod │ ├── 创建新版本 Pod │ ├── 等待新 Pod Ready │ ├── 删除部分旧 Pod │ ├── 创建更多新 Pod │ └── 最终全部切换到新版本 最终：\nv1 Pod × 0 v2 Pod × N 因此，在合理配置：\nmaxSurge maxUnavailable Readiness Probe 的情况下，可以实现服务的平滑版本切换。\n这也是 Kubernetes Deployment 相比直接运行 Pod 的重要优势。\n十七、如何回滚 Deployment 如果新版本存在问题，可以将镜像重新切换回旧版本。\n例如：\nkubectl set image deployments/kubernetes-bootcamp \\ kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10 然后：\nkubectl describe pods 检查 Pod 使用的镜像版本。\n在实际生产环境中，更推荐结合 Deployment Revision 使用：\nkubectl rollout history deployment/kubernetes-bootcamp 查看历史版本：\nkubectl rollout history deployment/kubernetes-bootcamp 出现问题时：\nkubectl rollout undo deployment/kubernetes-bootcamp 即可回滚到上一版本。\n因此，一个典型的 Kubernetes 应用发布流程可以抽象为：\nBuild Image │ ▼ Push Registry │ ▼ Update Deployment │ ▼ Rolling Update │ ├── Pod Ready │ ├── Service 接收流量 │ └── Old Pod 逐步退出 │ ▼ Release Done 如果新版本异常：\nDeployment │ ▼ rollout undo │ ▼ Previous Revision 十八、完整实验链路 到这里，我们实际上已经完成了一套比较完整的 Kubernetes 基础实验。\n整体流程如下：\nKind + Podman │ ▼ Kubernetes Cluster │ ┌─────────┴─────────┐ │ │ Control Plane Workers │ │ └─────────┬─────────┘ │ Deployment │ ▼ ReplicaSet │ ┌─────────┼─────────┐ ▼ ▼ ▼ Pod Pod Pod │ │ │ └─────────┼─────────┘ │ Service │ ▼ EndpointSlice │ ▼ Service Traffic │ ▼ Backend Pods 然后通过：\nkubectl scale 改变副本数量。\n通过：\nkubectl set image 修改应用版本。\n通过：\nkubectl rollout 管理 Deployment 发布历史。\n通过：\nkubectl port-forward 进行本地调试。\n通过：\nkubectl expose 创建 Service。\n十九、几个值得记住的 Kubernetes 实践原则 1. Pod 不是稳定的服务入口 Pod IP 是临时的。\n不要让业务客户端直接依赖 Pod IP。\n应该使用：\nService DNS 作为稳定访问入口。\n2. Deployment 不等于 Pod Deployment 负责声明应用的期望状态。\n实际管理链路是：\nDeployment ↓ ReplicaSet ↓ Pod 理解这个关系，是理解 Kubernetes Controller 模型的基础。\n3. Service 不负责创建 Pod Service 和 Deployment 是两个完全不同的 API Object。\nDeployment └── 管理 Pod Service └── 管理 Pod 的访问入口 Service 通过 Selector 发现后端 Pod。\n4. port-forward 主要用于调试 kubectl port-forward 非常适合：\n本地开发 Debug 临时访问 快速验证服务 但它不是生产环境的标准流量入口。\n生产环境通常需要考虑：\nIngress Gateway LoadBalancer NodePort Service Mesh 等方案。\n5. 本地 Kind 集群和生产 Kubernetes 不完全等价 Kind 非常适合：\nKubernetes 学习 API 实验 Controller 开发 CI 测试 Helm 实验 Service Mesh 学习 但它毕竟运行在本地容器环境中。\n尤其是：\nRootless Podman + Kind + Kubernetes Networking 会引入额外的网络层。\n因此，在进行网络实验时，需要明确区分：\n宿主机网络 ↓ Podman 网络 ↓ Kind Node 网络 ↓ Kubernetes Pod 网络 很多“为什么我的 Kubernetes 行为和教程不一样”的问题，本质上并不是 Kubernetes 本身的问题，而是运行环境的网络拓扑不同。\n二十、总结 使用 Kind + Podman，可以在一台普通 Linux 主机上快速构建一个多节点 Kubernetes 实验环境。\n本文从一个最简单的 kubernetes-bootcamp 应用出发，逐步完成：\n安装 Podman / kubectl / Kind ↓ 创建三节点 Kubernetes 集群 ↓ 解决镜像拉取问题 ↓ 理解 Kind 镜像管理 ↓ 配置容器代理 ↓ 管理 Namespace ↓ 创建 Service ↓ port-forward 暴露服务 ↓ 集群内部验证 Service ↓ 验证 Pod 流量分发 ↓ Deployment 扩缩容 ↓ Deployment Rolling Update ↓ 版本回滚 如果是为了系统学习 Kubernetes，这套实验的重点并不是记住几个 kubectl 命令，而是建立下面这套模型：\nKubernetes API │ ▼ Deployment │ ▼ ReplicaSet │ ▼ Pod │ ┌─────┴─────┐ │ │ Pod IP Pod IP / Pod IP │ │ └─────┬─────┘ │ Service │ ▼ EndpointSlice │ ▼ Service Traffic 一旦理解了 Deployment → ReplicaSet → Pod 和 Service → EndpointSlice → Pod 这两条核心链路，再继续学习 Kubernetes 的 Ingress、Gateway、HPA、StatefulSet、DaemonSet，以及 Istio 等 Service Mesh 技术，就会容易很多。\n对于本地 Kubernetes 学习环境而言，Kind + Podman 是一个成本低、可重复、足够接近真实 Kubernetes 对象模型的实验方案。\n",
+  "wordCount" : "1568",
+  "inLanguage": "zh",
+  "datePublished": "2017-12-25T19:25:00+08:00",
+  "dateModified": "2022-04-13T09:04:59+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2026/08/building_a_local_kubernetes_multi-node_cluster_using_kind_and_podman/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      使用 Kind &#43; Podman 搭建本地 Kubernetes 多节点集群
+    </h1>
+    <div class="post-meta">
+
+<span title='2017-12-25 19:25:00 +0800 CST'>2017年12月25日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><p>想系统学习 Kubernetes，单节点环境只能解决最基础的 Pod、Deployment 和 Service 实验。当开始涉及 <strong>Node、Service、负载均衡、滚动更新、扩缩容以及容器网络</strong>时，一个多节点 Kubernetes 集群会更有价值。</p>
+<p>生产环境通常使用 kubeadm、RKE2、K3s 或云厂商 Kubernetes 服务，但对于本地学习和实验，直接部署完整 Kubernetes 集群成本较高。</p>
+<p>本文采用：</p>
+<ul>
+<li>Fedora Linux</li>
+<li>Podman</li>
+<li>Kind</li>
+<li>kubectl</li>
+</ul>
+<p>搭建一个包含 <strong>1 个 Control Plane + 2 个 Worker</strong> 的本地 Kubernetes 集群，并在此基础上完成镜像管理、Service 暴露、负载均衡、Deployment 扩缩容和滚动更新。</p>
+<hr>
+<h2 id="一为什么选择-kind--podman">一、为什么选择 Kind + Podman<a hidden class="anchor" aria-hidden="true" href="#一为什么选择-kind--podman">#</a></h2>
+<p><a href="https://kind.sigs.k8s.io/">Kind</a>（Kubernetes IN Docker）本质上是一个用于创建 Kubernetes 测试集群的工具。</p>
+<p>它与传统 Kubernetes 部署方式最大的区别是：</p>
+<blockquote>
+<p><strong>Kind 不需要为每个 Kubernetes Node 创建完整虚拟机，而是直接将 Kubernetes Node 运行在容器中。</strong></p>
+</blockquote>
+<p>因此，一个三节点 Kubernetes 集群可以抽象成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>┌──────────────────────────────────────────┐
+</span></span><span style="display:flex;"><span>│                Fedora Host               │
+</span></span><span style="display:flex;"><span>│                                          │
+</span></span><span style="display:flex;"><span>│                 Podman                   │
+</span></span><span style="display:flex;"><span>│                    │                     │
+</span></span><span style="display:flex;"><span>│        ┌───────────┼───────────┐         │
+</span></span><span style="display:flex;"><span>│        │           │           │         │
+</span></span><span style="display:flex;"><span>│   control-plane  worker      worker      │
+</span></span><span style="display:flex;"><span>│        │           │           │         │
+</span></span><span style="display:flex;"><span>│     Kubernetes  Kubernetes  Kubernetes   │
+</span></span><span style="display:flex;"><span>│        Node        Node        Node      │
+</span></span><span style="display:flex;"><span>└──────────────────────────────────────────┘
+</span></span></code></pre></div><p>这种架构非常适合学习 Kubernetes，因为 Kubernetes 的 Node、Pod、Service、Deployment 等核心概念依然存在，只是 Node 的物理载体从虚拟机变成了容器。</p>
+<p>而 Podman 本身支持 Rootless Container，因此可以进一步降低本地实验环境对 root 权限的依赖。</p>
+<hr>
+<h1 id="二安装基础环境">二、安装基础环境<a hidden class="anchor" aria-hidden="true" href="#二安装基础环境">#</a></h1>
+<p>首先安装 Podman、网络相关组件、kubectl 和 Docker Compose：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo dnf install podman passt kubectl docker-compose podman-docker
+</span></span></code></pre></div><p>然后安装 Kind：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go install sigs.k8s.io/kind@v0.33.0
+</span></span></code></pre></div><p>确认安装：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman --version
+</span></span><span style="display:flex;"><span>kubectl version --client
+</span></span><span style="display:flex;"><span>kind version
+</span></span></code></pre></div><p>这里有一个容易忽略的问题：</p>
+<p><strong>Kind 的容器运行时和 Kubernetes 本身是两个不同层次的概念。</strong></p>
+<p>可以简单理解为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kubectl
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ▼
+</span></span><span style="display:flex;"><span>Kubernetes API Server
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ▼
+</span></span><span style="display:flex;"><span>Kubernetes Cluster
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ▼
+</span></span><span style="display:flex;"><span>Kind Node
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ▼
+</span></span><span style="display:flex;"><span>Podman Container Runtime
+</span></span></code></pre></div><p>kubectl 操作的是 Kubernetes API，而 Podman 负责承载 Kind Node 容器。</p>
+<hr>
+<h1 id="三创建多节点-kubernetes-集群">三、创建多节点 Kubernetes 集群<a hidden class="anchor" aria-hidden="true" href="#三创建多节点-kubernetes-集群">#</a></h1>
+<h2 id="31-创建-kind-配置文件">3.1 创建 Kind 配置文件<a hidden class="anchor" aria-hidden="true" href="#31-创建-kind-配置文件">#</a></h2>
+<p>创建 <code>kind.yaml</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">nodes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">extraPortMappings</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">hostPort</span>: <span style="color:#ae81ff">8080</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">443</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">hostPort</span>: <span style="color:#ae81ff">8443</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+</span></span></code></pre></div><p>这个配置创建：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Control Plane × 1
+</span></span><span style="display:flex;"><span>Worker × 2
+</span></span></code></pre></div><p>同时把 Control Plane 容器的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>80  →  宿主机 8080
+</span></span><span style="display:flex;"><span>443 →  宿主机 8443
+</span></span></code></pre></div><p>进行端口映射。</p>
+<p>需要注意：</p>
+<p><code>extraPortMappings</code> 是 <strong>Kind Node 容器与宿主机之间的端口映射</strong>，并不等同于 Kubernetes Service 的 <code>NodePort</code>。</p>
+<p>这是 Kind 使用过程中非常容易混淆的两个概念。</p>
+<hr>
+<h2 id="32-创建集群">3.2 创建集群<a hidden class="anchor" aria-hidden="true" href="#32-创建集群">#</a></h2>
+<p>执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kind create cluster <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --config kind.yaml
+</span></span></code></pre></div><p>如果使用 Podman 作为 Kind Provider，可以看到类似：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>using podman due to KIND_EXPERIMENTAL_PROVIDER
+</span></span><span style="display:flex;"><span>enabling experimental podman provider
+</span></span></code></pre></div><p>创建完成后查看集群：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kind get clusters
+</span></span></code></pre></div><p>查看 Kubernetes Node：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get nodes -o wide
+</span></span></code></pre></div><p>正常情况下可以看到：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>NAME                  STATUS   ROLES           AGE
+</span></span><span style="display:flex;"><span>dev-control-plane     Ready    control-plane   ...
+</span></span><span style="display:flex;"><span>dev-worker            Ready    &lt;none&gt;          ...
+</span></span><span style="display:flex;"><span>dev-worker2           Ready    &lt;none&gt;          ...
+</span></span></code></pre></div><p>至此，一个三节点 Kubernetes 集群已经运行起来。</p>
+<hr>
+<h1 id="四kind-中的镜像管理">四、Kind 中的镜像管理<a hidden class="anchor" aria-hidden="true" href="#四kind-中的镜像管理">#</a></h1>
+<p>在本地使用 Kind 时，一个非常常见的问题是：</p>
+<blockquote>
+<p>宿主机明明已经有这个镜像，为什么 Kubernetes 创建 Pod 时仍然需要拉取镜像？</p>
+</blockquote>
+<p>原因在于：</p>
+<p><strong>宿主机的容器镜像存储与 Kind Node 内部的容器镜像存储并不是同一个环境。</strong></p>
+<p>架构可以理解为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Fedora Host
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   └── Podman Image Store
+</span></span><span style="display:flex;"><span>          │
+</span></span><span style="display:flex;"><span>          │  podman pull
+</span></span><span style="display:flex;"><span>          ▼
+</span></span><span style="display:flex;"><span>     Kubernetes Image
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Kind Cluster
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ├── dev-control-plane
+</span></span><span style="display:flex;"><span>   ├── dev-worker
+</span></span><span style="display:flex;"><span>   └── dev-worker2
+</span></span><span style="display:flex;"><span>          │
+</span></span><span style="display:flex;"><span>          └── Node 内部的 Container Runtime
+</span></span></code></pre></div><p>因此：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman pull xxx
+</span></span></code></pre></div><p>只是将镜像拉到了宿主机的镜像存储中。</p>
+<p>Kubernetes Pod 真正启动时，需要 Node 内部能够访问这个镜像。</p>
+<hr>
+<h1 id="五使用-kind-load-加载本地镜像">五、使用 kind load 加载本地镜像<a hidden class="anchor" aria-hidden="true" href="#五使用-kind-load-加载本地镜像">#</a></h1>
+<p>对于无法直接访问 Docker Hub、GCR 等公网 Registry 的环境，一个非常实用的方法是：</p>
+<blockquote>
+<p><strong>先在宿主机拉取镜像，再使用 <code>kind load docker-image</code> 将镜像加载到 Kind 集群。</strong></p>
+</blockquote>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman pull gcr.io/google-samples/kubernetes-bootcamp:v1
+</span></span></code></pre></div><p>然后：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kind load docker-image <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  gcr.io/google-samples/kubernetes-bootcamp:v1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name dev
+</span></span></code></pre></div><p>最后创建 Deployment：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create deployment kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --image<span style="color:#f92672">=</span>gcr.io/google-samples/kubernetes-bootcamp:v1
+</span></span></code></pre></div><p>这种方式特别适合以下场景：</p>
+<ul>
+<li>国内网络环境无法直接访问海外 Registry</li>
+<li>本地开发镜像</li>
+<li>Kubernetes 实验环境</li>
+<li>CI/CD 测试</li>
+<li>不希望搭建私有 Registry 的临时实验</li>
+</ul>
+<hr>
+<h2 id="51-为什么不要使用-latest">5.1 为什么不要使用 <code>latest</code><a hidden class="anchor" aria-hidden="true" href="#51-为什么不要使用-latest">#</a></h2>
+<p>这里有一个非常重要的实践原则：</p>
+<blockquote>
+<p><strong>Kind 加载本地镜像时，尽量使用明确的版本 Tag，不要使用 <code>latest</code>。</strong></p>
+</blockquote>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>推荐：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubernetes-bootcamp:v1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>不推荐：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubernetes-bootcamp:latest
+</span></span></code></pre></div><p>原因在于 <code>latest</code> 并不是一个稳定的版本标识。</p>
+<p>如果 Kubernetes 认为本地镜像不可用，或者 Pod 的 <code>imagePullPolicy</code> 导致重新拉取镜像，就可能再次访问远程 Registry。</p>
+<p>因此，在本地实验环境中，最好始终使用明确版本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">image</span>: <span style="color:#ae81ff">kubernetes-bootcamp:v1</span>
+</span></span></code></pre></div><p>而不是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">image</span>: <span style="color:#ae81ff">kubernetes-bootcamp:latest</span>
+</span></span></code></pre></div><p><strong>版本化镜像 Tag 是可重复实验的重要基础。</strong></p>
+<hr>
+<h1 id="六解决-kind-节点无法拉取镜像的问题">六、解决 Kind 节点无法拉取镜像的问题<a hidden class="anchor" aria-hidden="true" href="#六解决-kind-节点无法拉取镜像的问题">#</a></h1>
+<p>如果希望 Kubernetes Node 自己通过网络拉取镜像，就需要解决 Kind Node 的网络访问问题。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kind create cluster <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --config kind.yaml
+</span></span></code></pre></div><p>进入 Control Plane：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman exec -it dev-control-plane bash
+</span></span></code></pre></div><p>然后为 containerd 配置代理：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /etc/systemd/system/containerd.service.d
+</span></span></code></pre></div><p>创建：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat &gt;/etc/systemd/system/containerd.service.d/proxy.conf <span style="color:#e6db74">&lt;&lt;&#39;EOF&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[Service]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Environment=&#34;HTTP_PROXY=http://host.containers.internal:10808&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Environment=&#34;HTTPS_PROXY=http://host.containers.internal:10808&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Environment=&#34;NO_PROXY=localhost,127.0.0.1,10.88.0.0/16,10.96.0.0/12,10.244.0.0/16,.svc,.svc.cluster.local&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span></code></pre></div><p>这里有几个关键点。</p>
+<h3 id="hostcontainersinternal"><code>host.containers.internal</code><a hidden class="anchor" aria-hidden="true" href="#hostcontainersinternal">#</a></h3>
+<p>这是容器访问宿主机的一种特殊主机名。</p>
+<p>在本例中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Kind Node
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   │ HTTP_PROXY
+</span></span><span style="display:flex;"><span>   ▼
+</span></span><span style="display:flex;"><span>host.containers.internal:10808
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ▼
+</span></span><span style="display:flex;"><span>Fedora Host
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ▼
+</span></span><span style="display:flex;"><span>代理服务
+</span></span></code></pre></div><p>这样 Kind Node 内部的 containerd 就可以通过宿主机代理访问外部 Registry。</p>
+<hr>
+<h2 id="61-no_proxy-为什么重要">6.1 NO_PROXY 为什么重要<a hidden class="anchor" aria-hidden="true" href="#61-no_proxy-为什么重要">#</a></h2>
+<p>代理配置不能简单地写成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>所有流量 → Proxy
+</span></span></code></pre></div><p>Kubernetes 集群内部存在大量不应该经过外部代理的地址，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>localhost
+</span></span><span style="display:flex;"><span>127.0.0.1
+</span></span><span style="display:flex;"><span>Service CIDR
+</span></span><span style="display:flex;"><span>Pod CIDR
+</span></span><span style="display:flex;"><span>.svc
+</span></span><span style="display:flex;"><span>.svc.cluster.local
+</span></span></code></pre></div><p>因此需要配置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>NO_PROXY
+</span></span></code></pre></div><p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>10.96.0.0/12
+</span></span></code></pre></div><p>通常对应 Kubernetes Service 网络。</p>
+<p>而：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>10.244.0.0/16
+</span></span></code></pre></div><p>则可以对应 Pod 网络。</p>
+<p>实际 CIDR 应以当前 Kind/Kubernetes 集群配置为准。</p>
+<hr>
+<h1 id="七系统重启后如何恢复-kind-集群">七、系统重启后如何恢复 Kind 集群<a hidden class="anchor" aria-hidden="true" href="#七系统重启后如何恢复-kind-集群">#</a></h1>
+<p>Kind Node 本质上是 Podman 容器。</p>
+<p>因此系统重启之后，如果容器没有自动启动，可以手动启动：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman start dev-control-plane
+</span></span><span style="display:flex;"><span>podman start dev-worker
+</span></span><span style="display:flex;"><span>podman start dev-worker2
+</span></span></code></pre></div><p>然后检查：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get nodes
+</span></span></code></pre></div><p>如果 Node 状态恢复为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Ready
+</span></span></code></pre></div><p>说明 Kubernetes 集群已经恢复。</p>
+<p>这里需要注意：</p>
+<p><strong>不要把 <code>kind create cluster</code> 当成集群启动命令。</strong></p>
+<p><code>kind create cluster</code> 用于创建集群，而已经存在的 Kind Node 可以直接通过容器运行时重新启动。</p>
+<hr>
+<h1 id="八kubectl-默认-namespace">八、kubectl 默认 Namespace<a hidden class="anchor" aria-hidden="true" href="#八kubectl-默认-namespace">#</a></h1>
+<p>由于每次重启后 Kubernetes 都会使用default 作为默认Namespace, 为避免后续频繁切换Namespace, 可以修改默认的Namespeace</p>
+<p>Kubernetes 中的资源默认属于当前 Namespace。</p>
+<p>查看所有 Namespace：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get namespaces
+</span></span></code></pre></div><p>查看所有 Namespace 中的 Pod：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods -A
+</span></span></code></pre></div><p>修改当前 kubectl Context 的默认 Namespace：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl config set-context <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --current <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --namespace<span style="color:#f92672">=</span>kube-system
+</span></span></code></pre></div><p>之后：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods
+</span></span></code></pre></div><p>默认查询的就是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kube-system
+</span></span></code></pre></div><p>而不是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>default
+</span></span></code></pre></div><p>可以通过：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl config view --minify
+</span></span></code></pre></div><p>检查当前 Context 配置。</p>
+<p>需要明确：</p>
+<blockquote>
+<p><strong>Namespace 是 Kubernetes API 资源的逻辑隔离边界，不是网络隔离边界。</strong></p>
+</blockquote>
+<p>因此修改默认 Namespace 只是改变 kubectl 的默认操作范围，并不会改变 Pod 的网络拓扑。</p>
+<hr>
+<h1 id="九使用-service-暴露-deployment">九、使用 Service 暴露 Deployment<a hidden class="anchor" aria-hidden="true" href="#九使用-service-暴露-deployment">#</a></h1>
+<p>创建 Deployment 后，可以通过 Service 为 Pod 提供稳定的访问入口。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl expose deployment kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --type<span style="color:#f92672">=</span>NodePort <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --port<span style="color:#f92672">=</span><span style="color:#ae81ff">8080</span>
+</span></span></code></pre></div><p>查看 Service：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get service
+</span></span></code></pre></div><p>此时 Kubernetes 会创建一个 Service。</p>
+<p>Service 的核心价值是：</p>
+<blockquote>
+<p><strong>为一组动态变化的 Pod 提供稳定的虚拟访问入口。</strong></p>
+</blockquote>
+<p>Pod IP 会随着 Pod 创建、删除、重启而变化。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Pod A
+</span></span><span style="display:flex;"><span>10.244.0.5
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Pod B
+</span></span><span style="display:flex;"><span>10.244.1.8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Pod C
+</span></span><span style="display:flex;"><span>10.244.2.4
+</span></span></code></pre></div><p>客户端不应该直接依赖这些 Pod IP。</p>
+<p>而应该访问：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Service
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ├── Pod A
+</span></span><span style="display:flex;"><span>    ├── Pod B
+</span></span><span style="display:flex;"><span>    └── Pod C
+</span></span></code></pre></div><p>Service 通过 Selector 选择后端 Pod，并维护对应的 EndpointSlice。</p>
+<hr>
+<h1 id="十使用-port-forward-访问-service">十、使用 port-forward 访问 Service<a hidden class="anchor" aria-hidden="true" href="#十使用-port-forward-访问-service">#</a></h1>
+<p>开发和调试过程中，可以直接使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl port-forward <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  service/kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  8080:8080
+</span></span></code></pre></div><p>默认情况下，<code>kubectl port-forward</code> 通常只监听本机回环地址。</p>
+<p>如果希望其他机器也能够访问，可以指定：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl port-forward <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  service/kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --address 0.0.0.0 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  18080:8080
+</span></span></code></pre></div><p>此时访问：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>宿主机IP:18080
+</span></span></code></pre></div><p>即可转发到 Kubernetes Service。</p>
+<p>需要强调：</p>
+<blockquote>
+<p><code>kubectl port-forward</code> 更适合开发、调试和临时访问，不应该作为生产环境的服务暴露方案。</p>
+</blockquote>
+<p>它建立的是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>客户端
+</span></span><span style="display:flex;"><span>  │
+</span></span><span style="display:flex;"><span>  ▼
+</span></span><span style="display:flex;"><span>kubectl
+</span></span><span style="display:flex;"><span>  │
+</span></span><span style="display:flex;"><span>  ▼
+</span></span><span style="display:flex;"><span>Kubernetes API
+</span></span><span style="display:flex;"><span>  │
+</span></span><span style="display:flex;"><span>  ▼
+</span></span><span style="display:flex;"><span>Service / Pod
+</span></span></code></pre></div><p>而不是典型的生产流量入口架构。</p>
+<hr>
+<h1 id="十一为什么宿主机测试-service-负载均衡可能产生误导">十一、为什么宿主机测试 Service 负载均衡可能产生误导<a hidden class="anchor" aria-hidden="true" href="#十一为什么宿主机测试-service-负载均衡可能产生误导">#</a></h1>
+<p>这是本实验中比较容易踩坑的一点。</p>
+<p>在：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Rootless Podman + Kind
+</span></span></code></pre></div><p>环境下，宿主机、Kind Node 和 Kubernetes Pod 实际处于不同的网络层。</p>
+<p>可以抽象为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>                 Fedora Host
+</span></span><span style="display:flex;"><span>                     │
+</span></span><span style="display:flex;"><span>              Podman Network
+</span></span><span style="display:flex;"><span>                     │
+</span></span><span style="display:flex;"><span>        ┌────────────┼────────────┐
+</span></span><span style="display:flex;"><span>        │            │            │
+</span></span><span style="display:flex;"><span>   Control Plane   Worker       Worker
+</span></span><span style="display:flex;"><span>        │            │            │
+</span></span><span style="display:flex;"><span>        └──────── Kubernetes ─────┘
+</span></span><span style="display:flex;"><span>                     │
+</span></span><span style="display:flex;"><span>                   Service
+</span></span><span style="display:flex;"><span>                     │
+</span></span><span style="display:flex;"><span>             ┌───────┼───────┐
+</span></span><span style="display:flex;"><span>             ▼       ▼       ▼
+</span></span><span style="display:flex;"><span>            Pod     Pod     Pod
+</span></span></code></pre></div><p>因此：</p>
+<p><strong>宿主机访问 Service 所经过的网络路径，与 Kubernetes 集群内部 Pod 访问 Service 并不完全相同。</strong></p>
+<p>如果实验目标是验证 Kubernetes Service 的后端 Pod 分发，最直接的方法是：</p>
+<blockquote>
+<p><strong>从集群内部发起请求。</strong></p>
+</blockquote>
+<p>这样可以避免宿主机到 Kind Node 的额外网络路径对实验结果造成干扰。</p>
+<hr>
+<h1 id="十二从集群内部验证-service-负载均衡">十二、从集群内部验证 Service 负载均衡<a hidden class="anchor" aria-hidden="true" href="#十二从集群内部验证-service-负载均衡">#</a></h1>
+<p>首先准备一个 curl 镜像：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman pull curlimages/curl:8.21.0
+</span></span></code></pre></div><p>加载到 Kind：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kind load docker-image <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  docker.io/curlimages/curl:8.21.0 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name dev
+</span></span></code></pre></div><p>创建测试 Pod：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl run test-curl <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --image<span style="color:#f92672">=</span>curlimages/curl:8.21.0 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -it --rm -- sh
+</span></span></code></pre></div><p>进入 Pod 后执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl http://kubernetes-bootcamp:8080
+</span></span></code></pre></div><p>这里直接使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kubernetes-bootcamp
+</span></span></code></pre></div><p>而不是 ClusterIP。</p>
+<p>原因是 Kubernetes 默认提供 Service DNS。</p>
+<p>因此：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kubernetes-bootcamp
+</span></span><span style="display:flex;"><span>        │
+</span></span><span style="display:flex;"><span>        ▼
+</span></span><span style="display:flex;"><span>Kubernetes DNS
+</span></span><span style="display:flex;"><span>        │
+</span></span><span style="display:flex;"><span>        ▼
+</span></span><span style="display:flex;"><span>Service ClusterIP
+</span></span><span style="display:flex;"><span>        │
+</span></span><span style="display:flex;"><span>        ▼
+</span></span><span style="display:flex;"><span>EndpointSlice
+</span></span><span style="display:flex;"><span>        │
+</span></span><span style="display:flex;"><span>        ▼
+</span></span><span style="display:flex;"><span>Backend Pods
+</span></span></code></pre></div><p>多次执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl http://kubernetes-bootcamp:8080
+</span></span></code></pre></div><p>即可观察请求是否被分发到不同的 Pod。</p>
+<hr>
+<h1 id="十三service-到底是如何实现负载均衡的">十三、Service 到底是如何实现负载均衡的？<a hidden class="anchor" aria-hidden="true" href="#十三service-到底是如何实现负载均衡的">#</a></h1>
+<p>从 Kubernetes 的抽象模型来看：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Deployment
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ▼
+</span></span><span style="display:flex;"><span>ReplicaSet
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ▼
+</span></span><span style="display:flex;"><span>Pods
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ▼
+</span></span><span style="display:flex;"><span>Service Selector
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ▼
+</span></span><span style="display:flex;"><span>EndpointSlice
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ▼
+</span></span><span style="display:flex;"><span>Service
+</span></span></code></pre></div><p>假设 Deployment 有三个 Pod：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kubernetes-bootcamp-xxx-1
+</span></span><span style="display:flex;"><span>kubernetes-bootcamp-xxx-2
+</span></span><span style="display:flex;"><span>kubernetes-bootcamp-xxx-3
+</span></span></code></pre></div><p>Service 通过 Selector 找到这些 Pod，并将其作为后端 Endpoint。</p>
+<p>客户端访问：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kubernetes-bootcamp:8080
+</span></span></code></pre></div><p>首先通过 Kubernetes DNS 解析 Service。</p>
+<p>然后由 Kubernetes 节点侧的数据平面组件将 Service 流量转发到对应的后端 Pod。</p>
+<p>因此 Service 最重要的价值并不是简单的“负载均衡器”，而是提供：</p>
+<ol>
+<li>稳定的虚拟 IP</li>
+<li>稳定的 DNS 名称</li>
+<li>Pod 后端动态发现</li>
+<li>后端 Endpoint 生命周期管理</li>
+<li>流量转发</li>
+</ol>
+<p>这也是为什么客户端不应该直接依赖 Pod IP。</p>
+<hr>
+<h1 id="十四deployment-扩容与缩容">十四、Deployment 扩容与缩容<a hidden class="anchor" aria-hidden="true" href="#十四deployment-扩容与缩容">#</a></h1>
+<p>当业务流量增加时，可以增加 Deployment 的 Pod 副本数。</p>
+<p>例如扩容到 4 个副本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl scale deployments/kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>
+</span></span></code></pre></div><p>查看：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods
+</span></span></code></pre></div><p>缩容到 2 个副本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl scale deployments/kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><p>Deployment 并不是直接管理 Pod，而是通过 ReplicaSet 管理 Pod。</p>
+<p>整体关系：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Deployment
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ▼
+</span></span><span style="display:flex;"><span> ReplicaSet
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span> ┌───┼────┐
+</span></span><span style="display:flex;"><span> ▼   ▼    ▼
+</span></span><span style="display:flex;"><span>Pod Pod  Pod
+</span></span></code></pre></div><p>执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl scale
+</span></span></code></pre></div><p>本质上是在修改 Deployment 的期望副本数。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>replicas = 4
+</span></span></code></pre></div><p>表示 Kubernetes Controller 希望集群最终保持：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>4 个符合条件的 Pod
+</span></span></code></pre></div><p>如果当前只有 2 个：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Current = 2
+</span></span><span style="display:flex;"><span>Desired = 4
+</span></span></code></pre></div><p>Controller 就会创建新的 Pod。</p>
+<p>反之：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Current = 4
+</span></span><span style="display:flex;"><span>Desired = 2
+</span></span></code></pre></div><p>Controller 就会删除多余 Pod。</p>
+<p>这体现了 Kubernetes 最核心的设计思想之一：</p>
+<blockquote>
+<p><strong>声明式 API + Controller Reconciliation。</strong></p>
+</blockquote>
+<p>用户声明“我希望有多少个副本”，Controller 负责不断将实际状态向期望状态收敛。</p>
+<hr>
+<h1 id="十五deployment-滚动更新">十五、Deployment 滚动更新<a hidden class="anchor" aria-hidden="true" href="#十五deployment-滚动更新">#</a></h1>
+<p>Kubernetes 不仅可以扩缩容，还可以在不中断业务的情况下更新应用版本。</p>
+<p>例如当前使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kubernetes-bootcamp:v1
+</span></span></code></pre></div><p>准备更新到：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>kubernetes-bootcamp:v2
+</span></span></code></pre></div><p>首先准备镜像：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>podman pull docker.io/jocatalin/kubernetes-bootcamp:v2
+</span></span></code></pre></div><p>然后加载到 Kind：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kind load docker-image <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  docker.io/jocatalin/kubernetes-bootcamp:v2 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --name dev
+</span></span></code></pre></div><p>修改 Deployment：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl set image deployments/kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  kubernetes-bootcamp<span style="color:#f92672">=</span>docker.io/jocatalin/kubernetes-bootcamp:v2
+</span></span></code></pre></div><p>查看 Pod：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods
+</span></span></code></pre></div><p>也可以进一步：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl describe pods
+</span></span></code></pre></div><p>观察 Pod 的镜像版本变化。</p>
+<hr>
+<h1 id="十六rolling-update-的工作机制">十六、Rolling Update 的工作机制<a hidden class="anchor" aria-hidden="true" href="#十六rolling-update-的工作机制">#</a></h1>
+<p>Deployment 默认采用 RollingUpdate 策略。</p>
+<p>它不是简单地：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>删除所有旧 Pod
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>创建所有新 Pod
+</span></span></code></pre></div><p>而是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>旧版本 Pod
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ├── 创建新版本 Pod
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ├── 等待新 Pod Ready
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ├── 删除部分旧 Pod
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ├── 创建更多新 Pod
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    └── 最终全部切换到新版本
+</span></span></code></pre></div><p>最终：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>v1 Pod × 0
+</span></span><span style="display:flex;"><span>v2 Pod × N
+</span></span></code></pre></div><p>因此，在合理配置：</p>
+<ul>
+<li><code>maxSurge</code></li>
+<li><code>maxUnavailable</code></li>
+<li>Readiness Probe</li>
+</ul>
+<p>的情况下，可以实现服务的平滑版本切换。</p>
+<p>这也是 Kubernetes Deployment 相比直接运行 Pod 的重要优势。</p>
+<hr>
+<h1 id="十七如何回滚-deployment">十七、如何回滚 Deployment<a hidden class="anchor" aria-hidden="true" href="#十七如何回滚-deployment">#</a></h1>
+<p>如果新版本存在问题，可以将镜像重新切换回旧版本。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl set image deployments/kubernetes-bootcamp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  kubernetes-bootcamp<span style="color:#f92672">=</span>gcr.io/google-samples/kubernetes-bootcamp:v10
+</span></span></code></pre></div><p>然后：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl describe pods
+</span></span></code></pre></div><p>检查 Pod 使用的镜像版本。</p>
+<p>在实际生产环境中，更推荐结合 Deployment Revision 使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl rollout history deployment/kubernetes-bootcamp
+</span></span></code></pre></div><p>查看历史版本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl rollout history deployment/kubernetes-bootcamp
+</span></span></code></pre></div><p>出现问题时：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl rollout undo deployment/kubernetes-bootcamp
+</span></span></code></pre></div><p>即可回滚到上一版本。</p>
+<p>因此，一个典型的 Kubernetes 应用发布流程可以抽象为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Build Image
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ▼
+</span></span><span style="display:flex;"><span>Push Registry
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ▼
+</span></span><span style="display:flex;"><span>Update Deployment
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ▼
+</span></span><span style="display:flex;"><span>Rolling Update
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ├── Pod Ready
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ├── Service 接收流量
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     └── Old Pod 逐步退出
+</span></span><span style="display:flex;"><span>              │
+</span></span><span style="display:flex;"><span>              ▼
+</span></span><span style="display:flex;"><span>          Release Done
+</span></span></code></pre></div><p>如果新版本异常：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Deployment
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ▼
+</span></span><span style="display:flex;"><span>rollout undo
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ▼
+</span></span><span style="display:flex;"><span>Previous Revision
+</span></span></code></pre></div><hr>
+<h1 id="十八完整实验链路">十八、完整实验链路<a hidden class="anchor" aria-hidden="true" href="#十八完整实验链路">#</a></h1>
+<p>到这里，我们实际上已经完成了一套比较完整的 Kubernetes 基础实验。</p>
+<p>整体流程如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>                 Kind + Podman
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                       ▼
+</span></span><span style="display:flex;"><span>              Kubernetes Cluster
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>             ┌─────────┴─────────┐
+</span></span><span style="display:flex;"><span>             │                   │
+</span></span><span style="display:flex;"><span>        Control Plane          Workers
+</span></span><span style="display:flex;"><span>             │                   │
+</span></span><span style="display:flex;"><span>             └─────────┬─────────┘
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                   Deployment
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                       ▼
+</span></span><span style="display:flex;"><span>                   ReplicaSet
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>             ┌─────────┼─────────┐
+</span></span><span style="display:flex;"><span>             ▼         ▼         ▼
+</span></span><span style="display:flex;"><span>            Pod       Pod       Pod
+</span></span><span style="display:flex;"><span>             │         │         │
+</span></span><span style="display:flex;"><span>             └─────────┼─────────┘
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                    Service
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                       ▼
+</span></span><span style="display:flex;"><span>                  EndpointSlice
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                       ▼
+</span></span><span style="display:flex;"><span>                 Service Traffic
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                       ▼
+</span></span><span style="display:flex;"><span>                  Backend Pods
+</span></span></code></pre></div><p>然后通过：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl scale
+</span></span></code></pre></div><p>改变副本数量。</p>
+<p>通过：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl set image
+</span></span></code></pre></div><p>修改应用版本。</p>
+<p>通过：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl rollout
+</span></span></code></pre></div><p>管理 Deployment 发布历史。</p>
+<p>通过：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl port-forward
+</span></span></code></pre></div><p>进行本地调试。</p>
+<p>通过：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl expose
+</span></span></code></pre></div><p>创建 Service。</p>
+<hr>
+<h1 id="十九几个值得记住的-kubernetes-实践原则">十九、几个值得记住的 Kubernetes 实践原则<a hidden class="anchor" aria-hidden="true" href="#十九几个值得记住的-kubernetes-实践原则">#</a></h1>
+<h2 id="1-pod-不是稳定的服务入口">1. Pod 不是稳定的服务入口<a hidden class="anchor" aria-hidden="true" href="#1-pod-不是稳定的服务入口">#</a></h2>
+<p>Pod IP 是临时的。</p>
+<p>不要让业务客户端直接依赖 Pod IP。</p>
+<p>应该使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Service DNS
+</span></span></code></pre></div><p>作为稳定访问入口。</p>
+<hr>
+<h2 id="2-deployment-不等于-pod">2. Deployment 不等于 Pod<a hidden class="anchor" aria-hidden="true" href="#2-deployment-不等于-pod">#</a></h2>
+<p>Deployment 负责声明应用的期望状态。</p>
+<p>实际管理链路是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Deployment
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>ReplicaSet
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>Pod
+</span></span></code></pre></div><p>理解这个关系，是理解 Kubernetes Controller 模型的基础。</p>
+<hr>
+<h2 id="3-service-不负责创建-pod">3. Service 不负责创建 Pod<a hidden class="anchor" aria-hidden="true" href="#3-service-不负责创建-pod">#</a></h2>
+<p>Service 和 Deployment 是两个完全不同的 API Object。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Deployment
+</span></span><span style="display:flex;"><span>    └── 管理 Pod
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Service
+</span></span><span style="display:flex;"><span>    └── 管理 Pod 的访问入口
+</span></span></code></pre></div><p>Service 通过 Selector 发现后端 Pod。</p>
+<hr>
+<h2 id="4-port-forward-主要用于调试">4. <code>port-forward</code> 主要用于调试<a hidden class="anchor" aria-hidden="true" href="#4-port-forward-主要用于调试">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl port-forward
+</span></span></code></pre></div><p>非常适合：</p>
+<ul>
+<li>本地开发</li>
+<li>Debug</li>
+<li>临时访问</li>
+<li>快速验证服务</li>
+</ul>
+<p>但它不是生产环境的标准流量入口。</p>
+<p>生产环境通常需要考虑：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Ingress
+</span></span><span style="display:flex;"><span>Gateway
+</span></span><span style="display:flex;"><span>LoadBalancer
+</span></span><span style="display:flex;"><span>NodePort
+</span></span><span style="display:flex;"><span>Service Mesh
+</span></span></code></pre></div><p>等方案。</p>
+<hr>
+<h2 id="5-本地-kind-集群和生产-kubernetes-不完全等价">5. 本地 Kind 集群和生产 Kubernetes 不完全等价<a hidden class="anchor" aria-hidden="true" href="#5-本地-kind-集群和生产-kubernetes-不完全等价">#</a></h2>
+<p>Kind 非常适合：</p>
+<ul>
+<li>Kubernetes 学习</li>
+<li>API 实验</li>
+<li>Controller 开发</li>
+<li>CI 测试</li>
+<li>Helm 实验</li>
+<li>Service Mesh 学习</li>
+</ul>
+<p>但它毕竟运行在本地容器环境中。</p>
+<p>尤其是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Rootless Podman
+</span></span><span style="display:flex;"><span>+
+</span></span><span style="display:flex;"><span>Kind
+</span></span><span style="display:flex;"><span>+
+</span></span><span style="display:flex;"><span>Kubernetes Networking
+</span></span></code></pre></div><p>会引入额外的网络层。</p>
+<p>因此，在进行网络实验时，需要明确区分：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>宿主机网络
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>Podman 网络
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>Kind Node 网络
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>Kubernetes Pod 网络
+</span></span></code></pre></div><p>很多“为什么我的 Kubernetes 行为和教程不一样”的问题，本质上并不是 Kubernetes 本身的问题，而是<strong>运行环境的网络拓扑不同</strong>。</p>
+<hr>
+<h1 id="二十总结">二十、总结<a hidden class="anchor" aria-hidden="true" href="#二十总结">#</a></h1>
+<p>使用 Kind + Podman，可以在一台普通 Linux 主机上快速构建一个多节点 Kubernetes 实验环境。</p>
+<p>本文从一个最简单的 <code>kubernetes-bootcamp</code> 应用出发，逐步完成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>安装 Podman / kubectl / Kind
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>创建三节点 Kubernetes 集群
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>解决镜像拉取问题
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>理解 Kind 镜像管理
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>配置容器代理
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>管理 Namespace
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>创建 Service
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>port-forward 暴露服务
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>集群内部验证 Service
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>验证 Pod 流量分发
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>Deployment 扩缩容
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>Deployment Rolling Update
+</span></span><span style="display:flex;"><span>            ↓
+</span></span><span style="display:flex;"><span>版本回滚
+</span></span></code></pre></div><p>如果是为了系统学习 Kubernetes，这套实验的重点并不是记住几个 <code>kubectl</code> 命令，而是建立下面这套模型：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>             Kubernetes API
+</span></span><span style="display:flex;"><span>                   │
+</span></span><span style="display:flex;"><span>                   ▼
+</span></span><span style="display:flex;"><span>              Deployment
+</span></span><span style="display:flex;"><span>                   │
+</span></span><span style="display:flex;"><span>                   ▼
+</span></span><span style="display:flex;"><span>               ReplicaSet
+</span></span><span style="display:flex;"><span>                   │
+</span></span><span style="display:flex;"><span>                   ▼
+</span></span><span style="display:flex;"><span>                  Pod
+</span></span><span style="display:flex;"><span>                   │
+</span></span><span style="display:flex;"><span>             ┌─────┴─────┐
+</span></span><span style="display:flex;"><span>             │           │
+</span></span><span style="display:flex;"><span>        Pod IP       Pod IP / Pod IP
+</span></span><span style="display:flex;"><span>             │           │
+</span></span><span style="display:flex;"><span>             └─────┬─────┘
+</span></span><span style="display:flex;"><span>                   │
+</span></span><span style="display:flex;"><span>                Service
+</span></span><span style="display:flex;"><span>                   │
+</span></span><span style="display:flex;"><span>                   ▼
+</span></span><span style="display:flex;"><span>             EndpointSlice
+</span></span><span style="display:flex;"><span>                   │
+</span></span><span style="display:flex;"><span>                   ▼
+</span></span><span style="display:flex;"><span>             Service Traffic
+</span></span></code></pre></div><p>一旦理解了 <strong>Deployment → ReplicaSet → Pod</strong> 和 <strong>Service → EndpointSlice → Pod</strong> 这两条核心链路，再继续学习 Kubernetes 的 Ingress、Gateway、HPA、StatefulSet、DaemonSet，以及 Istio 等 Service Mesh 技术，就会容易很多。</p>
+<p>对于本地 Kubernetes 学习环境而言，<strong>Kind + Podman 是一个成本低、可重复、足够接近真实 Kubernetes 对象模型的实验方案</strong>。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

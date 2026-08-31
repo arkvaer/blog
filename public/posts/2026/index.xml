@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>2026 Index on Waver&#39;s Blog</title>
+    <link>https://waver.me/posts/2026/</link>
+    <description>Recent content in 2026 Index on Waver&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 13 Apr 2022 09:04:59 +0800</lastBuildDate>
+    <atom:link href="https://waver.me/posts/2026/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Kind &#43; Podman 搭建本地 Kubernetes 多节点集群</title>
+      <link>https://waver.me/posts/2026/08/building_a_local_kubernetes_multi-node_cluster_using_kind_and_podman/</link>
+      <pubDate>Mon, 25 Dec 2017 19:25:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2026/08/building_a_local_kubernetes_multi-node_cluster_using_kind_and_podman/</guid>
+      <description>&lt;p&gt;想系统学习 Kubernetes，单节点环境只能解决最基础的 Pod、Deployment 和 Service 实验。当开始涉及 &lt;strong&gt;Node、Service、负载均衡、滚动更新、扩缩容以及容器网络&lt;/strong&gt;时，一个多节点 Kubernetes 集群会更有价值。&lt;/p&gt;
+&lt;p&gt;生产环境通常使用 kubeadm、RKE2、K3s 或云厂商 Kubernetes 服务，但对于本地学习和实验，直接部署完整 Kubernetes 集群成本较高。&lt;/p&gt;
+&lt;p&gt;本文采用：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fedora Linux&lt;/li&gt;
+&lt;li&gt;Podman&lt;/li&gt;
+&lt;li&gt;Kind&lt;/li&gt;
+&lt;li&gt;kubectl&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;搭建一个包含 &lt;strong&gt;1 个 Control Plane + 2 个 Worker&lt;/strong&gt; 的本地 Kubernetes 集群，并在此基础上完成镜像管理、Service 暴露、负载均衡、Deployment 扩缩容和滚动更新。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;一为什么选择-kind--podman&#34;&gt;一、为什么选择 Kind + Podman&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://kind.sigs.k8s.io/&#34;&gt;Kind&lt;/a&gt;（Kubernetes IN Docker）本质上是一个用于创建 Kubernetes 测试集群的工具。&lt;/p&gt;
+&lt;p&gt;它与传统 Kubernetes 部署方式最大的区别是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Kind 不需要为每个 Kubernetes Node 创建完整虚拟机，而是直接将 Kubernetes Node 运行在容器中。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;因此，一个三节点 Kubernetes 集群可以抽象成：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;┌──────────────────────────────────────────┐
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│                Fedora Host               │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│                                          │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│                 Podman                   │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│                    │                     │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│        ┌───────────┼───────────┐         │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│        │           │           │         │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   control-plane  worker      worker      │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│        │           │           │         │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│     Kubernetes  Kubernetes  Kubernetes   │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│        Node        Node        Node      │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└──────────────────────────────────────────┘
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种架构非常适合学习 Kubernetes，因为 Kubernetes 的 Node、Pod、Service、Deployment 等核心概念依然存在，只是 Node 的物理载体从虚拟机变成了容器。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>2018 Index | Waver&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="2018 年
+
+Navicat Data Modeler
+破解
+通過一次 IDEA Spring Boot
+啟動報錯深入理解 maven scope 標籤
+Jrebel
+激活服務器及使用方法
+volatile 關鍵字詳解 (轉)
+Java
+中的代碼點和代碼單元
+Jackson
+Direct self-reference leading to cycle 異常解決
+Java
+中的逆變與協變
+RandomAccess
+接口理解
+IDEA 性能調優
+常用 Git 命令清單
+Struts2
+下载文件异常解决
+Struts2
+参数转换异常处理
+深入浅出
+Java 转发和重定向的区别
+Mybatis
+异常: Error parsing Mapper XML&hellip;
+深入分析
+Java 的序列化与反序列化
+Java
+找不到或无法加载主类 XXX 错误原因汇总
+工具推荐-AutoHotKey
+微信跳一跳高分攻(外)略(挂)
+maven
+管理 SSM 时 xml 和 properties 文件丢失异常
+记一次
+Redis 连接用尽异常解决
+">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2018/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://waver.me/posts/2018/index.xml" title="rss">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2018/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2018/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="2018 Index">
+  <meta property="og:description" content="2018 年 Navicat Data Modeler 破解 通過一次 IDEA Spring Boot 啟動報錯深入理解 maven scope 標籤 Jrebel 激活服務器及使用方法 volatile 關鍵字詳解 (轉) Java 中的代碼點和代碼單元 Jackson Direct self-reference leading to cycle 異常解決 Java 中的逆變與協變 RandomAccess 接口理解 IDEA 性能調優 常用 Git 命令清單 Struts2 下载文件异常解决 Struts2 参数转换异常处理 深入浅出 Java 转发和重定向的区别 Mybatis 异常: Error parsing Mapper XML… 深入分析 Java 的序列化与反序列化 Java 找不到或无法加载主类 XXX 错误原因汇总 工具推荐-AutoHotKey 微信跳一跳高分攻(外)略(挂) maven 管理 SSM 时 xml 和 properties 文件丢失异常 记一次 Redis 连接用尽异常解决">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2018 Index">
+  <meta name="twitter:description" content="2018 年 Navicat Data Modeler 破解 通過一次 IDEA Spring Boot 啟動報錯深入理解 maven scope 標籤 Jrebel 激活服務器及使用方法 volatile 關鍵字詳解 (轉) Java 中的代碼點和代碼單元 Jackson Direct self-reference leading to cycle 異常解決 Java 中的逆變與協變 RandomAccess 接口理解 IDEA 性能調優 常用 Git 命令清單 Struts2 下载文件异常解决 Struts2 参数转换异常处理 深入浅出 Java 转发和重定向的区别 Mybatis 异常: Error parsing Mapper XML… 深入分析 Java 的序列化与反序列化 Java 找不到或无法加载主类 XXX 错误原因汇总 工具推荐-AutoHotKey 微信跳一跳高分攻(外)略(挂) maven 管理 SSM 时 xml 和 properties 文件丢失异常 记一次 Redis 连接用尽异常解决">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2018 Index",
+      "item": "https://waver.me/posts/2018/"
+    }
+  ]
+}
+</script>
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    2018 Index
+  </h1>
+</header>
+<div class="post-content md-content"><h2 id="年">2018 年<a hidden class="anchor" aria-hidden="true" href="#年">#</a></h2>
+<ul>
+<li><a href="/posts/2018/Navicat_Data_Modeler_crack.md">Navicat Data Modeler
+破解</a></li>
+<li><a href="/posts/2018/IDEA_maven_bug_fix.md">通過一次 IDEA Spring Boot
+啟動報錯深入理解 maven scope 標籤</a></li>
+<li><a href="/posts/2018/Jrebel_activation_server_and_how_to_use_it.md">Jrebel
+激活服務器及使用方法</a></li>
+<li><a href="/posts/2018/volatile_keyword_detailed.md">volatile 關鍵字詳解 (轉)</a></li>
+<li><a href="/posts/2018/Code_points_and_code_units_in_Java.md">Java
+中的代碼點和代碼單元</a></li>
+<li><a href="/posts/2018/Jackson_Direct_self_reference_leading_to_cycle_Exception.md">Jackson
+Direct self-reference leading to cycle 異常解決</a></li>
+<li><a href="/posts/2018/Contravariance_and_Covariance_in_Java.md">Java
+中的逆變與協變</a></li>
+<li><a href="/posts/2018/RandomAccess_interface_detailed.md">RandomAccess
+接口理解</a></li>
+<li><a href="/posts/2018/IDEA_performance_optimization.md">IDEA 性能調優</a></li>
+<li><a href="/posts/2018/Common_Git_Command_List.md">常用 Git 命令清單</a></li>
+<li><a href="/posts/2018/Struts2_Download_file_abnormal_solution.md">Struts2
+下载文件异常解决</a></li>
+<li><a href="/posts/2018/Struts2_Parameter_conversion_Exception.md">Struts2
+参数转换异常处理</a></li>
+<li><a href="/posts/2018/Explain_the_difference_between_Java_forwarding_and_redirection_in_a_simple_way.md">深入浅出
+Java 转发和重定向的区别</a></li>
+<li><a href="/posts/2018/Mybatis_Error_parsing_Mapper_XML_Cause_java_lang_IllegalArgumentException_Result_Maps_collection_already.md">Mybatis
+异常: Error parsing Mapper XML&hellip;</a></li>
+<li><a href="/posts/2018/In-depth_analysis_of_Java_serialization_and_deserialization.md">深入分析
+Java 的序列化与反序列化</a></li>
+<li><a href="/posts/2018/Java_Can't_find_or_load_the_main_class_xxx_error_summary.md">Java
+找不到或无法加载主类 XXX 错误原因汇总</a></li>
+<li><a href="/posts/2018/Tool_recommendation_AutoHotKey.md">工具推荐-AutoHotKey</a></li>
+<li><a href="/posts/2018/wechat_jump_cheat.md">微信跳一跳高分攻(外)略(挂)</a></li>
+<li><a href="/posts/2018/maven_manager_SSM_xml_and_properties_file_not_found_Exception.md">maven
+管理 SSM 时 xml 和 properties 文件丢失异常</a></li>
+<li><a href="/posts/2017/Remember_a_Redis_connection_exhaustion_exception_solution.md">记一次
+Redis 连接用尽异常解决</a></li>
+</ul>
+
+
+</div>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Mybatis 异常: Error parsing Mapper XML
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Mybatis 异常: Error parsing Mapper XML. Cause:java.lang.IllegalArgumentException: Result Maps collection already
+:CUSTOM_ID: mybatis-异常-error-parsing-mapper-xml.-causejava.lang.illegalargumentexception-result-maps-collection-already
+前几天遇到一个非常神奇的错误,Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already, 搞了半天,也没搞明白, 而且时有时无,很是神奇,最终发现最终原因是因为…….懒!
+错误描述 Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap; nestedexception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;sqlSessionFactory&#39; defined in file [E:\16年文 件\JAVAdemo\jiankunking\jiankunking-web\target\jiankunking-web-1.0-SNAPSHOT\WEB-INF\classes\spring\spring-mybatis.xml]: Invocation of init method failed; nested exception is org.springframework.core.NestedIOException: Failed to parse mapping resource: &#39;URL [jar:file:/E:/16年文件/JAVAdemo/jiankunking/jiankunking-web/target/jiankunking-web-1.0-SNAPSHOT/ WEB-INF/lib/jiankunking-system-1.0-SNAPSHOT.jar!/mapper/OrderLogMapper.xml]&#39;; nested exception is org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap 解决方式 因为 Mybatis 官方提供了逆向工程的模块, 所以平时开发几乎都用这个,可以省不少事, 但是 问题来了, 在开发过程中有可能遇到数据库变动的情况, 所以这时就不得不重新生成 mapper 和 pojo 文件, 但是! 如果原先的文件不删除的话, 新生成的文件不会覆盖旧文件, 而是在旧 文件的结尾继续添加, 所以这也就是 Result Maps collection already 的原因了.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2018-03-10 17:31:00 +0800 CST'>2018年3月10日</span></footer>
+  <a class="entry-link" aria-label="post link to Mybatis 异常: Error parsing Mapper XML" href="https://waver.me/posts/2018/mybatis_error_parsing_mapper_xml_cause_java_lang_illegalargumentexception_result_maps_collection_already/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Mybatis 异常: Error parsing Mapper XML. Cause:java.lang.IllegalArgumentException: Result Maps collection already
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Mybatis 异常: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already
+:CUSTOM_ID: mybatis-异常-error-parsing-mapper-xml.-cause-java.lang.illegalargumentexception-result-maps-collection-already
+2018-03-10 17:31:39 前几天遇到一个非常神奇的错误,Error parsing Mapper XML. Cause:
+java.lang.IllegalArgumentException: Result Maps collection already, 搞了半天,也没搞明白, 而且时有时无,很是神奇,最终发现最终原因是因为…….懒!
+错误描述 Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap; nestedexception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;sqlSessionFactory&#39; defined in file [E:\16年文 件\JAVAdemo\jiankunking\jiankunking-web\target\jiankunking-web-1.0-SNAPSHOT\WEB-INF\classes\spring\spring-mybatis.xml]: Invocation of init method failed; nested exception is org.springframework.core.NestedIOException: Failed to parse mapping resource: &#39;URL [jar:file:/E:/16年文件/JAVAdemo/jiankunking/jiankunking-web/target/jiankunking-web-1.0-SNAPSHOT/ WEB-INF/lib/jiankunking-system-1.0-SNAPSHOT.jar!/mapper/OrderLogMapper.xml]&#39;; nested exception is org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for org.hc.jiankunking.system.member.dao.OrderLogMapper.BaseResultMap 解决方式 因为 Mybatis 官方提供了逆向工程的模块, 所以平时开发几乎都用这个,可以省不少事, 但是 问题来了, 在开发过程中有可能遇到数据库变动的情况, 所以这时就不得不重新生成 mapper 和 pojo 文件, 但是! 如果原先的文件不删除的话, 新生成的文件不会覆盖旧文件, 而是在旧 文件的结尾继续添加, 所以这也就是 Result Maps collection already 的原因了. 所以….这个懒还是不要偷的好, 重新生成文件前一定要把旧文件清理干净. 在这里给自己踩踩坑-_-!
+</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2018-03-10 17:31:00 +0800 CST'>2018年3月10日</span></footer>
+  <a class="entry-link" aria-label="post link to Mybatis 异常: Error parsing Mapper XML. Cause:java.lang.IllegalArgumentException: Result Maps collection already" href="https://waver.me/posts/2018/mybatis_exception_error_parsing_mapper_xml_cause_java_lang_illegalargumentexception_result_maps_collection_already/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">深入分析Java的序列化与反序列化
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>JavaAPI 中的定义: {#javaapi 中的定义} public interface Serializable 类通过实现 java.io.Serializable 接口以启用其序列化功能。未实现此接口的类将无法使其任何状态序列化或反序列化。可序列化类的所有子类型本身都是可序列化的。序列化接口没有方法或字段，仅用于标识可序列化的语义。
+要允许不可序列化类的子类型序列化，可以假定该子类型负责保存和恢复超类型的公用 (public). 受保护的 (protected) 和（如果可访问）包 (package) 字段的状态。仅在子类型扩展的类有一个可访问的无参数构造方法来初始化该类的状态时，才可以假定子类型有此职责。如果不是这种情况，则声明一个类为可序列化类是错误的。该错误将在运行时检测到。
+在反序列化过程中，将使用该类的公用或受保护的无参数构造方法初始化不可序列化类的字段。可序列化的子类必须能够访问无参数构造方法。可序列化子类的字段将从该流中恢复。
+当遍历一个图形时，可能会遇到不支持 Serializable 接口的对象。在此情况下，将抛出 =NotSerializableException=，并将标识不可序列化对象的类。
+在序列化和反序列化过程中需要特殊处理的类必须使用下列准确签名来实现特殊方法：
+private void writeObject(java.io.ObjectOutputStream out) throws IOException private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException; private void readObjectNoData() throws ObjectStreamException; writeObject 方法负责写入特定类的对象的状态，以便相应的 readObject 方法可以恢复它。通过调用 out.defaultWriteObject 可以调用保存 Object 的字段的默认机制。该方法本身不需要涉及属于其超类或子类的状态。通过使用 writeObject 方法或使用 DataOutput 支持的用于基本数据类型的方法将各个字段写入 =ObjectOutputStream=，状态可以被保存。
+readObject 方法负责从流中读取并恢复类字段。它可以调用 in.defaultReadObject 来调用默认机制，以恢复对象的非静态和非瞬态字段。=defaultReadObject=方法使用流中的信息来分配流中通过当前对象中相应指定字段保存的对象的字段。这用于处理类演化后需要添加新字段的情形。该方法本身不需要涉及属于其超类或子类的状态。通过使用 writeObject 方法或使用 DataOutput 支持的用于基本数据类型的方法将各个字段写入 =ObjectOutputStream=，状态可以被保存。
+在序列化流不列出给定类作为将被反序列化对象的超类的情况下，=readObjectNoData= 方法负责初始化特定类的对象状态。这在接收方使用的反序列化实例类的版本不同于发送方，并且接收者版本扩展的类不是发送者版本扩展的类时发生。在序列化流已经被篡改时也将发生；因此，不管源流是“敌意的”还是不完整的，=readObjectNoData= 方法都可以用来正确地初始化反序列化的对象。
+将对象写入流时需要指定要使用的替代对象的可序列化类，应使用准确的签名来实现此特殊方法：
+ANY-ACCESS-MODIFIER Object writeReplace() throws ObjectStreamException;
+此 writeReplace 方法将由序列化调用，前提是如果此方法存在，而且它可以通过被序列化对象的类中定义的一个方法访问。因此，该方法可以拥有私有 (private). 受保护的 (protected) 和包私有 (package-private) 访问。子类对此方法的访问遵循 java 访问规则。
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2018-02-08 21:33:00 +0800 CST'>2018年2月8日</span></footer>
+  <a class="entry-link" aria-label="post link to 深入分析Java的序列化与反序列化" href="https://waver.me/posts/2018/in-depth_analysis_of_java_serialization_and_deserialization/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 找不到或无法加载主类XXX终极解决方案
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>起因 今天突发奇想用命令行运行 Java 文件, 但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过, 便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH, 临时环境变量等所有可能的因素后,依然报这个错, 好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后, 但是结果又让人欲哭无泪…
+解决方案: 配置错误 入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和 javac 都有提示出来，说明没问题了，
+主要是以下两点要注意：
+在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。 更为重要的是，在 cmd 下运行 javac 和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不 会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径 下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意 到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。 如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可
+以上解决方案转自 javac编译成功，用java运行class文件出现“找不到或无法加载主类” 的问题
+语法错误 语法错误分两种:
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2018-02-01 23:47:00 +0800 CST'>2018年2月1日</span></footer>
+  <a class="entry-link" aria-label="post link to Java 找不到或无法加载主类XXX终极解决方案" href="https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">工具推荐-第一期-AutoHotKey
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>最近发现一款高(neng)大(zhuang)上(bi)的神器——-AutoHotKey, 可以自定义 Windows 的快捷键, 可以使你彻底脱离鼠标, 这酸爽, 谁用谁知道.
+下载地址: www.autohotkey.com 中文帮助文档下载: 帮助文档 最后附上 ChinaUnix 博主 xiaogangzgg 写的教程: AutoHotkey的几个入门级应用
+入门教程 创建第一个 AHK 脚本 {#创建第一个 ahk 脚本} 在桌面或您选择的文件夹中右键点击空白处. 在菜单中, 选择 新建-&gt; 文本文档. 输入文件名, 将=.txt=后缀修改成=.ahk=. 例如：Test.ahk。 若没有后缀,请参见win10文件后缀名怎么显示 右键点击此文件并选择 Edit Script. 在新的空行中，输入下列内容：#space::Run www.google.com。 在上面的语句行中, 首个字符 “#” 表示 Windows 键; 所以 #space 表示按住 Windows 键然后按下空格键来激活热键. 双冒号 :: 表示每次按下此热键时会执行其后续命令, 这里是转到 Google 网站. 要试用此脚本, 请继续下列操作: 1. 保存并关闭此文件. 2. 双击此文件来运行. 在任务栏通知区域会出现新的图标. 3. 按住 Windows 键并按下空格键. 在默认浏览器中会打开网页. 4. 要退出或编辑此脚本, 则在任务栏通知区域的绿色 “H” 图标上点击右键.
+注意: - 多个脚本可以同时运行, 其中的每个脚本在任务栏通知区域使用自己的图标. - 每个脚本可以包含多个[热键]和[热字串]. - 要让您的脚本在启动计算机时自动运行, 请在开始菜单的启动文件夹中给您的脚本创建快捷方式.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2018-01-28 17:32:00 +0800 CST'>2018年1月28日</span></footer>
+  <a class="entry-link" aria-label="post link to 工具推荐-第一期-AutoHotKey" href="https://waver.me/posts/2018/tool_recommendation_autohotkey/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">微信跳一跳高分攻(外)略(挂)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>最近看微信的跳一跳特别火, 作为一名程序员, 感觉有必要运用一下自己的专(找)业(挂)知(能)识(力), 搞一个高分外挂. 具体流程请参考传送门, 本文只介绍环境搭建过程; ## Python 笔者只用过 3.6 其他版本, 推荐使用
+</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2018-01-02 13:39:00 +0800 CST'>2018年1月2日</span></footer>
+  <a class="entry-link" aria-label="post link to 微信跳一跳高分攻(外)略(挂)" href="https://waver.me/posts/2018/wechat_jump_cheat/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Result Maps collection already contains value for xxx.xxx.Mapper.BaseResultMap异常解决
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Result Maps collection already contains value for xxx.xxx.Mapper.BaseResultMap 异常解决 突然项目启动时报出以下错误: 百度上的所有答案没能解决, 最终索性重新把 mapper 文件重新生成了一遍, 结果令人感到意外, 竟然不报错了, 至于原因好像是运行过一个 mybatis-gen
+Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;userServiceImpl&#39;: Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire field: private com.bobo.mapper.UserMapper com.bobo.service.impl.UserServiceImpl.userMapper; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type [com.bobo.mapper.UserMapper] found for dependency: expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)} Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;userMapper&#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;userMapper&#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;userMapper&#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;userMapper&#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;avisMapper&#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\AvisMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.AvisMapper.BaseResultMap Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;avisMapper&#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\AvisMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.AvisMapper.BaseResultMap Related cause: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;userMapper&#39; defined in file [F:\Work\IDEA\bobo\target\classes\com\bobo\mapper\UserMapper.class]: Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML. Cause: java.lang.IllegalArgumentException: Result Maps collection already contains value for com.bobo.mapper.UserMapper.BaseResultMap Related cause: org.springframework.beans.factory.BeanCreationException: Error </p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2017-12-29 20:02:00 +0800 CST'>2017年12月29日</span></footer>
+  <a class="entry-link" aria-label="post link to Result Maps collection already contains value for xxx.xxx.Mapper.BaseResultMap异常解决" href="https://waver.me/posts/2018/result_maps_collection_already_contains_value-for_xxx.xxx.mapper.baseresultmap/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">maven管理SSM时xml和properties文件丢失异常
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>classpath resource [com/qinkangdeid/mapping/] cannot be resolved to URL because it does not exist 和 org.apache.ibatis.binding.BindingException: Invalid bound statement (not found)异常解决
+:CUSTOM_ID: classpath-resource-comqinkangdeidmapping-cannot-be-resolved-to-url-because-it-does-not-exist-和-org.apache.ibatis.binding.bindingexception-invalid-bound-statement-not-found 异常解决
+项目结构如图所示: &lt;build&gt; &lt;resources&gt; &lt;resource&gt; &lt;directory&gt;src/main/java&lt;/directory&gt; &lt;includes&gt; &lt;include&gt;**/*.properties&lt;/include&gt; &lt;include&gt;**/*.xml&lt;/include&gt; &lt;/includes&gt; &lt;filtering&gt;false&lt;/filtering&gt; &lt;/resource&gt; &lt;resource&gt; &lt;directory&gt;src/main/resources&lt;/directory&gt; &lt;includes&gt; &lt;include&gt;**/*.properties&lt;/include&gt; &lt;include&gt;**/*.xml&lt;/include&gt; &lt;/includes&gt; &lt;filtering&gt;false&lt;/filtering&gt; &lt;/resource&gt; &lt;/resources&gt; &lt;/build&gt; 如上图所示, 将 com.bobo.mapper 和 resource 目录配置到 pom 文件的 bulid 中即可
+</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2017-12-28 18:52:00 +0800 CST'>2017年12月28日</span></footer>
+  <a class="entry-link" aria-label="post link to maven管理SSM时xml和properties文件丢失异常" href="https://waver.me/posts/2018/maven_manager_ssm_xml_and_properties_file_not_found_exception/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="prev" href="https://waver.me/posts/2018/">
+      «&nbsp;上一页&nbsp;
+    </a>
+  </nav>
+</footer>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

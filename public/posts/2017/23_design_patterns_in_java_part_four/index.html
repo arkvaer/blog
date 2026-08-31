@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Java中的23中设计模式 (4) | Waver&#39;s Blog</title>
+<meta name="keywords" content="Java, Desgin_Patterns">
+<meta name="description" content="
+本文转自:http://blog.csdn.net/zhangerqing;
+
+其实每个设计模式都是很一种思想,看上去很熟,其实是因为我们在学到的东西中都有涉及,尽管有时我们并不知道,其实在 Java 本身的设计之中处处都有体现,像 AWT、JDBC、集合类、IO 管道或者是 Web 框架,里面设计模式无处不在。因为我们篇幅有限,很难讲每一个设计模式都讲的很详细,不过我会尽我所能,尽量在有限的空间和篇幅内,把意思写清楚了,更好让大家明白。本章不出意外的话,应该是设计模式最后一讲了,首先还是上一下上篇开头的那个图:
+
+本章讲讲第三类和第四类。
+19. 备忘录模式（Memento） {#备忘录模式 memento}
+主要目的是保存一个对象的某个状态,以便在适当的时候恢复对象,个人觉得叫备份模式更形象些,通俗的讲下：假设有原始类 A,A 中有各种属性,A 可以决定需要备份的属性,备忘录类 B 是用来存储 A 的一些内部状态,类 C 呢,就是一个用来存储备忘录的,且只能存储,不能修改等操作。做个图来分析一下: 
+Original 类是原始类,里面有需要保存的属性 value 及创建一个备忘录类,用来保存 value 值。Memento 类是备忘录类,Storage 类是存储备忘录的类,持有 Memento 类的实例,该模式很好理解。
+直接看源码:
+public class Original {
+
+    private String value;
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Original(String value) {
+        this.value = value;
+    }
+
+    public Memento createMemento(){
+        return new Memento(value);
+    }
+
+    public void restoreMemento(Memento memento){
+        this.value = memento.getValue();
+    }
+}
+public class Memento {
+
+    private String value;
+
+    public Memento(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+}
+public class Storage {
+
+    private Memento memento;
+
+    public Storage(Memento memento) {
+        this.memento = memento;
+    }
+
+    public Memento getMemento() {
+        return memento;
+    }
+
+    public void setMemento(Memento memento) {
+        this.memento = memento;
+    }
+}
+测试类:">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2017/23_design_patterns_in_java_part_four/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2017/23_design_patterns_in_java_part_four/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2017/23_design_patterns_in_java_part_four/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="Java中的23中设计模式 (4)">
+  <meta property="og:description" content="本文转自:http://blog.csdn.net/zhangerqing;
+其实每个设计模式都是很一种思想,看上去很熟,其实是因为我们在学到的东西中都有涉及,尽管有时我们并不知道,其实在 Java 本身的设计之中处处都有体现,像 AWT、JDBC、集合类、IO 管道或者是 Web 框架,里面设计模式无处不在。因为我们篇幅有限,很难讲每一个设计模式都讲的很详细,不过我会尽我所能,尽量在有限的空间和篇幅内,把意思写清楚了,更好让大家明白。本章不出意外的话,应该是设计模式最后一讲了,首先还是上一下上篇开头的那个图: 本章讲讲第三类和第四类。
+19. 备忘录模式（Memento） {#备忘录模式 memento} 主要目的是保存一个对象的某个状态,以便在适当的时候恢复对象,个人觉得叫备份模式更形象些,通俗的讲下：假设有原始类 A,A 中有各种属性,A 可以决定需要备份的属性,备忘录类 B 是用来存储 A 的一些内部状态,类 C 呢,就是一个用来存储备忘录的,且只能存储,不能修改等操作。做个图来分析一下: Original 类是原始类,里面有需要保存的属性 value 及创建一个备忘录类,用来保存 value 值。Memento 类是备忘录类,Storage 类是存储备忘录的类,持有 Memento 类的实例,该模式很好理解。
+直接看源码:
+public class Original { private String value; public String getValue() { return value; } public void setValue(String value) { this.value = value; } public Original(String value) { this.value = value; } public Memento createMemento(){ return new Memento(value); } public void restoreMemento(Memento memento){ this.value = memento.getValue(); } } public class Memento { private String value; public Memento(String value) { this.value = value; } public String getValue() { return value; } public void setValue(String value) { this.value = value; } } public class Storage { private Memento memento; public Storage(Memento memento) { this.memento = memento; } public Memento getMemento() { return memento; } public void setMemento(Memento memento) { this.memento = memento; } } 测试类:">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2017-12-25T19:25:00+08:00">
+    <meta property="article:modified_time" content="2022-04-13T09:04:59+08:00">
+    <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="Desgin_Patterns">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java中的23中设计模式 (4)">
+  <meta name="twitter:description" content="本文转自:http://blog.csdn.net/zhangerqing;
+其实每个设计模式都是很一种思想,看上去很熟,其实是因为我们在学到的东西中都有涉及,尽管有时我们并不知道,其实在 Java 本身的设计之中处处都有体现,像 AWT、JDBC、集合类、IO 管道或者是 Web 框架,里面设计模式无处不在。因为我们篇幅有限,很难讲每一个设计模式都讲的很详细,不过我会尽我所能,尽量在有限的空间和篇幅内,把意思写清楚了,更好让大家明白。本章不出意外的话,应该是设计模式最后一讲了,首先还是上一下上篇开头的那个图: 本章讲讲第三类和第四类。
+19. 备忘录模式（Memento） {#备忘录模式 memento} 主要目的是保存一个对象的某个状态,以便在适当的时候恢复对象,个人觉得叫备份模式更形象些,通俗的讲下：假设有原始类 A,A 中有各种属性,A 可以决定需要备份的属性,备忘录类 B 是用来存储 A 的一些内部状态,类 C 呢,就是一个用来存储备忘录的,且只能存储,不能修改等操作。做个图来分析一下: Original 类是原始类,里面有需要保存的属性 value 及创建一个备忘录类,用来保存 value 值。Memento 类是备忘录类,Storage 类是存储备忘录的类,持有 Memento 类的实例,该模式很好理解。
+直接看源码:
+public class Original { private String value; public String getValue() { return value; } public void setValue(String value) { this.value = value; } public Original(String value) { this.value = value; } public Memento createMemento(){ return new Memento(value); } public void restoreMemento(Memento memento){ this.value = memento.getValue(); } } public class Memento { private String value; public Memento(String value) { this.value = value; } public String getValue() { return value; } public void setValue(String value) { this.value = value; } } public class Storage { private Memento memento; public Storage(Memento memento) { this.memento = memento; } public Memento getMemento() { return memento; } public void setMemento(Memento memento) { this.memento = memento; } } 测试类:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2017 Index",
+      "item": "https://waver.me/posts/2017/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Java中的23中设计模式 (4)",
+      "item": "https://waver.me/posts/2017/23_design_patterns_in_java_part_four/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java中的23中设计模式 (4)",
+  "name": "Java中的23中设计模式 (4)",
+  "description": " 本文转自:http://blog.csdn.net/zhangerqing;\n其实每个设计模式都是很一种思想,看上去很熟,其实是因为我们在学到的东西中都有涉及,尽管有时我们并不知道,其实在 Java 本身的设计之中处处都有体现,像 AWT、JDBC、集合类、IO 管道或者是 Web 框架,里面设计模式无处不在。因为我们篇幅有限,很难讲每一个设计模式都讲的很详细,不过我会尽我所能,尽量在有限的空间和篇幅内,把意思写清楚了,更好让大家明白。本章不出意外的话,应该是设计模式最后一讲了,首先还是上一下上篇开头的那个图: 本章讲讲第三类和第四类。\n19. 备忘录模式（Memento） {#备忘录模式 memento} 主要目的是保存一个对象的某个状态,以便在适当的时候恢复对象,个人觉得叫备份模式更形象些,通俗的讲下：假设有原始类 A,A 中有各种属性,A 可以决定需要备份的属性,备忘录类 B 是用来存储 A 的一些内部状态,类 C 呢,就是一个用来存储备忘录的,且只能存储,不能修改等操作。做个图来分析一下: Original 类是原始类,里面有需要保存的属性 value 及创建一个备忘录类,用来保存 value 值。Memento 类是备忘录类,Storage 类是存储备忘录的类,持有 Memento 类的实例,该模式很好理解。\n直接看源码:\npublic class Original { private String value; public String getValue() { return value; } public void setValue(String value) { this.value = value; } public Original(String value) { this.value = value; } public Memento createMemento(){ return new Memento(value); } public void restoreMemento(Memento memento){ this.value = memento.getValue(); } } public class Memento { private String value; public Memento(String value) { this.value = value; } public String getValue() { return value; } public void setValue(String value) { this.value = value; } } public class Storage { private Memento memento; public Storage(Memento memento) { this.memento = memento; } public Memento getMemento() { return memento; } public void setMemento(Memento memento) { this.memento = memento; } } 测试类:\n",
+  "keywords": [
+    "Java", "Desgin_Patterns"
+  ],
+  "articleBody": " 本文转自:http://blog.csdn.net/zhangerqing;\n其实每个设计模式都是很一种思想,看上去很熟,其实是因为我们在学到的东西中都有涉及,尽管有时我们并不知道,其实在 Java 本身的设计之中处处都有体现,像 AWT、JDBC、集合类、IO 管道或者是 Web 框架,里面设计模式无处不在。因为我们篇幅有限,很难讲每一个设计模式都讲的很详细,不过我会尽我所能,尽量在有限的空间和篇幅内,把意思写清楚了,更好让大家明白。本章不出意外的话,应该是设计模式最后一讲了,首先还是上一下上篇开头的那个图: 本章讲讲第三类和第四类。\n19. 备忘录模式（Memento） {#备忘录模式 memento} 主要目的是保存一个对象的某个状态,以便在适当的时候恢复对象,个人觉得叫备份模式更形象些,通俗的讲下：假设有原始类 A,A 中有各种属性,A 可以决定需要备份的属性,备忘录类 B 是用来存储 A 的一些内部状态,类 C 呢,就是一个用来存储备忘录的,且只能存储,不能修改等操作。做个图来分析一下: Original 类是原始类,里面有需要保存的属性 value 及创建一个备忘录类,用来保存 value 值。Memento 类是备忘录类,Storage 类是存储备忘录的类,持有 Memento 类的实例,该模式很好理解。\n直接看源码:\npublic class Original { private String value; public String getValue() { return value; } public void setValue(String value) { this.value = value; } public Original(String value) { this.value = value; } public Memento createMemento(){ return new Memento(value); } public void restoreMemento(Memento memento){ this.value = memento.getValue(); } } public class Memento { private String value; public Memento(String value) { this.value = value; } public String getValue() { return value; } public void setValue(String value) { this.value = value; } } public class Storage { private Memento memento; public Storage(Memento memento) { this.memento = memento; } public Memento getMemento() { return memento; } public void setMemento(Memento memento) { this.memento = memento; } } 测试类:\npublic class Test { public static void main(String[] args) { // 创建原始类 Original origi = new Original(\"egg\"); // 创建备忘录 Storage storage = new Storage(origi.createMemento()); // 修改原始类的状态 System.out.println(\"初始化状态为:\" + origi.getValue()); origi.setValue(\"niu\"); System.out.println(\"修改后的状态为:\" + origi.getValue()); // 回复原始类的状态 origi.restoreMemento(storage.getMemento()); System.out.println(\"恢复后的状态为:\" + origi.getValue()); } } 输出： 初始化状态为:egg 修改后的状态为:niu 恢复后的状态为:egg ## 20. 状态模式(State) 核心思想就是：当对象的状态改变时,同时改变其行为,很好理解！就拿 QQ 来说,有几种状态,在线、隐身、忙碌等,每个状态对应不同的操作,而且你的好友也能看到你的状态所以,状态模式就两点: 1. 可以通过改变状态来获得不同的行为。 2. 你的好友能同时看到你的变化。看图: State 类是个状态类,Context 类可以实现切换,我们来看看代码:\npackage com.xtfggef.dp.state; /** * 状态类的核心类 * 2012-12-1 * @author erqing * */ public class State { private String value; public String getValue() { return value; } public void setValue(String value) { this.value = value; } public void method1(){ System.out.println(\"execute the first opt!\"); } public void method2(){ System.out.println(\"execute the second opt!\"); } } package com.xtfggef.dp.state; /** * 状态模式的切换类 2012-12-1 * @author erqing * */ public class Context { private State state; public Context(State state) { this.state = state; } public State getState() { return state; } public void setState(State state) { this.state = state; } public void method() { if (state.getValue().equals(\"state1\")) { state.method1(); } else if (state.getValue().equals(\"state2\")) { state.method2(); } } } 测试类:\npublic class Test { public static void main(String[] args) { State state = new State(); Context context = new Context(state); //设置第一种状态 state.setValue(\"state1\"); context.method(); //设置第二种状态 state.setValue(\"state2\"); context.method(); } } 输出: execute the first opt! execute the second opt!\n根据这个特性,状态模式在日常开发中用的挺多的,尤其是做网站的时候,我们有时希望根据对象的某一属性,区别开他们的一些功能,比如说简单的权限控制等。 ## 21. 访问者模式（Visitor）访问者模式把数据结构和作用于结构上的操作解耦合,使得操作集合可相对自由地演化。访问者模式适用于数据结构相对稳定算法又易变化的系统。因为访问者模式使得算法操作增加变得容易。若系统数据结构对象易于变化,经常有新的数据对象增加进来,则不适合使用访问者模式。访问者模式的优点是增加操作很容易,因为增加操作意味着增加新的访问者。访问者模式将有关行为集中到一个访问者对象中,其改变不影响系统数据结构。其缺点就是增加新的数据结构很困难。—— From 百科\n简单来说,访问者模式就是一种分离对象数据结构与行为的方法,通过这种分离,可达到为一个被访问者动态添加新的操作而无需做其它的修改的效果。简单关系图： 来看看原码: 一个 Visitor 类,存放要访问的对象,\npublic interface Visitor { public void visit(Subject sub); } public class MyVisitor implements Visitor { @Override public void visit(Subject sub) { System.out.println(\"visit the subject:\"+sub.getSubject()); } } Subject 类,accept 方法,接受将要访问它的对象,getSubject()获取将要被访问的属性,\npublic interface Subject { public void accept(Visitor visitor); public String getSubject(); } public class MySubject implements Subject { @Override public void accept(Visitor visitor) { visitor.visit(this); } @Override public String getSubject() { return \"love\"; } } 测试:\npublic class Test { public static void main(String[] args) { Visitor visitor = new MyVisitor(); Subject sub = new MySubject(); sub.accept(visitor); } } 输出: visit the subject:love 该模式适用场景：如果我们想为一个现有的类增加新功能,不得不考虑几个事情： 1、新功能会不会与现有功能出现兼容性问题？2、以后会不会再需要添加？3、如果类不允许修改代码怎么办？面对这些问题,最好的解决方法就是使用访问者模式,访问者模式适用于数据结构相对稳定的系统,把数据结构和算法解耦;\n22. 中介者模式(Mediator) {#中介者模式 mediator} 中介者模式也是用来降低类类之间的耦合的,因为如果类类之间有依赖关系的话,不利于功能的拓展和维护,因为只要修改一个对象,其它关联的对象都得进行修改。如果使用中介者模式,只需关心和 Mediator 类的关系,具体类类之间的关系及调度交给 Mediator 就行,这有点像 spring 容器的作用。先看看图:User 类统一接口,User1 和 User2 分别是不同的对象,二者之间有关联,如果不采用中介者模式,则需要二者相互持有引用,这样二者的耦合度很高,为了解耦,引入了 Mediator 类,提供统一接口,MyMediator 为其实现类,里面持有 User1 和 User2 的实例,用来实现对 User1 和 User2 的控制。这样 User1 和 User2 两个对象相互独立,他们只需要保持好和 Mediator 之间的关系就行,剩下的全由 MyMediator 类来维护！基本实现:\npublic interface Mediator { public void createMediator(); public void workAll(); } public class MyMediator implements Mediator { private User user1; private User user2; public User getUser1() { return user1; } public User getUser2() { return user2; } @Override public void createMediator() { user1 = new User1(this); user2 = new User2(this); } @Override public void workAll() { user1.work(); user2.work(); } } public abstract class User { private Mediator mediator; public Mediator getMediator(){ return mediator; } public User(Mediator mediator) { this.mediator = mediator; } public abstract void work(); } public class User1 extends User { public User1(Mediator mediator){ super(mediator); } @Override public void work() { System.out.println(\"user1 exe!\"); } } public class User2 extends User { public User2(Mediator mediator){ super(mediator); } @Override public void work() { System.out.println(\"user2 exe!\"); } } 测试类:\npublic class Test { public static void main(String[] args) { Mediator mediator = new MyMediator(); mediator.createMediator(); mediator.workAll(); } } 输出: user1 exe! user2 exe!\n23. 解释器模式(Interpreter) {#解释器模式 interpreter} 解释器模式是我们暂时的最后一讲,一般主要应用在 OOP 开发中的编译器的开发中,所以适用面比较窄。 Context 类是一个上下文环境类,Plus 和 Minus 分别是用来计算的实现,代码如下:\npublic interface Expression { public int interpret(Context context); } public class Plus implements Expression { @Override public int interpret(Context context) { return context.getNum1()+context.getNum2(); } } public class Minus implements Expression { @Override public int interpret(Context context) { return context.getNum1()-context.getNum2(); } } public class Context { private int num1; private int num2; public Context(int num1, int num2) { this.num1 = num1; this.num2 = num2; } public int getNum1() { return num1; } public void setNum1(int num1) { this.num1 = num1; } public int getNum2() { return num2; } public void setNum2(int num2) { this.num2 = num2; } } 测试类:\npublic class Test { public static void main(String[] args) { // 计算9+2-8的值 int result = new Minus().interpret((new Context(new Plus() .interpret(new Context(9, 2)), 8))); System.out.println(result); } } 最后输出正确的结果:=3=。\n基本就这样,解释器模式用来做各种各样的解释器,如正则表达式等的解释器等等！\n设计模式基本就这么大概讲完了,总体感觉有点简略,的确,这么点儿篇幅,不足以对整个 23 种设计模式做全面的阐述,此处读者可将它作为一个理论基础去学习,通过这四篇博文,先基本有个概念,虽然我讲的有些简单,但基本都能说明问题及他们的特点,如果对哪一个感兴趣,可以继续深入研究！\n",
+  "wordCount" : "785",
+  "inLanguage": "zh",
+  "datePublished": "2017-12-25T19:25:00+08:00",
+  "dateModified": "2022-04-13T09:04:59+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2017/23_design_patterns_in_java_part_four/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Java中的23中设计模式 (4)
+    </h1>
+    <div class="post-meta">
+
+<span title='2017-12-25 19:25:00 +0800 CST'>2017年12月25日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><blockquote>
+<p>本文转自:<a href="http://blog.csdn.net/zhangerqing">http://blog.csdn.net/zhangerqing</a>;</p>
+</blockquote>
+<p>其实每个设计模式都是很一种思想,看上去很熟,其实是因为我们在学到的东西中都有涉及,尽管有时我们并不知道,其实在 Java 本身的设计之中处处都有体现,像 AWT、JDBC、集合类、IO 管道或者是 Web 框架,里面设计模式无处不在。因为我们篇幅有限,很难讲每一个设计模式都讲的很详细,不过我会尽我所能,尽量在有限的空间和篇幅内,把意思写清楚了,更好让大家明白。本章不出意外的话,应该是设计模式最后一讲了,首先还是上一下上篇开头的那个图:
+<img loading="lazy" src="/images/post_images/20171225_13.png"></p>
+<p>本章讲讲第三类和第四类。</p>
+<h2 id="19-备忘录模式memento-备忘录模式-memento">19. 备忘录模式（Memento） {#备忘录模式 memento}<a hidden class="anchor" aria-hidden="true" href="#19-备忘录模式memento-备忘录模式-memento">#</a></h2>
+<p>主要目的是保存一个对象的某个状态,以便在适当的时候恢复对象,个人觉得叫备份模式更形象些,通俗的讲下：假设有原始类 A,A 中有各种属性,A 可以决定需要备份的属性,备忘录类 B 是用来存储 A 的一些内部状态,类 C 呢,就是一个用来存储备忘录的,且只能存储,不能修改等操作。做个图来分析一下: <img loading="lazy" src="/images/post_images/20171225_20.png">
+Original 类是原始类,里面有需要保存的属性 value 及创建一个备忘录类,用来保存 value 值。Memento 类是备忘录类,Storage 类是存储备忘录的类,持有 Memento 类的实例,该模式很好理解。</p>
+<p>直接看源码:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Original</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String value;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getValue</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setValue</span>(String value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Original</span>(String value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Memento <span style="color:#a6e22e">createMemento</span>(){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Memento(value);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">restoreMemento</span>(Memento memento){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> memento.<span style="color:#a6e22e">getValue</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Memento</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String value;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Memento</span>(String value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getValue</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setValue</span>(String value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Storage</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Memento memento;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Storage</span>(Memento memento) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">memento</span> <span style="color:#f92672">=</span> memento;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Memento <span style="color:#a6e22e">getMemento</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> memento;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setMemento</span>(Memento memento) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">memento</span> <span style="color:#f92672">=</span> memento;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>测试类:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 创建原始类</span>
+</span></span><span style="display:flex;"><span>        Original origi <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Original(<span style="color:#e6db74">&#34;egg&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 创建备忘录</span>
+</span></span><span style="display:flex;"><span>        Storage storage <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Storage(origi.<span style="color:#a6e22e">createMemento</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 修改原始类的状态</span>
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;初始化状态为:&#34;</span> <span style="color:#f92672">+</span> origi.<span style="color:#a6e22e">getValue</span>());
+</span></span><span style="display:flex;"><span>        origi.<span style="color:#a6e22e">setValue</span>(<span style="color:#e6db74">&#34;niu&#34;</span>);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;修改后的状态为:&#34;</span> <span style="color:#f92672">+</span> origi.<span style="color:#a6e22e">getValue</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 回复原始类的状态</span>
+</span></span><span style="display:flex;"><span>        origi.<span style="color:#a6e22e">restoreMemento</span>(storage.<span style="color:#a6e22e">getMemento</span>());
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;恢复后的状态为:&#34;</span> <span style="color:#f92672">+</span> origi.<span style="color:#a6e22e">getValue</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>输出： <code>初始化状态为:egg 修改后的状态为:niu 恢复后的状态为:egg</code> ## 20.
+状态模式(State)
+核心思想就是：当对象的状态改变时,同时改变其行为,很好理解！就拿 QQ 来说,有几种状态,在线、隐身、忙碌等,每个状态对应不同的操作,而且你的好友也能看到你的状态所以,状态模式就两点: 1. 可以通过改变状态来获得不同的行为。 2.
+你的好友能同时看到你的变化。看图:
+<img loading="lazy" src="/images/post_images/20171225_21.png"></p>
+<p>State 类是个状态类,Context 类可以实现切换,我们来看看代码:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.xtfggef.dp.state;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 状态类的核心类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 2012-12-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author erqing
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">State</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String value;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getValue</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setValue</span>(String value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">method1</span>(){
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;execute the first opt!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">method2</span>(){
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;execute the second opt!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.xtfggef.dp.state;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 状态模式的切换类   2012-12-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author erqing
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Context</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> State state;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Context</span>(State state) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">state</span> <span style="color:#f92672">=</span> state;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> State <span style="color:#a6e22e">getState</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> state;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setState</span>(State state) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">state</span> <span style="color:#f92672">=</span> state;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">method</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (state.<span style="color:#a6e22e">getValue</span>().<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34;state1&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            state.<span style="color:#a6e22e">method1</span>();
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (state.<span style="color:#a6e22e">getValue</span>().<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34;state2&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            state.<span style="color:#a6e22e">method2</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>测试类:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        State state <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> State();
+</span></span><span style="display:flex;"><span>        Context context <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Context(state);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//设置第一种状态</span>
+</span></span><span style="display:flex;"><span>        state.<span style="color:#a6e22e">setValue</span>(<span style="color:#e6db74">&#34;state1&#34;</span>);
+</span></span><span style="display:flex;"><span>        context.<span style="color:#a6e22e">method</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//设置第二种状态</span>
+</span></span><span style="display:flex;"><span>        state.<span style="color:#a6e22e">setValue</span>(<span style="color:#e6db74">&#34;state2&#34;</span>);
+</span></span><span style="display:flex;"><span>        context.<span style="color:#a6e22e">method</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>输出: <code>execute the first opt! execute the second opt!</code></p>
+<p>根据这个特性,状态模式在日常开发中用的挺多的,尤其是做网站的时候,我们有时希望根据对象的某一属性,区别开他们的一些功能,比如说简单的权限控制等。 ## 21.
+访问者模式（Visitor）访问者模式把数据结构和作用于结构上的操作解耦合,使得操作集合可相对自由地演化。访问者模式适用于数据结构相对稳定算法又易变化的系统。因为访问者模式使得算法操作增加变得容易。若系统数据结构对象易于变化,经常有新的数据对象增加进来,则不适合使用访问者模式。访问者模式的优点是增加操作很容易,因为增加操作意味着增加新的访问者。访问者模式将有关行为集中到一个访问者对象中,其改变不影响系统数据结构。其缺点就是增加新的数据结构很困难。&mdash;&mdash;
+From 百科</p>
+<p>简单来说,访问者模式就是一种分离对象数据结构与行为的方法,通过这种分离,可达到为一个被访问者动态添加新的操作而无需做其它的修改的效果。简单关系图：
+<img loading="lazy" src="/images/post_images/20171225_22.png"> 来看看原码:
+一个 Visitor 类,存放要访问的对象,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Visitor</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span>(Subject sub);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyVisitor</span> <span style="color:#66d9ef">implements</span> Visitor {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span>(Subject sub) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;visit the subject:&#34;</span><span style="color:#f92672">+</span>sub.<span style="color:#a6e22e">getSubject</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Subject 类,accept 方法,接受将要访问它的对象,getSubject()获取将要被访问的属性,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Subject</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">accept</span>(Visitor visitor);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getSubject</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubject</span> <span style="color:#66d9ef">implements</span> Subject {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">accept</span>(Visitor visitor) {
+</span></span><span style="display:flex;"><span>        visitor.<span style="color:#a6e22e">visit</span>(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getSubject</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;love&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>测试:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Visitor visitor <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MyVisitor();
+</span></span><span style="display:flex;"><span>        Subject sub <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MySubject();
+</span></span><span style="display:flex;"><span>        sub.<span style="color:#a6e22e">accept</span>(visitor);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>输出: <code>visit the subject:love</code>
+该模式适用场景：如果我们想为一个现有的类增加新功能,不得不考虑几个事情：
+1、新功能会不会与现有功能出现兼容性问题？2、以后会不会再需要添加？3、如果类不允许修改代码怎么办？面对这些问题,最好的解决方法就是使用访问者模式,访问者模式适用于数据结构相对稳定的系统,把数据结构和算法解耦;</p>
+<h2 id="22-中介者模式mediator-中介者模式-mediator">22. 中介者模式(Mediator) {#中介者模式 mediator}<a hidden class="anchor" aria-hidden="true" href="#22-中介者模式mediator-中介者模式-mediator">#</a></h2>
+<p>中介者模式也是用来降低类类之间的耦合的,因为如果类类之间有依赖关系的话,不利于功能的拓展和维护,因为只要修改一个对象,其它关联的对象都得进行修改。如果使用中介者模式,只需关心和 Mediator 类的关系,具体类类之间的关系及调度交给 Mediator 就行,这有点像 spring 容器的作用。先看看图:<img loading="lazy" src="/images/post_images/20171225_23.png">User 类统一接口,User1 和 User2 分别是不同的对象,二者之间有关联,如果不采用中介者模式,则需要二者相互持有引用,这样二者的耦合度很高,为了解耦,引入了 Mediator 类,提供统一接口,MyMediator 为其实现类,里面持有 User1 和 User2 的实例,用来实现对 User1 和 User2 的控制。这样 User1 和 User2 两个对象相互独立,他们只需要保持好和 Mediator 之间的关系就行,剩下的全由 MyMediator 类来维护！基本实现:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Mediator</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createMediator</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">workAll</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyMediator</span> <span style="color:#66d9ef">implements</span> Mediator {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> User user1;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> User user2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> User <span style="color:#a6e22e">getUser1</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> user1;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> User <span style="color:#a6e22e">getUser2</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> user2;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createMediator</span>() {
+</span></span><span style="display:flex;"><span>        user1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User1(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>        user2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User2(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">workAll</span>() {
+</span></span><span style="display:flex;"><span>        user1.<span style="color:#a6e22e">work</span>();
+</span></span><span style="display:flex;"><span>        user2.<span style="color:#a6e22e">work</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Mediator mediator;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Mediator <span style="color:#a6e22e">getMediator</span>(){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> mediator;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">User</span>(Mediator mediator) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">mediator</span> <span style="color:#f92672">=</span> mediator;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">work</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User1</span> <span style="color:#66d9ef">extends</span> User {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">User1</span>(Mediator mediator){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span>(mediator);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">work</span>() {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;user1 exe!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User2</span> <span style="color:#66d9ef">extends</span> User {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">User2</span>(Mediator mediator){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span>(mediator);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">work</span>() {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;user2 exe!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>测试类:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Mediator mediator <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MyMediator();
+</span></span><span style="display:flex;"><span>        mediator.<span style="color:#a6e22e">createMediator</span>();
+</span></span><span style="display:flex;"><span>        mediator.<span style="color:#a6e22e">workAll</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>输出: <code>user1 exe! user2 exe!</code></p>
+<h2 id="23-解释器模式interpreter-解释器模式-interpreter">23. 解释器模式(Interpreter) {#解释器模式 interpreter}<a hidden class="anchor" aria-hidden="true" href="#23-解释器模式interpreter-解释器模式-interpreter">#</a></h2>
+<p>解释器模式是我们暂时的最后一讲,一般主要应用在 OOP 开发中的编译器的开发中,所以适用面比较窄。
+<img loading="lazy" src="/images/post_images/20171225_24.png">
+Context 类是一个上下文环境类,Plus 和 Minus 分别是用来计算的实现,代码如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Expression</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">interpret</span>(Context context);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Plus</span> <span style="color:#66d9ef">implements</span> Expression {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">interpret</span>(Context context) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> context.<span style="color:#a6e22e">getNum1</span>()<span style="color:#f92672">+</span>context.<span style="color:#a6e22e">getNum2</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Minus</span> <span style="color:#66d9ef">implements</span> Expression {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">interpret</span>(Context context) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> context.<span style="color:#a6e22e">getNum1</span>()<span style="color:#f92672">-</span>context.<span style="color:#a6e22e">getNum2</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Context</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num1;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Context</span>(<span style="color:#66d9ef">int</span> num1, <span style="color:#66d9ef">int</span> num2) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">num1</span> <span style="color:#f92672">=</span> num1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">num2</span> <span style="color:#f92672">=</span> num2;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getNum1</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> num1;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setNum1</span>(<span style="color:#66d9ef">int</span> num1) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">num1</span> <span style="color:#f92672">=</span> num1;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getNum2</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> num2;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setNum2</span>(<span style="color:#66d9ef">int</span> num2) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">num2</span> <span style="color:#f92672">=</span> num2;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>测试类:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 计算9+2-8的值</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Minus().<span style="color:#a6e22e">interpret</span>((<span style="color:#66d9ef">new</span> Context(<span style="color:#66d9ef">new</span> Plus()
+</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">interpret</span>(<span style="color:#66d9ef">new</span> Context(9, 2)), 8)));
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(result);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后输出正确的结果:=3=。</p>
+<p>基本就这样,解释器模式用来做各种各样的解释器,如正则表达式等的解释器等等！</p>
+<p>设计模式基本就这么大概讲完了,总体感觉有点简略,的确,这么点儿篇幅,不足以对整个 23 种设计模式做全面的阐述,此处读者可将它作为一个理论基础去学习,通过这四篇博文,先基本有个概念,虽然我讲的有些简单,但基本都能说明问题及他们的特点,如果对哪一个感兴趣,可以继续深入研究！</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/java/">Java</a></li>
+      <li><a href="https://waver.me/tags/desgin_patterns/">Desgin_Patterns</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>JavaReview-day14-集合框架[1] | Waver&#39;s Blog</title>
+<meta name="keywords" content="Java">
+<meta name="description" content="集合框架
+集合框架图
+
+
+Collection
+Collection 定义了集合框架的共性功能。
+
+
+添加
+add(e);
+addAll(collection);
+
+
+删除
+remove(e);
+removeAll(collection);
+clear();
+
+
+判断。 contains(e); isEmpty();
+
+
+获取 iterator(); size();
+
+
+获取交集。 retainAll();
+
+
+集合变数组。 toArray();
+
+
+add 方法的参数类型是 Object。以便于接收任意类型对象。
+
+
+集合中存储的都是对象的引用(地址)
+
+
+什么是迭代器呢？ 其实就是集合的取出元素的方式。
+如同抓娃娃游戏机中的夹子。
+迭代器是取出方式，会直接访问集合中的元素。
+所以将迭代器通过内部类的形式来进行描述。
+通过容器的 iterator()方法获取该内部类的对象。
+import java.util.*;
+
+class  CollectionDemo
+{
+    public static void main(String[] args)
+    {
+        method_get();
+    }
+    public static void method_get()
+    {
+        ArrayList al = new ArrayList();
+        //1，添加元素。
+        al.add(&#34;java01&#34;);//add(Object obj);
+        al.add(&#34;java02&#34;);
+        al.add(&#34;java03&#34;);
+        al.add(&#34;java04&#34;);
+        /*
+        Iterator it = al.iterator();//获取迭代器，用于取出集合中的元素。
+        while(it.hasNext())
+        {
+            sop(it.next());
+        }
+        */
+        for(Iterator it = al.iterator(); it.hasNext() ; )
+        {
+            sop(it.next());
+        }
+    }
+
+    public static void method_2()
+    {
+        ArrayList al1 = new ArrayList();
+
+        al1.add(&#34;java01&#34;);
+        al1.add(&#34;java02&#34;);
+        al1.add(&#34;java03&#34;);
+        al1.add(&#34;java04&#34;);
+        ArrayList al2 = new ArrayList();
+
+        al2.add(&#34;java03&#34;);
+        al2.add(&#34;java04&#34;);
+        al2.add(&#34;java05&#34;);
+        al2.add(&#34;java06&#34;);
+
+        //al1.retainAll(al2);//去交集，al1中只会保留和al2中相同的元素。
+        al1.removeAll(al2);
+        sop(&#34;al1:&#34;&#43;al1);
+        sop(&#34;al2:&#34;&#43;al2);
+
+    }
+
+    public static void base_method()
+    {
+        //创建一个集合容器。使用Collection接口的子类。ArrayList
+        ArrayList al = new ArrayList();
+
+        //1，添加元素。
+        al.add(&#34;java01&#34;);//add(Object obj);
+        al.add(&#34;java02&#34;);
+        al.add(&#34;java03&#34;);
+        al.add(&#34;java04&#34;);
+
+        //打印原集合。
+        sop(&#34;原集合:&#34;&#43;al);
+
+        //3，删除元素。
+        //al.remove(&#34;java02&#34;);
+        //al.clear();//清空集合。
+
+        //4，判断元素。
+        sop(&#34;java03是否存在:&#34;&#43;al.contains(&#34;java03&#34;));
+        sop(&#34;集合是否为空？&#34;&#43;al.isEmpty());
+
+        //2，获取个数。集合长度。
+        sop(&#34;size:&#34;&#43;al.size());
+
+        //打印改变后的集合。
+        sop(al);
+
+    }
+
+    public static void sop(Object obj)
+    {
+        System.out.println(obj);
+    }
+}
+List
+Vector
+枚举就是 Vector 特有的取出方式。 发现枚举和迭代器很像。
+其实枚举和迭代是一样的。">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2017/summary_of_java_knowledge_points_collection_framework_12/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2017/summary_of_java_knowledge_points_collection_framework_12/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2017/summary_of_java_knowledge_points_collection_framework_12/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="JavaReview-day14-集合框架[1]">
+  <meta property="og:description" content="集合框架 集合框架图 Collection Collection 定义了集合框架的共性功能。
+添加 add(e); addAll(collection);
+删除 remove(e); removeAll(collection); clear();
+判断。 contains(e); isEmpty();
+获取 iterator(); size();
+获取交集。 retainAll();
+集合变数组。 toArray();
+add 方法的参数类型是 Object。以便于接收任意类型对象。
+集合中存储的都是对象的引用(地址)
+什么是迭代器呢？ 其实就是集合的取出元素的方式。 如同抓娃娃游戏机中的夹子。
+迭代器是取出方式，会直接访问集合中的元素。 所以将迭代器通过内部类的形式来进行描述。 通过容器的 iterator()方法获取该内部类的对象。
+import java.util.*; class CollectionDemo { public static void main(String[] args) { method_get(); } public static void method_get() { ArrayList al = new ArrayList(); //1，添加元素。 al.add(&#34;java01&#34;);//add(Object obj); al.add(&#34;java02&#34;); al.add(&#34;java03&#34;); al.add(&#34;java04&#34;); /* Iterator it = al.iterator();//获取迭代器，用于取出集合中的元素。 while(it.hasNext()) { sop(it.next()); } */ for(Iterator it = al.iterator(); it.hasNext() ; ) { sop(it.next()); } } public static void method_2() { ArrayList al1 = new ArrayList(); al1.add(&#34;java01&#34;); al1.add(&#34;java02&#34;); al1.add(&#34;java03&#34;); al1.add(&#34;java04&#34;); ArrayList al2 = new ArrayList(); al2.add(&#34;java03&#34;); al2.add(&#34;java04&#34;); al2.add(&#34;java05&#34;); al2.add(&#34;java06&#34;); //al1.retainAll(al2);//去交集，al1中只会保留和al2中相同的元素。 al1.removeAll(al2); sop(&#34;al1:&#34;&#43;al1); sop(&#34;al2:&#34;&#43;al2); } public static void base_method() { //创建一个集合容器。使用Collection接口的子类。ArrayList ArrayList al = new ArrayList(); //1，添加元素。 al.add(&#34;java01&#34;);//add(Object obj); al.add(&#34;java02&#34;); al.add(&#34;java03&#34;); al.add(&#34;java04&#34;); //打印原集合。 sop(&#34;原集合:&#34;&#43;al); //3，删除元素。 //al.remove(&#34;java02&#34;); //al.clear();//清空集合。 //4，判断元素。 sop(&#34;java03是否存在:&#34;&#43;al.contains(&#34;java03&#34;)); sop(&#34;集合是否为空？&#34;&#43;al.isEmpty()); //2，获取个数。集合长度。 sop(&#34;size:&#34;&#43;al.size()); //打印改变后的集合。 sop(al); } public static void sop(Object obj) { System.out.println(obj); } } List Vector 枚举就是 Vector 特有的取出方式。 发现枚举和迭代器很像。 其实枚举和迭代是一样的。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-01-22T17:39:00+08:00">
+    <meta property="article:modified_time" content="2022-04-10T01:44:36+08:00">
+    <meta property="article:tag" content="Java">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JavaReview-day14-集合框架[1]">
+  <meta name="twitter:description" content="集合框架 集合框架图 Collection Collection 定义了集合框架的共性功能。
+添加 add(e); addAll(collection);
+删除 remove(e); removeAll(collection); clear();
+判断。 contains(e); isEmpty();
+获取 iterator(); size();
+获取交集。 retainAll();
+集合变数组。 toArray();
+add 方法的参数类型是 Object。以便于接收任意类型对象。
+集合中存储的都是对象的引用(地址)
+什么是迭代器呢？ 其实就是集合的取出元素的方式。 如同抓娃娃游戏机中的夹子。
+迭代器是取出方式，会直接访问集合中的元素。 所以将迭代器通过内部类的形式来进行描述。 通过容器的 iterator()方法获取该内部类的对象。
+import java.util.*; class CollectionDemo { public static void main(String[] args) { method_get(); } public static void method_get() { ArrayList al = new ArrayList(); //1，添加元素。 al.add(&#34;java01&#34;);//add(Object obj); al.add(&#34;java02&#34;); al.add(&#34;java03&#34;); al.add(&#34;java04&#34;); /* Iterator it = al.iterator();//获取迭代器，用于取出集合中的元素。 while(it.hasNext()) { sop(it.next()); } */ for(Iterator it = al.iterator(); it.hasNext() ; ) { sop(it.next()); } } public static void method_2() { ArrayList al1 = new ArrayList(); al1.add(&#34;java01&#34;); al1.add(&#34;java02&#34;); al1.add(&#34;java03&#34;); al1.add(&#34;java04&#34;); ArrayList al2 = new ArrayList(); al2.add(&#34;java03&#34;); al2.add(&#34;java04&#34;); al2.add(&#34;java05&#34;); al2.add(&#34;java06&#34;); //al1.retainAll(al2);//去交集，al1中只会保留和al2中相同的元素。 al1.removeAll(al2); sop(&#34;al1:&#34;&#43;al1); sop(&#34;al2:&#34;&#43;al2); } public static void base_method() { //创建一个集合容器。使用Collection接口的子类。ArrayList ArrayList al = new ArrayList(); //1，添加元素。 al.add(&#34;java01&#34;);//add(Object obj); al.add(&#34;java02&#34;); al.add(&#34;java03&#34;); al.add(&#34;java04&#34;); //打印原集合。 sop(&#34;原集合:&#34;&#43;al); //3，删除元素。 //al.remove(&#34;java02&#34;); //al.clear();//清空集合。 //4，判断元素。 sop(&#34;java03是否存在:&#34;&#43;al.contains(&#34;java03&#34;)); sop(&#34;集合是否为空？&#34;&#43;al.isEmpty()); //2，获取个数。集合长度。 sop(&#34;size:&#34;&#43;al.size()); //打印改变后的集合。 sop(al); } public static void sop(Object obj) { System.out.println(obj); } } List Vector 枚举就是 Vector 特有的取出方式。 发现枚举和迭代器很像。 其实枚举和迭代是一样的。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2017 Index",
+      "item": "https://waver.me/posts/2017/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "JavaReview-day14-集合框架[1]",
+      "item": "https://waver.me/posts/2017/summary_of_java_knowledge_points_collection_framework_12/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "JavaReview-day14-集合框架[1]",
+  "name": "JavaReview-day14-集合框架[1]",
+  "description": "集合框架 集合框架图 Collection Collection 定义了集合框架的共性功能。\n添加 add(e); addAll(collection);\n删除 remove(e); removeAll(collection); clear();\n判断。 contains(e); isEmpty();\n获取 iterator(); size();\n获取交集。 retainAll();\n集合变数组。 toArray();\nadd 方法的参数类型是 Object。以便于接收任意类型对象。\n集合中存储的都是对象的引用(地址)\n什么是迭代器呢？ 其实就是集合的取出元素的方式。 如同抓娃娃游戏机中的夹子。\n迭代器是取出方式，会直接访问集合中的元素。 所以将迭代器通过内部类的形式来进行描述。 通过容器的 iterator()方法获取该内部类的对象。\nimport java.util.*; class CollectionDemo { public static void main(String[] args) { method_get(); } public static void method_get() { ArrayList al = new ArrayList(); //1，添加元素。 al.add(\u0026#34;java01\u0026#34;);//add(Object obj); al.add(\u0026#34;java02\u0026#34;); al.add(\u0026#34;java03\u0026#34;); al.add(\u0026#34;java04\u0026#34;); /* Iterator it = al.iterator();//获取迭代器，用于取出集合中的元素。 while(it.hasNext()) { sop(it.next()); } */ for(Iterator it = al.iterator(); it.hasNext() ; ) { sop(it.next()); } } public static void method_2() { ArrayList al1 = new ArrayList(); al1.add(\u0026#34;java01\u0026#34;); al1.add(\u0026#34;java02\u0026#34;); al1.add(\u0026#34;java03\u0026#34;); al1.add(\u0026#34;java04\u0026#34;); ArrayList al2 = new ArrayList(); al2.add(\u0026#34;java03\u0026#34;); al2.add(\u0026#34;java04\u0026#34;); al2.add(\u0026#34;java05\u0026#34;); al2.add(\u0026#34;java06\u0026#34;); //al1.retainAll(al2);//去交集，al1中只会保留和al2中相同的元素。 al1.removeAll(al2); sop(\u0026#34;al1:\u0026#34;+al1); sop(\u0026#34;al2:\u0026#34;+al2); } public static void base_method() { //创建一个集合容器。使用Collection接口的子类。ArrayList ArrayList al = new ArrayList(); //1，添加元素。 al.add(\u0026#34;java01\u0026#34;);//add(Object obj); al.add(\u0026#34;java02\u0026#34;); al.add(\u0026#34;java03\u0026#34;); al.add(\u0026#34;java04\u0026#34;); //打印原集合。 sop(\u0026#34;原集合:\u0026#34;+al); //3，删除元素。 //al.remove(\u0026#34;java02\u0026#34;); //al.clear();//清空集合。 //4，判断元素。 sop(\u0026#34;java03是否存在:\u0026#34;+al.contains(\u0026#34;java03\u0026#34;)); sop(\u0026#34;集合是否为空？\u0026#34;+al.isEmpty()); //2，获取个数。集合长度。 sop(\u0026#34;size:\u0026#34;+al.size()); //打印改变后的集合。 sop(al); } public static void sop(Object obj) { System.out.println(obj); } } List Vector 枚举就是 Vector 特有的取出方式。 发现枚举和迭代器很像。 其实枚举和迭代是一样的。\n",
+  "keywords": [
+    "Java"
+  ],
+  "articleBody": "集合框架 集合框架图 Collection Collection 定义了集合框架的共性功能。\n添加 add(e); addAll(collection);\n删除 remove(e); removeAll(collection); clear();\n判断。 contains(e); isEmpty();\n获取 iterator(); size();\n获取交集。 retainAll();\n集合变数组。 toArray();\nadd 方法的参数类型是 Object。以便于接收任意类型对象。\n集合中存储的都是对象的引用(地址)\n什么是迭代器呢？ 其实就是集合的取出元素的方式。 如同抓娃娃游戏机中的夹子。\n迭代器是取出方式，会直接访问集合中的元素。 所以将迭代器通过内部类的形式来进行描述。 通过容器的 iterator()方法获取该内部类的对象。\nimport java.util.*; class CollectionDemo { public static void main(String[] args) { method_get(); } public static void method_get() { ArrayList al = new ArrayList(); //1，添加元素。 al.add(\"java01\");//add(Object obj); al.add(\"java02\"); al.add(\"java03\"); al.add(\"java04\"); /* Iterator it = al.iterator();//获取迭代器，用于取出集合中的元素。 while(it.hasNext()) { sop(it.next()); } */ for(Iterator it = al.iterator(); it.hasNext() ; ) { sop(it.next()); } } public static void method_2() { ArrayList al1 = new ArrayList(); al1.add(\"java01\"); al1.add(\"java02\"); al1.add(\"java03\"); al1.add(\"java04\"); ArrayList al2 = new ArrayList(); al2.add(\"java03\"); al2.add(\"java04\"); al2.add(\"java05\"); al2.add(\"java06\"); //al1.retainAll(al2);//去交集，al1中只会保留和al2中相同的元素。 al1.removeAll(al2); sop(\"al1:\"+al1); sop(\"al2:\"+al2); } public static void base_method() { //创建一个集合容器。使用Collection接口的子类。ArrayList ArrayList al = new ArrayList(); //1，添加元素。 al.add(\"java01\");//add(Object obj); al.add(\"java02\"); al.add(\"java03\"); al.add(\"java04\"); //打印原集合。 sop(\"原集合:\"+al); //3，删除元素。 //al.remove(\"java02\"); //al.clear();//清空集合。 //4，判断元素。 sop(\"java03是否存在:\"+al.contains(\"java03\")); sop(\"集合是否为空？\"+al.isEmpty()); //2，获取个数。集合长度。 sop(\"size:\"+al.size()); //打印改变后的集合。 sop(al); } public static void sop(Object obj) { System.out.println(obj); } } List Vector 枚举就是 Vector 特有的取出方式。 发现枚举和迭代器很像。 其实枚举和迭代是一样的。\n因为枚举的名称以及方法的名称都过长。 所以被迭代器取代了。 枚举郁郁而终了。\nimport java.util.*; class VectorDemo { public static void main(String[] args) { Vector v = new Vector(); v.add(\"java01\"); v.add(\"java02\"); v.add(\"java03\"); v.add(\"java04\"); Enumeration en = v.elements(); while(en.hasMoreElements()) { System.out.println(en.nextElement()); } } } LinkedList 使用 LinkedList 模拟一个堆栈或者队列数据结构。\n堆栈：先进后出 如同一个杯子。 队列：先进先出 First in First out FIFO 如同一个水管。\nimport java.util.*; class DuiLie { private LinkedList link; DuiLie() { link = new LinkedList(); } public void myAdd(Object obj) { link.addFirst(obj); } public Object myGet() { return link.removeFirst(); } public boolean isNull() { return link.isEmpty(); } } class LinkedListTest { public static void main(String[] args) { DuiLie dl = new DuiLie(); dl.myAdd(\"java01\"); dl.myAdd(\"java02\"); dl.myAdd(\"java03\"); dl.myAdd(\"java04\"); while(!dl.isNull()) { System.out.println(dl.myGet()); } } } ArrayList import java.util.*; /* 去除ArrayList集合中的重复元素。 */ class ArrayListTest { public static void sop(Object obj) { System.out.println(obj); } public static void main(String[] args) { ArrayList al = new ArrayList(); al.add(\"java01\"); al.add(\"java02\"); al.add(\"java01\"); al.add(\"java02\"); al.add(\"java01\"); //al.add(\"java03\"); /* 在迭代时循环中next调用一次，就要hasNext判断一次。 Iterator it = al.iterator(); while(it.hasNext()) { sop(it.next()+\"....\"+it.next()); } */ sop(al); al = singleElement(al); sop(al); } public static ArrayList singleElement(ArrayList al) { //定义一个临时容器。 ArrayList newAl = new ArrayList(); Iterator it = al.iterator(); while(it.hasNext()) { Object obj = it.next(); if(!newAl.contains(obj)) newAl.add(obj); } return newAl; } } ArrayList 练习: {#arraylist 练习} 将自定义对象作为元素存到 ArrayList 集合中，并去除重复元素。 比如：存人对象。同姓名同年龄，视为同一个人。为重复元素。\n思路: 1. 对人描述，将数据封装进人对象。 2. 定义容器，将人存入。 3. 取出。\nList 集合判断元素是否相同，依据是元素的 equals 方法。\nimport java.util.*; class Person { private String name; private int age; Person(String name,int age) { this.name = name; this.age = age; } public boolean equals(Object obj) { if(!(obj instanceof Person)) return false; Person p = (Person)obj; //System.out.println(this.name+\".....\"+p.name); return this.name.equals(p.name) \u0026\u0026 this.age == p.age; } public String getName() { return name; } public int getAge() { return age; } } class ArrayListTest2 { public static void sop(Object obj) { System.out.println(obj); } public static void main(String[] args) { ArrayList al = new ArrayList(); al.add(new Demo()); al.add(new Person(\"lisi01\",30));//al.add(Object obj);//Object obj = new Person(\"lisi01\",30); //al.add(new Person(\"lisi02\",32)); al.add(new Person(\"lisi02\",32)); al.add(new Person(\"lisi04\",35)); al.add(new Person(\"lisi03\",33)); //al.add(new Person(\"lisi04\",35)); //al = singleElement(al); sop(\"remove 03 :\"+al.remove(new Person(\"lisi03\",33)));//remove方法底层也是依赖于元素的equals方法。 Iterator it = al.iterator(); while(it.hasNext()) { Person p = (Person)it.next(); sop(p.getName()+\"::\"+p.getAge()); } } public static ArrayList singleElement(ArrayList al) { //定义一个临时容器。 ArrayList newAl = new ArrayList(); Iterator it = al.iterator(); while(it.hasNext()) { Object obj = it.next(); if(!newAl.contains(obj)) newAl.add(obj); } return newAl; } } 练习 2 {#练习 2} 对字符串排序。 “zxcvbasdfg” 思路： 1. 字符串变数组。 2. 数组排序。 3. 数组变字符串。\nimport java.util.*; class Test { public static void main(String[] args) { String str = \"zxcvbasdfg\"; // char[] arr = str.toCharArray(); // Arrays.sort(arr); // System.out.println(new String(arr)); // str = sortString(str); // System.out.println(str); } public static String sortString(String str) { char[] arr = stringToArray(str); sort(arr); return arrayToString(arr); } private static char[] stringToArray(String str) { return str.toCharArray(); } private static void sort(char[] arr) { for(int x=0; x\u003carr.length-1; x++) { for(int y=x+1; y\u003carr.length; y++) { if(arr[x]\u003earr[y]) { swap(arr,x,y); } } } } private static void swap(char[] arr,int x,int y) { char temp = arr[x]; arr[x] = arr[y]; arr[y] = temp; } private static String arrayToString(char[] arr) { return new String(arr); } } ",
+  "wordCount" : "633",
+  "inLanguage": "zh",
+  "datePublished": "2018-01-22T17:39:00+08:00",
+  "dateModified": "2022-04-10T01:44:36+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2017/summary_of_java_knowledge_points_collection_framework_12/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      JavaReview-day14-集合框架[1]
+    </h1>
+    <div class="post-meta">
+
+<span title='2018-01-22 17:39:00 +0800 CST'>2018年1月22日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="集合框架">集合框架<a hidden class="anchor" aria-hidden="true" href="#集合框架">#</a></h2>
+<h3 id="集合框架图">集合框架图<a hidden class="anchor" aria-hidden="true" href="#集合框架图">#</a></h3>
+<p><img loading="lazy" src="/images/post_images/20180122-Collection.jpg">
+<img loading="lazy" src="/images/post_images/20180122-Collection-simple.jpg"></p>
+<h3 id="collection">Collection<a hidden class="anchor" aria-hidden="true" href="#collection">#</a></h3>
+<p>Collection 定义了集合框架的共性功能。</p>
+<ol>
+<li>
+<p>添加
+add(e);
+addAll(collection);</p>
+</li>
+<li>
+<p>删除
+remove(e);
+removeAll(collection);
+clear();</p>
+</li>
+<li>
+<p>判断。 contains(e); isEmpty();</p>
+</li>
+<li>
+<p>获取 iterator(); size();</p>
+</li>
+<li>
+<p>获取交集。 retainAll();</p>
+</li>
+<li>
+<p>集合变数组。 toArray();</p>
+</li>
+<li>
+<p>add 方法的参数类型是 Object。以便于接收任意类型对象。</p>
+</li>
+<li>
+<p>集合中存储的都是对象的引用(地址)</p>
+</li>
+</ol>
+<p><strong>什么是迭代器呢？</strong> 其实就是集合的取出元素的方式。
+如同抓娃娃游戏机中的夹子。</p>
+<p>迭代器是取出方式，会直接访问集合中的元素。
+所以将迭代器通过内部类的形式来进行描述。
+通过容器的 iterator()方法获取该内部类的对象。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span>  <span style="color:#a6e22e">CollectionDemo</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        method_get();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">method_get</span>()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        ArrayList al <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//1，添加元素。</span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);<span style="color:#75715e">//add(Object obj);</span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java02&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java03&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java04&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        Iterator it = al.iterator();//获取迭代器，用于取出集合中的元素。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        while(it.hasNext())
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">            sop(it.next());
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(Iterator it <span style="color:#f92672">=</span> al.<span style="color:#a6e22e">iterator</span>(); it.<span style="color:#a6e22e">hasNext</span>() ; )
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            sop(it.<span style="color:#a6e22e">next</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">method_2</span>()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        ArrayList al1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        al1.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);
+</span></span><span style="display:flex;"><span>        al1.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java02&#34;</span>);
+</span></span><span style="display:flex;"><span>        al1.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java03&#34;</span>);
+</span></span><span style="display:flex;"><span>        al1.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java04&#34;</span>);
+</span></span><span style="display:flex;"><span>        ArrayList al2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        al2.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java03&#34;</span>);
+</span></span><span style="display:flex;"><span>        al2.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java04&#34;</span>);
+</span></span><span style="display:flex;"><span>        al2.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java05&#34;</span>);
+</span></span><span style="display:flex;"><span>        al2.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java06&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//al1.retainAll(al2);//去交集，al1中只会保留和al2中相同的元素。</span>
+</span></span><span style="display:flex;"><span>        al1.<span style="color:#a6e22e">removeAll</span>(al2);
+</span></span><span style="display:flex;"><span>        sop(<span style="color:#e6db74">&#34;al1:&#34;</span><span style="color:#f92672">+</span>al1);
+</span></span><span style="display:flex;"><span>        sop(<span style="color:#e6db74">&#34;al2:&#34;</span><span style="color:#f92672">+</span>al2);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">base_method</span>()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//创建一个集合容器。使用Collection接口的子类。ArrayList</span>
+</span></span><span style="display:flex;"><span>        ArrayList al <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//1，添加元素。</span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);<span style="color:#75715e">//add(Object obj);</span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java02&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java03&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java04&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//打印原集合。</span>
+</span></span><span style="display:flex;"><span>        sop(<span style="color:#e6db74">&#34;原集合:&#34;</span><span style="color:#f92672">+</span>al);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//3，删除元素。</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//al.remove(&#34;java02&#34;);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//al.clear();//清空集合。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//4，判断元素。</span>
+</span></span><span style="display:flex;"><span>        sop(<span style="color:#e6db74">&#34;java03是否存在:&#34;</span><span style="color:#f92672">+</span>al.<span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;java03&#34;</span>));
+</span></span><span style="display:flex;"><span>        sop(<span style="color:#e6db74">&#34;集合是否为空？&#34;</span><span style="color:#f92672">+</span>al.<span style="color:#a6e22e">isEmpty</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//2，获取个数。集合长度。</span>
+</span></span><span style="display:flex;"><span>        sop(<span style="color:#e6db74">&#34;size:&#34;</span><span style="color:#f92672">+</span>al.<span style="color:#a6e22e">size</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//打印改变后的集合。</span>
+</span></span><span style="display:flex;"><span>        sop(al);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sop</span>(Object obj)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(obj);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="list">List<a hidden class="anchor" aria-hidden="true" href="#list">#</a></h3>
+<h4 id="vector">Vector<a hidden class="anchor" aria-hidden="true" href="#vector">#</a></h4>
+<p>枚举就是 Vector 特有的取出方式。 发现枚举和迭代器很像。
+其实枚举和迭代是一样的。</p>
+<p>因为枚举的名称以及方法的名称都过长。 所以被迭代器取代了。
+枚举郁郁而终了。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">VectorDemo</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Vector v <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Vector();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        v.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);
+</span></span><span style="display:flex;"><span>        v.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java02&#34;</span>);
+</span></span><span style="display:flex;"><span>        v.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java03&#34;</span>);
+</span></span><span style="display:flex;"><span>        v.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java04&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Enumeration en <span style="color:#f92672">=</span> v.<span style="color:#a6e22e">elements</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(en.<span style="color:#a6e22e">hasMoreElements</span>())
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(en.<span style="color:#a6e22e">nextElement</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="linkedlist">LinkedList<a hidden class="anchor" aria-hidden="true" href="#linkedlist">#</a></h4>
+<p>使用 LinkedList 模拟一个堆栈或者队列数据结构。</p>
+<p>堆栈：先进后出 如同一个杯子。 队列：先进先出 First in First out FIFO
+如同一个水管。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DuiLie</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> LinkedList link;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    DuiLie()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        link <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">myAdd</span>(Object obj)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        link.<span style="color:#a6e22e">addFirst</span>(obj);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">myGet</span>()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> link.<span style="color:#a6e22e">removeFirst</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isNull</span>()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> link.<span style="color:#a6e22e">isEmpty</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span>  <span style="color:#a6e22e">LinkedListTest</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        DuiLie dl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DuiLie();
+</span></span><span style="display:flex;"><span>        dl.<span style="color:#a6e22e">myAdd</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);
+</span></span><span style="display:flex;"><span>        dl.<span style="color:#a6e22e">myAdd</span>(<span style="color:#e6db74">&#34;java02&#34;</span>);
+</span></span><span style="display:flex;"><span>        dl.<span style="color:#a6e22e">myAdd</span>(<span style="color:#e6db74">&#34;java03&#34;</span>);
+</span></span><span style="display:flex;"><span>        dl.<span style="color:#a6e22e">myAdd</span>(<span style="color:#e6db74">&#34;java04&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>dl.<span style="color:#a6e22e">isNull</span>())
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(dl.<span style="color:#a6e22e">myGet</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="arraylist">ArrayList<a hidden class="anchor" aria-hidden="true" href="#arraylist">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">去除ArrayList集合中的重复元素。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ArrayListTest</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sop</span>(Object obj)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(obj);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        ArrayList al <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java02&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java02&#34;</span>);
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;java01&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//al.add(&#34;java03&#34;);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        在迭代时循环中next调用一次，就要hasNext判断一次。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        Iterator it = al.iterator();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        while(it.hasNext())
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">            sop(it.next()+&#34;....&#34;+it.next());
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        sop(al);
+</span></span><span style="display:flex;"><span>        al <span style="color:#f92672">=</span> singleElement(al);
+</span></span><span style="display:flex;"><span>        sop(al);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ArrayList <span style="color:#a6e22e">singleElement</span>(ArrayList al)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//定义一个临时容器。</span>
+</span></span><span style="display:flex;"><span>        ArrayList newAl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Iterator it <span style="color:#f92672">=</span> al.<span style="color:#a6e22e">iterator</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(it.<span style="color:#a6e22e">hasNext</span>())
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Object obj <span style="color:#f92672">=</span> it.<span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>newAl.<span style="color:#a6e22e">contains</span>(obj))
+</span></span><span style="display:flex;"><span>                newAl.<span style="color:#a6e22e">add</span>(obj);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> newAl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="arraylist-练习-arraylist-练习">ArrayList 练习: {#arraylist 练习}<a hidden class="anchor" aria-hidden="true" href="#arraylist-练习-arraylist-练习">#</a></h4>
+<p>将自定义对象作为元素存到 ArrayList 集合中，并去除重复元素。
+比如：存人对象。同姓名同年龄，视为同一个人。为重复元素。</p>
+<p>思路: 1. 对人描述，将数据封装进人对象。 2. 定义容器，将人存入。 3.
+取出。</p>
+<p>List 集合判断元素是否相同，依据是元素的 equals 方法。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> age;
+</span></span><span style="display:flex;"><span>    Person(String name,<span style="color:#66d9ef">int</span> age)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> name;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">age</span> <span style="color:#f92672">=</span> age;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">equals</span>(Object obj)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>(obj <span style="color:#66d9ef">instanceof</span> Person))
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Person p <span style="color:#f92672">=</span> (Person)obj;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//System.out.println(this.name+&#34;.....&#34;+p.name);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">equals</span>(p.<span style="color:#a6e22e">name</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">age</span> <span style="color:#f92672">==</span> p.<span style="color:#a6e22e">age</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span>()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> name;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getAge</span>()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> age;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ArrayListTest2</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sop</span>(Object obj)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(obj);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        ArrayList al <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Demo());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Person(<span style="color:#e6db74">&#34;lisi01&#34;</span>,30));<span style="color:#75715e">//al.add(Object obj);//Object obj = new Person(&#34;lisi01&#34;,30);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//al.add(new Person(&#34;lisi02&#34;,32));</span>
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Person(<span style="color:#e6db74">&#34;lisi02&#34;</span>,32));
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Person(<span style="color:#e6db74">&#34;lisi04&#34;</span>,35));
+</span></span><span style="display:flex;"><span>        al.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Person(<span style="color:#e6db74">&#34;lisi03&#34;</span>,33));
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//al.add(new Person(&#34;lisi04&#34;,35));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//al = singleElement(al);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        sop(<span style="color:#e6db74">&#34;remove 03 :&#34;</span><span style="color:#f92672">+</span>al.<span style="color:#a6e22e">remove</span>(<span style="color:#66d9ef">new</span> Person(<span style="color:#e6db74">&#34;lisi03&#34;</span>,33)));<span style="color:#75715e">//remove方法底层也是依赖于元素的equals方法。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Iterator it <span style="color:#f92672">=</span> al.<span style="color:#a6e22e">iterator</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(it.<span style="color:#a6e22e">hasNext</span>())
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Person p <span style="color:#f92672">=</span> (Person)it.<span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>            sop(p.<span style="color:#a6e22e">getName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;::&#34;</span><span style="color:#f92672">+</span>p.<span style="color:#a6e22e">getAge</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ArrayList <span style="color:#a6e22e">singleElement</span>(ArrayList al)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//定义一个临时容器。</span>
+</span></span><span style="display:flex;"><span>        ArrayList newAl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Iterator it <span style="color:#f92672">=</span> al.<span style="color:#a6e22e">iterator</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(it.<span style="color:#a6e22e">hasNext</span>())
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Object obj <span style="color:#f92672">=</span> it.<span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>newAl.<span style="color:#a6e22e">contains</span>(obj))
+</span></span><span style="display:flex;"><span>                newAl.<span style="color:#a6e22e">add</span>(obj);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> newAl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="练习-2-练习-2">练习 2 {#练习 2}<a hidden class="anchor" aria-hidden="true" href="#练习-2-练习-2">#</a></h4>
+<p>对字符串排序。 &ldquo;zxcvbasdfg&rdquo; 思路： 1. 字符串变数组。 2. 数组排序。 3.
+数组变字符串。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span>  <span style="color:#a6e22e">Test</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        String str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;zxcvbasdfg&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      char[] arr = str.toCharArray();</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      Arrays.sort(arr);</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      System.out.println(new String(arr));</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      str = sortString(str);</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      System.out.println(str);</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">sortString</span>(String str)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> stringToArray(str);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        sort(arr);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> arrayToString(arr);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">stringToArray</span>(String str)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> str.<span style="color:#a6e22e">toCharArray</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> x<span style="color:#f92672">=</span>0; x<span style="color:#f92672">&lt;</span>arr.<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span>1; x<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> y<span style="color:#f92672">=</span>x<span style="color:#f92672">+</span>1; y<span style="color:#f92672">&lt;</span>arr.<span style="color:#a6e22e">length</span>; y<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(arr<span style="color:#f92672">[</span>x<span style="color:#f92672">]&gt;</span>arr<span style="color:#f92672">[</span>y<span style="color:#f92672">]</span>)
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    swap(arr,x,y);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr,<span style="color:#66d9ef">int</span> x,<span style="color:#66d9ef">int</span> y)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> temp <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        arr<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>y<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        arr<span style="color:#f92672">[</span>y<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> temp;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">arrayToString</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> String(arr);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/java/">Java</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

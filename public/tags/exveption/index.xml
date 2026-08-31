@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Exveption on Waver&#39;s Blog</title>
+    <link>https://waver.me/tags/exveption/</link>
+    <description>Recent content in Exveption on Waver&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 10 Apr 2022 01:47:16 +0800</lastBuildDate>
+    <atom:link href="https://waver.me/tags/exveption/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>maven管理SSM时xml和properties文件丢失异常</title>
+      <link>https://waver.me/posts/2018/maven_manager_ssm_xml_and_properties_file_not_found_exception/</link>
+      <pubDate>Thu, 28 Dec 2017 18:52:00 +0800</pubDate>
+      <guid>https://waver.me/posts/2018/maven_manager_ssm_xml_and_properties_file_not_found_exception/</guid>
+      <description>&lt;h2 id=&#34;classpath-resource-com-qinkangdeid-mapping-cannot-be-resolved-to&#34;&gt;classpath resource [com/qinkangdeid/mapping/] cannot be resolved to&lt;/h2&gt;
+&lt;p&gt;URL because it does not exist 和
+org.apache.ibatis.binding.BindingException: Invalid bound statement (not
+found)异常解决&lt;/p&gt;
+&lt;p&gt;:CUSTOM_ID: classpath-resource-comqinkangdeidmapping-cannot-be-resolved-to-url-because-it-does-not-exist-和-org.apache.ibatis.binding.bindingexception-invalid-bound-statement-not-found 异常解决&lt;/p&gt;
+&lt;p&gt;项目结构如图所示: &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/images/post_images/20171228ResourceException.jpg&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;build&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &amp;lt;resources&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &amp;lt;resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;directory&amp;gt;src/main/java&amp;lt;/directory&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.properties&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.xml&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;/includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;filtering&amp;gt;false&amp;lt;/filtering&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;/resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;directory&amp;gt;src/main/resources&amp;lt;/directory&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.properties&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;include&amp;gt;**/*.xml&amp;lt;/include&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;/includes&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &amp;lt;filtering&amp;gt;false&amp;lt;/filtering&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &amp;lt;/resource&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &amp;lt;/resources&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/build&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如上图所示, 将 com.bobo.mapper 和 resource 目录配置到 pom 文件的 bulid 中即可&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

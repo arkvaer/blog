@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Struts2 下载文件异常解决 | Waver&#39;s Blog</title>
+<meta name="keywords" content="Java, Struts2">
+<meta name="description" content="异常描述
+异常截图
+
+     
+
+
+Java 代码如下 {#java 代码如下}
+package action.upload;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Map;
+
+/**
+ * @author : Waver
+ * @date : 2018/3/19 20:35
+ */
+public class DownloadAction extends ActionSupport {
+
+    /**
+     * 获取文件路径
+     */
+    private String savePath;
+    /**
+     * 接收的文件名
+     */
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSavePath() {
+        return savePath;
+    }
+
+    public void setSavePath(String savePath) {
+        this.savePath = savePath;
+    }
+
+    public String list() {
+        File file = new File(savePath);
+        String[] list = file.list();
+        ActionContext context = ActionContext.getContext();
+        Map&lt;String, Object&gt; contextMap = context.getContextMap();
+        contextMap.put(&#34;list&#34;, list);
+        return &#34;list&#34;;
+    }
+
+    public InputStream getInputStream() {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(new File(savePath &#43; name));
+            return fileInputStream;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(&#34;下载异常!!!&#34;);
+        }
+    }
+
+    public String down(){
+        return &#34;down&#34;;
+    }
+
+
+}
+xml 配置信息 {#xml 配置信息}
+&lt;struts&gt;
+    &lt;package name=&#34;upload&#34; extends=&#34;struts-default&#34; namespace=&#34;/upload&#34;&gt;
+        &lt;action name=&#34;upload&#34; class=&#34;action.upload.UploadAction&#34; method=&#34;execute&#34;&gt;
+            &lt;interceptor-ref name=&#34;defaultStack&#34;&gt;
+                &lt;param name=&#34;fileUpload.allowedTypes&#34;&gt;image/jpeg,image/jpg&lt;/param&gt;
+            &lt;/interceptor-ref&gt;
+            &lt;param name=&#34;savePath&#34;&gt;e:/upload/&lt;/param&gt;
+            &lt;result&gt;/login.jsp&lt;/result&gt;
+            &lt;result name=&#34;input&#34;&gt;/error.jsp&lt;/result&gt;
+        &lt;/action&gt;
+
+        &lt;action name=&#34;down_*&#34; class=&#34;action.upload.DownloadAction&#34; method=&#34;{1}&#34;&gt;
+            &lt;param name=&#34;savePath&#34;&gt;e:/upload&lt;/param&gt;
+            &lt;result name=&#34;list&#34;&gt;/listFile.jsp&lt;/result&gt;
+            &lt;result type=&#34;stream&#34; name=&#34;down&#34;&gt;
+                &lt;!--返回给浏览器的文件类型, 返回通常用二进制--&gt;
+                &lt;param name=&#34;contentType&#34;&gt;applicantion/octet-stream&lt;/param&gt;
+                &lt;!--返回给浏览器的输入流--&gt;
+                &lt;param name=&#34;inputName&#34;&gt;inputStream&lt;/param&gt;
+                &lt;!--告诉浏览器以下载的方式下载资源--&gt;
+                &lt;param name=&#34;contentDisposition&#34;&gt;attachment=${name}&lt;/param&gt;
+                &lt;!--缓存大小--&gt;
+                &lt;param name=&#34;bufferSize&#34;&gt;1024&lt;/param&gt;
+            &lt;/result&gt;
+        &lt;/action&gt;
+    &lt;/package&gt;
+&lt;/struts&gt;
+错误原因及解决方案
+&lt;param name&ldquo;savePath&rdquo;&gt;e:/upload&lt;/param&gt;= 项后没有加 &quot;/&quot;
+与文件名组合后无法找到文件名应改为
+&lt;param name&ldquo;savePath&rdquo;&gt;e:/upload/&lt;/param&gt;=">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2018/struts2_download_file_abnormal_solution/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2018/struts2_download_file_abnormal_solution/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2018/struts2_download_file_abnormal_solution/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="Struts2 下载文件异常解决">
+  <meta property="og:description" content="异常描述 异常截图 Java 代码如下 {#java 代码如下} package action.upload; import com.opensymphony.xwork2.ActionContext; import com.opensymphony.xwork2.ActionSupport; import java.io.File; import java.io.FileInputStream; import java.io.FileNotFoundException; import java.io.InputStream; import java.util.Map; /** * @author : Waver * @date : 2018/3/19 20:35 */ public class DownloadAction extends ActionSupport { /** * 获取文件路径 */ private String savePath; /** * 接收的文件名 */ private String name; public String getName() { return name; } public void setName(String name) { this.name = name; } public String getSavePath() { return savePath; } public void setSavePath(String savePath) { this.savePath = savePath; } public String list() { File file = new File(savePath); String[] list = file.list(); ActionContext context = ActionContext.getContext(); Map&lt;String, Object&gt; contextMap = context.getContextMap(); contextMap.put(&#34;list&#34;, list); return &#34;list&#34;; } public InputStream getInputStream() { try { FileInputStream fileInputStream = new FileInputStream(new File(savePath &#43; name)); return fileInputStream; } catch (FileNotFoundException e) { e.printStackTrace(); throw new RuntimeException(&#34;下载异常!!!&#34;); } } public String down(){ return &#34;down&#34;; } } xml 配置信息 {#xml 配置信息} &lt;struts&gt; &lt;package name=&#34;upload&#34; extends=&#34;struts-default&#34; namespace=&#34;/upload&#34;&gt; &lt;action name=&#34;upload&#34; class=&#34;action.upload.UploadAction&#34; method=&#34;execute&#34;&gt; &lt;interceptor-ref name=&#34;defaultStack&#34;&gt; &lt;param name=&#34;fileUpload.allowedTypes&#34;&gt;image/jpeg,image/jpg&lt;/param&gt; &lt;/interceptor-ref&gt; &lt;param name=&#34;savePath&#34;&gt;e:/upload/&lt;/param&gt; &lt;result&gt;/login.jsp&lt;/result&gt; &lt;result name=&#34;input&#34;&gt;/error.jsp&lt;/result&gt; &lt;/action&gt; &lt;action name=&#34;down_*&#34; class=&#34;action.upload.DownloadAction&#34; method=&#34;{1}&#34;&gt; &lt;param name=&#34;savePath&#34;&gt;e:/upload&lt;/param&gt; &lt;result name=&#34;list&#34;&gt;/listFile.jsp&lt;/result&gt; &lt;result type=&#34;stream&#34; name=&#34;down&#34;&gt; &lt;!--返回给浏览器的文件类型, 返回通常用二进制--&gt; &lt;param name=&#34;contentType&#34;&gt;applicantion/octet-stream&lt;/param&gt; &lt;!--返回给浏览器的输入流--&gt; &lt;param name=&#34;inputName&#34;&gt;inputStream&lt;/param&gt; &lt;!--告诉浏览器以下载的方式下载资源--&gt; &lt;param name=&#34;contentDisposition&#34;&gt;attachment=${name}&lt;/param&gt; &lt;!--缓存大小--&gt; &lt;param name=&#34;bufferSize&#34;&gt;1024&lt;/param&gt; &lt;/result&gt; &lt;/action&gt; &lt;/package&gt; &lt;/struts&gt; 错误原因及解决方案 &lt;param name“savePath”&gt;e:/upload&lt;/param&gt;= 项后没有加 &#34;/&#34; 与文件名组合后无法找到文件名应改为 &lt;param name“savePath”&gt;e:/upload/&lt;/param&gt;=">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-03-19T22:16:00+08:00">
+    <meta property="article:modified_time" content="2022-04-10T01:47:50+08:00">
+    <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="Struts2">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Struts2 下载文件异常解决">
+  <meta name="twitter:description" content="异常描述 异常截图 Java 代码如下 {#java 代码如下} package action.upload; import com.opensymphony.xwork2.ActionContext; import com.opensymphony.xwork2.ActionSupport; import java.io.File; import java.io.FileInputStream; import java.io.FileNotFoundException; import java.io.InputStream; import java.util.Map; /** * @author : Waver * @date : 2018/3/19 20:35 */ public class DownloadAction extends ActionSupport { /** * 获取文件路径 */ private String savePath; /** * 接收的文件名 */ private String name; public String getName() { return name; } public void setName(String name) { this.name = name; } public String getSavePath() { return savePath; } public void setSavePath(String savePath) { this.savePath = savePath; } public String list() { File file = new File(savePath); String[] list = file.list(); ActionContext context = ActionContext.getContext(); Map&lt;String, Object&gt; contextMap = context.getContextMap(); contextMap.put(&#34;list&#34;, list); return &#34;list&#34;; } public InputStream getInputStream() { try { FileInputStream fileInputStream = new FileInputStream(new File(savePath &#43; name)); return fileInputStream; } catch (FileNotFoundException e) { e.printStackTrace(); throw new RuntimeException(&#34;下载异常!!!&#34;); } } public String down(){ return &#34;down&#34;; } } xml 配置信息 {#xml 配置信息} &lt;struts&gt; &lt;package name=&#34;upload&#34; extends=&#34;struts-default&#34; namespace=&#34;/upload&#34;&gt; &lt;action name=&#34;upload&#34; class=&#34;action.upload.UploadAction&#34; method=&#34;execute&#34;&gt; &lt;interceptor-ref name=&#34;defaultStack&#34;&gt; &lt;param name=&#34;fileUpload.allowedTypes&#34;&gt;image/jpeg,image/jpg&lt;/param&gt; &lt;/interceptor-ref&gt; &lt;param name=&#34;savePath&#34;&gt;e:/upload/&lt;/param&gt; &lt;result&gt;/login.jsp&lt;/result&gt; &lt;result name=&#34;input&#34;&gt;/error.jsp&lt;/result&gt; &lt;/action&gt; &lt;action name=&#34;down_*&#34; class=&#34;action.upload.DownloadAction&#34; method=&#34;{1}&#34;&gt; &lt;param name=&#34;savePath&#34;&gt;e:/upload&lt;/param&gt; &lt;result name=&#34;list&#34;&gt;/listFile.jsp&lt;/result&gt; &lt;result type=&#34;stream&#34; name=&#34;down&#34;&gt; &lt;!--返回给浏览器的文件类型, 返回通常用二进制--&gt; &lt;param name=&#34;contentType&#34;&gt;applicantion/octet-stream&lt;/param&gt; &lt;!--返回给浏览器的输入流--&gt; &lt;param name=&#34;inputName&#34;&gt;inputStream&lt;/param&gt; &lt;!--告诉浏览器以下载的方式下载资源--&gt; &lt;param name=&#34;contentDisposition&#34;&gt;attachment=${name}&lt;/param&gt; &lt;!--缓存大小--&gt; &lt;param name=&#34;bufferSize&#34;&gt;1024&lt;/param&gt; &lt;/result&gt; &lt;/action&gt; &lt;/package&gt; &lt;/struts&gt; 错误原因及解决方案 &lt;param name“savePath”&gt;e:/upload&lt;/param&gt;= 项后没有加 &#34;/&#34; 与文件名组合后无法找到文件名应改为 &lt;param name“savePath”&gt;e:/upload/&lt;/param&gt;=">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2018 Index",
+      "item": "https://waver.me/posts/2018/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Struts2 下载文件异常解决",
+      "item": "https://waver.me/posts/2018/struts2_download_file_abnormal_solution/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Struts2 下载文件异常解决",
+  "name": "Struts2 下载文件异常解决",
+  "description": "异常描述 异常截图 Java 代码如下 {#java 代码如下} package action.upload; import com.opensymphony.xwork2.ActionContext; import com.opensymphony.xwork2.ActionSupport; import java.io.File; import java.io.FileInputStream; import java.io.FileNotFoundException; import java.io.InputStream; import java.util.Map; /** * @author : Waver * @date : 2018/3/19 20:35 */ public class DownloadAction extends ActionSupport { /** * 获取文件路径 */ private String savePath; /** * 接收的文件名 */ private String name; public String getName() { return name; } public void setName(String name) { this.name = name; } public String getSavePath() { return savePath; } public void setSavePath(String savePath) { this.savePath = savePath; } public String list() { File file = new File(savePath); String[] list = file.list(); ActionContext context = ActionContext.getContext(); Map\u0026lt;String, Object\u0026gt; contextMap = context.getContextMap(); contextMap.put(\u0026#34;list\u0026#34;, list); return \u0026#34;list\u0026#34;; } public InputStream getInputStream() { try { FileInputStream fileInputStream = new FileInputStream(new File(savePath + name)); return fileInputStream; } catch (FileNotFoundException e) { e.printStackTrace(); throw new RuntimeException(\u0026#34;下载异常!!!\u0026#34;); } } public String down(){ return \u0026#34;down\u0026#34;; } } xml 配置信息 {#xml 配置信息} \u0026lt;struts\u0026gt; \u0026lt;package name=\u0026#34;upload\u0026#34; extends=\u0026#34;struts-default\u0026#34; namespace=\u0026#34;/upload\u0026#34;\u0026gt; \u0026lt;action name=\u0026#34;upload\u0026#34; class=\u0026#34;action.upload.UploadAction\u0026#34; method=\u0026#34;execute\u0026#34;\u0026gt; \u0026lt;interceptor-ref name=\u0026#34;defaultStack\u0026#34;\u0026gt; \u0026lt;param name=\u0026#34;fileUpload.allowedTypes\u0026#34;\u0026gt;image/jpeg,image/jpg\u0026lt;/param\u0026gt; \u0026lt;/interceptor-ref\u0026gt; \u0026lt;param name=\u0026#34;savePath\u0026#34;\u0026gt;e:/upload/\u0026lt;/param\u0026gt; \u0026lt;result\u0026gt;/login.jsp\u0026lt;/result\u0026gt; \u0026lt;result name=\u0026#34;input\u0026#34;\u0026gt;/error.jsp\u0026lt;/result\u0026gt; \u0026lt;/action\u0026gt; \u0026lt;action name=\u0026#34;down_*\u0026#34; class=\u0026#34;action.upload.DownloadAction\u0026#34; method=\u0026#34;{1}\u0026#34;\u0026gt; \u0026lt;param name=\u0026#34;savePath\u0026#34;\u0026gt;e:/upload\u0026lt;/param\u0026gt; \u0026lt;result name=\u0026#34;list\u0026#34;\u0026gt;/listFile.jsp\u0026lt;/result\u0026gt; \u0026lt;result type=\u0026#34;stream\u0026#34; name=\u0026#34;down\u0026#34;\u0026gt; \u0026lt;!--返回给浏览器的文件类型, 返回通常用二进制--\u0026gt; \u0026lt;param name=\u0026#34;contentType\u0026#34;\u0026gt;applicantion/octet-stream\u0026lt;/param\u0026gt; \u0026lt;!--返回给浏览器的输入流--\u0026gt; \u0026lt;param name=\u0026#34;inputName\u0026#34;\u0026gt;inputStream\u0026lt;/param\u0026gt; \u0026lt;!--告诉浏览器以下载的方式下载资源--\u0026gt; \u0026lt;param name=\u0026#34;contentDisposition\u0026#34;\u0026gt;attachment=${name}\u0026lt;/param\u0026gt; \u0026lt;!--缓存大小--\u0026gt; \u0026lt;param name=\u0026#34;bufferSize\u0026#34;\u0026gt;1024\u0026lt;/param\u0026gt; \u0026lt;/result\u0026gt; \u0026lt;/action\u0026gt; \u0026lt;/package\u0026gt; \u0026lt;/struts\u0026gt; 错误原因及解决方案 \u0026lt;param name\u0026ldquo;savePath\u0026rdquo;\u0026gt;e:/upload\u0026lt;/param\u0026gt;= 项后没有加 \u0026quot;/\u0026quot; 与文件名组合后无法找到文件名应改为 \u0026lt;param name\u0026ldquo;savePath\u0026rdquo;\u0026gt;e:/upload/\u0026lt;/param\u0026gt;=\n",
+  "keywords": [
+    "Java", "Struts2"
+  ],
+  "articleBody": "异常描述 异常截图 Java 代码如下 {#java 代码如下} package action.upload; import com.opensymphony.xwork2.ActionContext; import com.opensymphony.xwork2.ActionSupport; import java.io.File; import java.io.FileInputStream; import java.io.FileNotFoundException; import java.io.InputStream; import java.util.Map; /** * @author : Waver * @date : 2018/3/19 20:35 */ public class DownloadAction extends ActionSupport { /** * 获取文件路径 */ private String savePath; /** * 接收的文件名 */ private String name; public String getName() { return name; } public void setName(String name) { this.name = name; } public String getSavePath() { return savePath; } public void setSavePath(String savePath) { this.savePath = savePath; } public String list() { File file = new File(savePath); String[] list = file.list(); ActionContext context = ActionContext.getContext(); Map\u003cString, Object\u003e contextMap = context.getContextMap(); contextMap.put(\"list\", list); return \"list\"; } public InputStream getInputStream() { try { FileInputStream fileInputStream = new FileInputStream(new File(savePath + name)); return fileInputStream; } catch (FileNotFoundException e) { e.printStackTrace(); throw new RuntimeException(\"下载异常!!!\"); } } public String down(){ return \"down\"; } } xml 配置信息 {#xml 配置信息} image/jpeg,image/jpg e:/upload/ /login.jsp /error.jsp e:/upload /listFile.jsp applicantion/octet-stream inputStream attachment=${name} 1024 错误原因及解决方案 ",
+  "wordCount" : "206",
+  "inLanguage": "zh",
+  "datePublished": "2018-03-19T22:16:00+08:00",
+  "dateModified": "2022-04-10T01:47:50+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2018/struts2_download_file_abnormal_solution/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Struts2 下载文件异常解决
+    </h1>
+    <div class="post-meta">
+
+<span title='2018-03-19 22:16:00 +0800 CST'>2018年3月19日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="异常描述">异常描述<a hidden class="anchor" aria-hidden="true" href="#异常描述">#</a></h2>
+<h3 id="异常截图">异常截图<a hidden class="anchor" aria-hidden="true" href="#异常截图">#</a></h3>
+<figure>
+    <img loading="lazy" src="https://waver.me/album/images/post/2018/2018_03_19_Srtuts2_Exception.png"/> 
+</figure>
+
+<h3 id="java-代码如下-java-代码如下">Java 代码如下 {#java 代码如下}<a hidden class="anchor" aria-hidden="true" href="#java-代码如下-java-代码如下">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> action.upload;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> com.opensymphony.xwork2.ActionContext;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> com.opensymphony.xwork2.ActionSupport;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.File;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.FileInputStream;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.FileNotFoundException;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.InputStream;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Map;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author : Waver
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @date : 2018/3/19 20:35
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DownloadAction</span> <span style="color:#66d9ef">extends</span> ActionSupport {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 获取文件路径
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String savePath;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 接收的文件名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> name;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setName</span>(String name) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> name;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getSavePath</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> savePath;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setSavePath</span>(String savePath) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">savePath</span> <span style="color:#f92672">=</span> savePath;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">list</span>() {
+</span></span><span style="display:flex;"><span>        File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File(savePath);
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> list <span style="color:#f92672">=</span> file.<span style="color:#a6e22e">list</span>();
+</span></span><span style="display:flex;"><span>        ActionContext context <span style="color:#f92672">=</span> ActionContext.<span style="color:#a6e22e">getContext</span>();
+</span></span><span style="display:flex;"><span>        Map<span style="color:#f92672">&lt;</span>String, Object<span style="color:#f92672">&gt;</span> contextMap <span style="color:#f92672">=</span> context.<span style="color:#a6e22e">getContextMap</span>();
+</span></span><span style="display:flex;"><span>        contextMap.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;list&#34;</span>, list);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;list&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> InputStream <span style="color:#a6e22e">getInputStream</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>            FileInputStream fileInputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileInputStream(<span style="color:#66d9ef">new</span> File(savePath <span style="color:#f92672">+</span> name));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> fileInputStream;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">catch</span> (FileNotFoundException e) {
+</span></span><span style="display:flex;"><span>            e.<span style="color:#a6e22e">printStackTrace</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(<span style="color:#e6db74">&#34;下载异常!!!&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">down</span>(){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;down&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="xml-配置信息-xml-配置信息">xml 配置信息 {#xml 配置信息}<a hidden class="anchor" aria-hidden="true" href="#xml-配置信息-xml-配置信息">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;struts&gt;
+</span></span><span style="display:flex;"><span>    &lt;package name=&#34;upload&#34; extends=&#34;struts-default&#34; namespace=&#34;/upload&#34;&gt;
+</span></span><span style="display:flex;"><span>        &lt;action name=&#34;upload&#34; class=&#34;action.upload.UploadAction&#34; method=&#34;execute&#34;&gt;
+</span></span><span style="display:flex;"><span>            &lt;interceptor-ref name=&#34;defaultStack&#34;&gt;
+</span></span><span style="display:flex;"><span>                &lt;param name=&#34;fileUpload.allowedTypes&#34;&gt;image/jpeg,image/jpg&lt;/param&gt;
+</span></span><span style="display:flex;"><span>            &lt;/interceptor-ref&gt;
+</span></span><span style="display:flex;"><span>            &lt;param name=&#34;savePath&#34;&gt;e:/upload/&lt;/param&gt;
+</span></span><span style="display:flex;"><span>            &lt;result&gt;/login.jsp&lt;/result&gt;
+</span></span><span style="display:flex;"><span>            &lt;result name=&#34;input&#34;&gt;/error.jsp&lt;/result&gt;
+</span></span><span style="display:flex;"><span>        &lt;/action&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        &lt;action name=&#34;down_*&#34; class=&#34;action.upload.DownloadAction&#34; method=&#34;{1}&#34;&gt;
+</span></span><span style="display:flex;"><span>            &lt;param name=&#34;savePath&#34;&gt;e:/upload&lt;/param&gt;
+</span></span><span style="display:flex;"><span>            &lt;result name=&#34;list&#34;&gt;/listFile.jsp&lt;/result&gt;
+</span></span><span style="display:flex;"><span>            &lt;result type=&#34;stream&#34; name=&#34;down&#34;&gt;
+</span></span><span style="display:flex;"><span>                &lt;!--返回给浏览器的文件类型, 返回通常用二进制--&gt;
+</span></span><span style="display:flex;"><span>                &lt;param name=&#34;contentType&#34;&gt;applicantion/octet-stream&lt;/param&gt;
+</span></span><span style="display:flex;"><span>                &lt;!--返回给浏览器的输入流--&gt;
+</span></span><span style="display:flex;"><span>                &lt;param name=&#34;inputName&#34;&gt;inputStream&lt;/param&gt;
+</span></span><span style="display:flex;"><span>                &lt;!--告诉浏览器以下载的方式下载资源--&gt;
+</span></span><span style="display:flex;"><span>                &lt;param name=&#34;contentDisposition&#34;&gt;attachment=${name}&lt;/param&gt;
+</span></span><span style="display:flex;"><span>                &lt;!--缓存大小--&gt;
+</span></span><span style="display:flex;"><span>                &lt;param name=&#34;bufferSize&#34;&gt;1024&lt;/param&gt;
+</span></span><span style="display:flex;"><span>            &lt;/result&gt;
+</span></span><span style="display:flex;"><span>        &lt;/action&gt;
+</span></span><span style="display:flex;"><span>    &lt;/package&gt;
+</span></span><span style="display:flex;"><span>&lt;/struts&gt;
+</span></span></code></pre></div><h2 id="错误原因及解决方案">错误原因及解决方案<a hidden class="anchor" aria-hidden="true" href="#错误原因及解决方案">#</a></h2>
+<p><code>&lt;param name</code>&ldquo;savePath&rdquo;&gt;e:/upload&lt;/param&gt;= 项后没有加 <strong>&quot;/&quot;</strong>
+与文件名组合后无法找到文件名应改为
+<code>&lt;param name</code>&ldquo;savePath&rdquo;&gt;e:/upload/&lt;/param&gt;=</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/java/">Java</a></li>
+      <li><a href="https://waver.me/tags/struts2/">Struts2</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

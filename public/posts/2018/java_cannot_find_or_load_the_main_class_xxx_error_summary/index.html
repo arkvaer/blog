@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Java 找不到或无法加载主类XXX终极解决方案 | Waver&#39;s Blog</title>
+<meta name="keywords" content="Java, Exception">
+<meta name="description" content="起因
+今天突发奇想用命令行运行 Java 文件,
+但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过,
+便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH,
+临时环境变量等所有可能的因素后,依然报这个错,
+好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后,
+但是结果又让人欲哭无泪&hellip;
+解决方案:
+配置错误
+入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和
+javac 都有提示出来，说明没问题了，
+主要是以下两点要注意：
+
+在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。
+更为重要的是，在 cmd 下运行 javac
+和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不
+会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径
+下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意
+到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。
+
+如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可
+
+以上解决方案转自
+javac编译成功，用java运行class文件出现“找不到或无法加载主类”
+的问题
+
+语法错误
+语法错误分两种:">
+<meta name="author" content="">
+<link rel="canonical" href="https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://waver.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://waver.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://waver.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://waver.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://waver.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/">
+  <meta property="og:site_name" content="Waver&#39;s Blog">
+  <meta property="og:title" content="Java 找不到或无法加载主类XXX终极解决方案">
+  <meta property="og:description" content="起因 今天突发奇想用命令行运行 Java 文件, 但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过, 便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH, 临时环境变量等所有可能的因素后,依然报这个错, 好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后, 但是结果又让人欲哭无泪…
+解决方案: 配置错误 入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和 javac 都有提示出来，说明没问题了，
+主要是以下两点要注意：
+在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。 更为重要的是，在 cmd 下运行 javac 和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不 会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径 下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意 到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。 如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可
+以上解决方案转自 javac编译成功，用java运行class文件出现“找不到或无法加载主类” 的问题
+语法错误 语法错误分两种:">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-02-01T23:47:00+08:00">
+    <meta property="article:modified_time" content="2022-04-10T01:47:06+08:00">
+    <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="Exception">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java 找不到或无法加载主类XXX终极解决方案">
+  <meta name="twitter:description" content="起因 今天突发奇想用命令行运行 Java 文件, 但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过, 便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH, 临时环境变量等所有可能的因素后,依然报这个错, 好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后, 但是结果又让人欲哭无泪…
+解决方案: 配置错误 入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和 javac 都有提示出来，说明没问题了，
+主要是以下两点要注意：
+在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。 更为重要的是，在 cmd 下运行 javac 和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不 会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径 下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意 到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。 如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可
+以上解决方案转自 javac编译成功，用java运行class文件出现“找不到或无法加载主类” 的问题
+语法错误 语法错误分两种:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://waver.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "2018 Index",
+      "item": "https://waver.me/posts/2018/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Java 找不到或无法加载主类XXX终极解决方案",
+      "item": "https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java 找不到或无法加载主类XXX终极解决方案",
+  "name": "Java 找不到或无法加载主类XXX终极解决方案",
+  "description": "起因 今天突发奇想用命令行运行 Java 文件, 但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过, 便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH, 临时环境变量等所有可能的因素后,依然报这个错, 好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后, 但是结果又让人欲哭无泪\u0026hellip;\n解决方案: 配置错误 入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和 javac 都有提示出来，说明没问题了，\n主要是以下两点要注意：\n在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。 更为重要的是，在 cmd 下运行 javac 和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不 会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径 下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意 到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。 如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可\n以上解决方案转自 javac编译成功，用java运行class文件出现“找不到或无法加载主类” 的问题\n语法错误 语法错误分两种:\n",
+  "keywords": [
+    "Java", "Exception"
+  ],
+  "articleBody": "起因 今天突发奇想用命令行运行 Java 文件, 但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过, 便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH, 临时环境变量等所有可能的因素后,依然报这个错, 好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后, 但是结果又让人欲哭无泪…\n解决方案: 配置错误 入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和 javac 都有提示出来，说明没问题了，\n主要是以下两点要注意：\n在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。 更为重要的是，在 cmd 下运行 javac 和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不 会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径 下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意 到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。 如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可\n以上解决方案转自 javac编译成功，用java运行class文件出现“找不到或无法加载主类” 的问题\n语法错误 语法错误分两种:\n文件名与主类名不相同\npackage 包不存在\n第二种错误很容易忽视.在这踩个坑 (笔者就是因为将 IDEA 中的文件直接考出来才…….,一切尽在不言中, 你们可能很难想象在半夜 12 点数次装 Java 配环境变量的紧张与刺激!)\n",
+  "wordCount" : "84",
+  "inLanguage": "zh",
+  "datePublished": "2018-02-01T23:47:00+08:00",
+  "dateModified": "2022-04-10T01:47:06+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://waver.me/posts/2018/java_cannot_find_or_load_the_main_class_xxx_error_summary/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Waver's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://waver.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://waver.me/" accesskey="h" title="Waver&#39;s Blog (Alt + H)">Waver&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Java 找不到或无法加载主类XXX终极解决方案
+    </h1>
+    <div class="post-meta">
+
+<span title='2018-02-01 23:47:00 +0800 CST'>2018年2月1日</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="起因">起因<a hidden class="anchor" aria-hidden="true" href="#起因">#</a></h2>
+<p>今天突发奇想用命令行运行 Java 文件,
+但惊喜的发现出现了找不到或无法加载主类这个错误, 这个错误以前也遇到过,
+便轻车熟路的改了, 发现在确认完文件名, 类名, CLASSPATH,
+临时环境变量等所有可能的因素后,依然报这个错,
+好歹也是搞过好几年 Java 的人了,不能在这跌跟头, 经过一方折腾后,
+但是结果又让人欲哭无泪&hellip;</p>
+<h2 id="解决方案">解决方案:<a hidden class="anchor" aria-hidden="true" href="#解决方案">#</a></h2>
+<h3 id="配置错误">配置错误<a hidden class="anchor" aria-hidden="true" href="#配置错误">#</a></h3>
+<p>入门就遇到这样的问题，环境变量按网上说的配好了，直接 java 和
+javac 都有提示出来，说明没问题了，</p>
+<p>主要是以下两点要注意：</p>
+<ol>
+<li>在 classpath 的最前面要加一个本目录路径，用.表示，由于后面还有 java 的 dt 和 tools 两个路径，所以.后要加;进行分隔表示。</li>
+<li>更为重要的是，在 cmd 下运行 javac
+和 java 的时候，必须在该 java 文件的目录下运行，这样生成的 class 也在该目录下，java 的时候也会第一个就在本目录下找 class 文件，就不
+会提示找不到了。这个 cmd 运行路径由于一般不太注意，输入 cmd 就会直接到 c:\个人文件夹下，而一般的 java 文件会用其它软件编写，放在选定的路径
+下，这两个路径很少能主动重合，一运行当然找不到了，但是 javac 能认到，不知为什么 java 就提示找不到？这点有点奇怪。网上各种解决方法里很少注意
+到其实就是这个小问题造成的找不到类，都想当然的以为是在 java 源文件路径下运行 java，那当然就找不到基本问题所在了。</li>
+</ol>
+<p>如果 1、2 都做了还是没变化，那就是该计算机改了环境变量后需要重新启动下让新的设置生效，重启下即可</p>
+<blockquote>
+<p>以上解决方案转自
+<a href="http://blog.csdn.net/wangjiaweiwei/article/details/42212525">javac编译成功，用java运行class文件出现“找不到或无法加载主类”
+的问题</a></p>
+</blockquote>
+<h3 id="语法错误">语法错误<a hidden class="anchor" aria-hidden="true" href="#语法错误">#</a></h3>
+<p>语法错误分两种:</p>
+<ol>
+<li>
+<p>文件名与主类名不相同</p>
+</li>
+<li>
+<p>package 包不存在</p>
+<p><strong>第二种错误很容易忽视.在这踩个坑</strong>
+(笔者就是因为将 IDEA 中的文件直接考出来才&hellip;&hellip;.,一切尽在不言中,
+你们可能很难想象在半夜 12 点数次装 Java 配环境变量的紧张与刺激!)</p>
+</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://waver.me/tags/java/">Java</a></li>
+      <li><a href="https://waver.me/tags/exception/">Exception</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://waver.me/">Waver&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
