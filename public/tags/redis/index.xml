@@ -1,60 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Redis on Waver&#39;s Blog</title>
-    <link>https://waver.me/tags/redis/</link>
-    <description>Recent content in Redis on Waver&#39;s Blog</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Apr 2022 01:43:41 +0800</lastBuildDate>
-    <atom:link href="https://waver.me/tags/redis/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>记一次 Redis 连接用尽异常解决</title>
-      <link>https://waver.me/posts/2017/remember_a_redis_connection_exhaustion_exception_solution/</link>
-      <pubDate>Sun, 17 Dec 2017 13:11:00 +0800</pubDate>
-      <guid>https://waver.me/posts/2017/remember_a_redis_connection_exhaustion_exception_solution/</guid>
-      <description>&lt;h2 id=&#34;记一次-redis-连接用尽异常解决&#34;&gt;记一次 Redis 连接用尽异常解决&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;2017-12-01 11:04:30&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;p&gt;不知怎么突然 jedis 出现 &amp;ldquo;Could not get a resource from the pool&amp;rdquo;
-错误,错误原因是连接池中的连接用尽&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;解决方法&#34;&gt;解决方法&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at redis.clients.util.Pool.getResource(Pool.java:22)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at com.derbysoft.jredis.longkeytest.BorrowObject.run(BorrowObject.java:22)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at java.lang.Thread.run(Thread.java:662)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Caused by: java.util.NoSuchElementException: Timeout waiting for idle object
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at org.apache.commons.pool.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:1134)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at redis.clients.util.Pool.getResource(Pool.java:20)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ... 2 more
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;增加-jedis-的活动连接数&#34;&gt;增加 Jedis 的活动连接数:&lt;/h4&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;bean id=&amp;#34;jedisPoolConfig&amp;#34; class=&amp;#34;redis.clients.jedis.JedisPoolConfig&amp;#34;&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 最大连接数 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;maxTotal&amp;#34; value=&amp;#34;300&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 最大空闲连接数 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;maxIdle&amp;#34; value=&amp;#34;50&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 每次释放连接的最大数目 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;numTestsPerEvictionRun&amp;#34; value=&amp;#34;1024&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 释放连接的扫描间隔（毫秒） --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;timeBetweenEvictionRunsMillis&amp;#34; value=&amp;#34;30000&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 连接最小空闲时间 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;minEvictableIdleTimeMillis&amp;#34; value=&amp;#34;1800000&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 连接空闲多久后释放, 当空闲时间&amp;gt;该值 且 空闲连接&amp;gt;最大空闲连接数 时直接释放 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;softMinEvictableIdleTimeMillis&amp;#34; value=&amp;#34;10000&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;maxWaitMillis&amp;#34; value=&amp;#34;1500&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 在获取连接的时候检查有效性, 默认false --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;testOnBorrow&amp;#34; value=&amp;#34;true&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 在空闲时检查有效性, 默认false --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;testWhileIdle&amp;#34; value=&amp;#34;true&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true --&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;blockWhenExhausted&amp;#34; value=&amp;#34;false&amp;#34; /&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/bean&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;将最大连接数增加到-300-但是错误仍然出现-检查代码发现&#34;&gt;将最大连接数增加到 300, 但是错误仍然出现, 检查代码发现,&lt;/h4&gt;
-&lt;p&gt;连接用完后并没有释放.&lt;/p&gt;</description>
-    </item>
-  </channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Redis on Waver&#39;s Blog</title>
+		<link>https://waver.me/tags/redis/</link>
+		<description>Recent content in Redis on Waver&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 10 Apr 2022 01:43:41 +0800</lastBuildDate>
+		
+			<atom:link href="https://waver.me/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>记一次 Redis 连接用尽异常解决</title>
+				<link>https://waver.me/posts/2017/remember_a_redis_connection_exhaustion_exception_solution/</link>
+				<pubDate>Sun, 17 Dec 2017 13:11:00 +0800</pubDate>
+				<guid>https://waver.me/posts/2017/remember_a_redis_connection_exhaustion_exception_solution/</guid>
+				<description>&lt;h2 id=&#34;记一次-redis-连接用尽异常解决&#34;&gt;记一次 Redis 连接用尽异常解决&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;2017-12-01 11:04:30&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;不知怎么突然 jedis 出现 &amp;ldquo;Could not get a resource from the pool&amp;rdquo;&#xA;错误,错误原因是连接池中的连接用尽&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;解决方法&#34;&gt;解决方法&lt;/h3&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at redis.clients.util.Pool.getResource(Pool.java:22)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at com.derbysoft.jredis.longkeytest.BorrowObject.run(BorrowObject.java:22)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at java.lang.Thread.run(Thread.java:662)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Caused by: java.util.NoSuchElementException: Timeout waiting for idle object&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at org.apache.commons.pool.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:1134)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    at redis.clients.util.Pool.getResource(Pool.java:20)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ... 2 more&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;增加-jedis-的活动连接数&#34;&gt;增加 Jedis 的活动连接数:&lt;/h4&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;bean id=&amp;#34;jedisPoolConfig&amp;#34; class=&amp;#34;redis.clients.jedis.JedisPoolConfig&amp;#34;&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 最大连接数 --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;maxTotal&amp;#34; value=&amp;#34;300&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 最大空闲连接数 --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;maxIdle&amp;#34; value=&amp;#34;50&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 每次释放连接的最大数目 --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;numTestsPerEvictionRun&amp;#34; value=&amp;#34;1024&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 释放连接的扫描间隔（毫秒） --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;timeBetweenEvictionRunsMillis&amp;#34; value=&amp;#34;30000&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 连接最小空闲时间 --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;minEvictableIdleTimeMillis&amp;#34; value=&amp;#34;1800000&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 连接空闲多久后释放, 当空闲时间&amp;gt;该值 且 空闲连接&amp;gt;最大空闲连接数 时直接释放 --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;softMinEvictableIdleTimeMillis&amp;#34; value=&amp;#34;10000&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;maxWaitMillis&amp;#34; value=&amp;#34;1500&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 在获取连接的时候检查有效性, 默认false --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;testOnBorrow&amp;#34; value=&amp;#34;true&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 在空闲时检查有效性, 默认false --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;testWhileIdle&amp;#34; value=&amp;#34;true&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true --&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;property name=&amp;#34;blockWhenExhausted&amp;#34; value=&amp;#34;false&amp;#34; /&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/bean&amp;gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;将最大连接数增加到-300-但是错误仍然出现-检查代码发现&#34;&gt;将最大连接数增加到 300, 但是错误仍然出现, 检查代码发现,&lt;/h4&gt;&#xA;&lt;p&gt;连接用完后并没有释放.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

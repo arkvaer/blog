@@ -1,48 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>2019 Index on Waver&#39;s Blog</title>
-    <link>https://waver.me/posts/2022/04/</link>
-    <description>Recent content in 2019 Index on Waver&#39;s Blog</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Apr 2022 17:27:47 +0800</lastBuildDate>
-    <atom:link href="https://waver.me/posts/2022/04/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>使用Org-mode 和 hugo 搭建博客</title>
-      <link>https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/</link>
-      <pubDate>Sun, 10 Apr 2022 00:55:00 +0800</pubDate>
-      <guid>https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/</guid>
-      <description>&lt;h2 id=&#34;开篇&#34;&gt;开篇&lt;/h2&gt;
-&lt;p&gt;最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了),
-下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.&lt;/p&gt;
-&lt;h2 id=&#34;环境搭建&#34;&gt;环境搭建&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;hugo &lt;a href=&#34;https://gohugo.io/getting-started/installing/&#34;&gt;Install Hugo&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;hugo 主题 &lt;a href=&#34;https://docs.stack.jimmycai.com/&#34;&gt;Hugo theme Stack&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;ox-hugo&lt;/li&gt;
-&lt;li&gt;pandoc (用于博客迁移, 将 markdown 转为 org 文件)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;搭建步骤&#34;&gt;搭建步骤&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;通过 hugo 初始化一个目录&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     &lt;span style=&#34;color:#75715e&#34;&gt;# blog 为你的博客目录名称&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     hugo new site blog
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;挑选博客主题我这里选用的是: &lt;a href=&#34;https://docs.stack.jimmycai.com/&#34;&gt;Hugo theme Stack&lt;/a&gt;
-根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;进入到博客根目录下的 &lt;code&gt;themes&lt;/code&gt; 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        git submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;进入到主题目录下的 exampleSite 文件夹下 &lt;code&gt;/blog/themes/hugo-theme-stack/exampleSite/&lt;/code&gt; 将其中的 &lt;code&gt;content&lt;/code&gt; 文件夹和 &lt;code&gt;config.yaml&lt;/code&gt; 文件覆盖到博客根目录下.&lt;/p&gt;</description>
-    </item>
-  </channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>2019 Index on Waver&#39;s Blog</title>
+		<link>https://waver.me/posts/2022/04/</link>
+		<description>Recent content in 2019 Index on Waver&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 11 Apr 2022 17:27:47 +0800</lastBuildDate>
+		
+			<atom:link href="https://waver.me/posts/2022/04/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>使用Org-mode 和 hugo 搭建博客</title>
+				<link>https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/</link>
+				<pubDate>Sun, 10 Apr 2022 00:55:00 +0800</pubDate>
+				<guid>https://waver.me/posts/2022/04/build_a_blog_use_hugo_and_org-mode/</guid>
+				<description>&lt;h2 id=&#34;开篇&#34;&gt;开篇&lt;/h2&gt;&#xA;&lt;p&gt;最近迷上了 Emacs 的 org-mode, 所以想以后通过 org-mode 来写博客, 经过一番研究, 就有了现在的这个博客(虽然一年多没有更新了),&#xA;下面就来说说这篇博客的搭建历程, 包括一些实用的技巧和踩过的坑.&lt;/p&gt;&#xA;&lt;h2 id=&#34;环境搭建&#34;&gt;环境搭建&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;hugo &lt;a href=&#34;https://gohugo.io/getting-started/installing/&#34;&gt;Install Hugo&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;hugo 主题 &lt;a href=&#34;https://docs.stack.jimmycai.com/&#34;&gt;Hugo theme Stack&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;ox-hugo&lt;/li&gt;&#xA;&lt;li&gt;pandoc (用于博客迁移, 将 markdown 转为 org 文件)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;搭建步骤&#34;&gt;搭建步骤&lt;/h3&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;通过 hugo 初始化一个目录&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     &lt;span style=&#34;color:#75715e&#34;&gt;# blog 为你的博客目录名称&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     hugo new site blog&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;将刚生成的目录发布到 github 上, 至于如何将该目录发布到 github 上有很多种方法, 这里就不展开了&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;挑选博客主题我这里选用的是: &lt;a href=&#34;https://docs.stack.jimmycai.com/&#34;&gt;Hugo theme Stack&lt;/a&gt;&#xA;根据各自的主题文档配置修改配置文件, 这里因为情况不一样, 我就以 Stack 主题举例了&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;进入到博客根目录下的 &lt;code&gt;themes&lt;/code&gt; 文件夹下, 运行以下命令, 将主题仓库作为博客仓库的一个子模块&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        git submodule add https://github.com/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;进入到主题目录下的 exampleSite 文件夹下 &lt;code&gt;/blog/themes/hugo-theme-stack/exampleSite/&lt;/code&gt; 将其中的 &lt;code&gt;content&lt;/code&gt; 文件夹和 &lt;code&gt;config.yaml&lt;/code&gt; 文件覆盖到博客根目录下.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

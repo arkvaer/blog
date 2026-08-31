@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Jrebel on Waver&#39;s Blog</title>
-    <link>https://waver.me/tags/jrebel/</link>
-    <description>Recent content in Jrebel on Waver&#39;s Blog</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Apr 2022 01:47:12 +0800</lastBuildDate>
-    <atom:link href="https://waver.me/tags/jrebel/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Jrebel激活服务器及使用方法</title>
-      <link>https://waver.me/posts/2018/jrebel_activation_server_and_how_to_use_it/</link>
-      <pubDate>Thu, 12 Jul 2018 14:19:00 +0800</pubDate>
-      <guid>https://waver.me/posts/2018/jrebel_activation_server_and_how_to_use_it/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://ckey.run/&#34;&gt;ckey.run&lt;/a&gt;
-&lt;a href=&#34;https://helper.idejihuo.com/#home&#34;&gt;https://helper.idejihuo.com/#home&lt;/a&gt;&lt;/p&gt;</description>
-    </item>
-  </channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Jrebel on Waver&#39;s Blog</title>
+		<link>https://waver.me/tags/jrebel/</link>
+		<description>Recent content in Jrebel on Waver&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 10 Apr 2022 01:47:12 +0800</lastBuildDate>
+		
+			<atom:link href="https://waver.me/tags/jrebel/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Jrebel激活服务器及使用方法</title>
+				<link>https://waver.me/posts/2018/jrebel_activation_server_and_how_to_use_it/</link>
+				<pubDate>Thu, 12 Jul 2018 14:19:00 +0800</pubDate>
+				<guid>https://waver.me/posts/2018/jrebel_activation_server_and_how_to_use_it/</guid>
+				<description>&lt;p&gt;&lt;a href=&#34;https://ckey.run/&#34;&gt;ckey.run&lt;/a&gt;&#xA;&lt;a href=&#34;https://helper.idejihuo.com/#home&#34;&gt;https://helper.idejihuo.com/#home&lt;/a&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

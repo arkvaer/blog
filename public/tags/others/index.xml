@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Others on Waver&#39;s Blog</title>
-    <link>https://waver.me/tags/others/</link>
-    <description>Recent content in Others on Waver&#39;s Blog</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Apr 2022 01:48:11 +0800</lastBuildDate>
-    <atom:link href="https://waver.me/tags/others/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>微信跳一跳高分攻(外)略(挂)</title>
-      <link>https://waver.me/posts/2018/wechat_jump_cheat/</link>
-      <pubDate>Tue, 02 Jan 2018 13:39:00 +0800</pubDate>
-      <guid>https://waver.me/posts/2018/wechat_jump_cheat/</guid>
-      <description>&lt;p&gt;最近看微信的跳一跳特别火, 作为一名程序员,
-感觉有必要运用一下自己的专(找)业(挂)知(能)识(力), 搞一个高分外挂.
-具体流程请参考&lt;a href=&#34;https://github.com/wavejoker/wechat_jump_game&#34;&gt;传送门&lt;/a&gt;,
-本文只介绍环境搭建过程; ## Python 笔者只用过 3.6 其他版本, 推荐使用&lt;/p&gt;</description>
-    </item>
-  </channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Others on Waver&#39;s Blog</title>
+		<link>https://waver.me/tags/others/</link>
+		<description>Recent content in Others on Waver&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 10 Apr 2022 01:48:11 +0800</lastBuildDate>
+		
+			<atom:link href="https://waver.me/tags/others/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>微信跳一跳高分攻(外)略(挂)</title>
+				<link>https://waver.me/posts/2018/wechat_jump_cheat/</link>
+				<pubDate>Tue, 02 Jan 2018 13:39:00 +0800</pubDate>
+				<guid>https://waver.me/posts/2018/wechat_jump_cheat/</guid>
+				<description>&lt;p&gt;最近看微信的跳一跳特别火, 作为一名程序员,&#xA;感觉有必要运用一下自己的专(找)业(挂)知(能)识(力), 搞一个高分外挂.&#xA;具体流程请参考&lt;a href=&#34;https://github.com/wavejoker/wechat_jump_game&#34;&gt;传送门&lt;/a&gt;,&#xA;本文只介绍环境搭建过程; ## Python 笔者只用过 3.6 其他版本, 推荐使用&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

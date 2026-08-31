@@ -1,88 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Posts on Waver&#39;s Blog</title>
-    <link>https://waver.me/posts/</link>
-    <description>Recent content in Posts on Waver&#39;s Blog</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Apr 2022 01:49:18 +0800</lastBuildDate>
-    <atom:link href="https://waver.me/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Nginx 搭建图片服务器及緩存設置</title>
-      <link>https://waver.me/posts/2019/nginx_image_server/</link>
-      <pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
-      <guid>https://waver.me/posts/2019/nginx_image_server/</guid>
-      <description>&lt;h2 id=&#34;nginx-搭建图片服务器及緩存設置&#34;&gt;Nginx 搭建图片服务器及緩存設置&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;2019-08-09 23:13:04&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;准备工作&#34;&gt;准备工作&lt;/h3&gt;
-&lt;p&gt;安装 Nginx 依赖&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum -y install pcre-devel openssl openssl-devel
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果不安装在执行=./configure=时会出现=./configure: error: the HTTP rewrite module requires the PCRE library.=错误&lt;/p&gt;
-&lt;h3 id=&#34;安装-nginx&#34;&gt;安装 Nginx&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;下载 Nginx 安装包 &lt;a href=&#34;https://nginx.org/en/download.html&#34;&gt;Nginx
-官网下载地址&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;解压 Nginx&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  tar -zxvf nginx-1.14.2.tar.gz
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  cd nginx-1.14.2
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  ./configure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  make &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在配置/编译/安装过程中可能会出现缺少依赖的问题,
-这个根据个人遇到的问题自行 Google 吧,这里就不一一介绍了&lt;/p&gt;
-&lt;h3 id=&#34;修改配置&#34;&gt;修改配置&lt;/h3&gt;
-&lt;h4 id=&#34;修改工作进程数配置&#34;&gt;修改工作进程数配置&lt;/h4&gt;
-&lt;p&gt;一般根据 CPU 核心数设置, CPU 有几个核心就设置成几, 比如我的服务器有 8
-个核心就设置为 8&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  worker_processes  8;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;修改-events-模块中包含-nginx-中所有处理连接的设置&#34;&gt;修改 events 模块中包含 nginx 中所有处理连接的设置&lt;/h4&gt;
-&lt;p&gt;常用配置项如下:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  events{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    use epoll;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    worker_connections 20000;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;详细说明 use epoll; 使用 epoll 的 I/O 模型(值得注意的是如果你不知道
-Nginx 该使用哪种轮询方法的话，它会选择一个最适合你操作系统的)&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>禁用Gnome桌面Ctrl&#43;Alt&#43;S调整桌面快捷键</title>
-      <link>https://waver.me/posts/2019/disable_ctrl_alt_s_to_minimize_a_window/</link>
-      <pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
-      <guid>https://waver.me/posts/2019/disable_ctrl_alt_s_to_minimize_a_window/</guid>
-      <description>&lt;h2 id=&#34;禁用-gnome-桌面-ctrlalts-调整桌面快捷键-禁用-gnome-桌面-ctrlalts-调整桌面快捷键&#34;&gt;禁用 Gnome 桌面 Ctrl+Alt+S 调整桌面快捷键 {#禁用 gnome 桌面 ctrlalts 调整桌面快捷键}&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;2019-08-09 23:13:04&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;正文&#34;&gt;正文&lt;/h3&gt;
-&lt;p&gt;久仰 Manjaro 大名很久,所以最近搞了个 Manjaro, 为了平滑过度, 所以选择了
-Gnome 版的, 本来以为可以开开心心的撸代码了, 但是当我在 IDEA 中按下快捷键
-备打开设置配置一下字体的时候, 我的 IDEA 竟然变小了??? 想都不用想,
-快捷键冲突, 改 IDEA 的快捷键是不可能的了, 毕竟我已经和 JetBarins
-开展了深度合作,这要改了,岂不是什么 WebStorm PyCharm CLion
-GoLand(虽然不经常用,但是据说多写几个显得牛逼:) )啥的全都得改? 然后&amp;hellip;&amp;hellip;
-我特么把快捷键列表翻了个遍也没找到一个对应的! Fuck!!!&lt;/p&gt;
-&lt;p&gt;但是,作为 Google(养大的)程序员怎么可能妥协, 然后在 Ubuntu
-论坛上找到了这篇帖子,但是我就啥都没找到&amp;hellip;&amp;hellip;
-&lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2019/08/02.png&#34;&gt; 最后在 SuperUser
-找到了以下结果 &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2019/08/03.png&#34;&gt;
-然后 &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2019/08/04.png&#34;&gt; 嗯??? Gnome
-扩展??? &lt;img loading=&#34;lazy&#34; src=&#34;https://waver.me/album/images/post/2019/08/01.png&#34;&gt;
-特么要把这个叫 Screen Window sizer 的扩展禁用,
-就解决了!!!也不知到是不是自己手贱装上的, 就当不是吧.&lt;/p&gt;
-&lt;p&gt;又水了一篇博客,开心 -_-&lt;/p&gt;
-&lt;h3 id=&#34;参考链接&#34;&gt;参考链接&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&#34;https://superuser.com/questions/1352037/ctrl-alt-s-on-ubuntu-18-04-triggers-a-screen-size-toggle-but-is-not-listed-i&#34;&gt;SuperUser&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://askubuntu.com/questions/74041/how-do-i-disable-ctrlalts-to-minimize-a-window?newreg=fd6736b0f20d4307ab995a5ba33a117d&#34;&gt;Ask
-Ubuntu&lt;/a&gt;&lt;/p&gt;</description>
-    </item>
-  </channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Posts on Waver&#39;s Blog</title>
+		<link>https://waver.me/posts/</link>
+		<description>Recent content in Posts on Waver&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 10 Apr 2022 01:49:18 +0800</lastBuildDate>
+		
+			<atom:link href="https://waver.me/posts/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Nginx 搭建图片服务器及緩存設置</title>
+				<link>https://waver.me/posts/2019/nginx_image_server/</link>
+				<pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
+				<guid>https://waver.me/posts/2019/nginx_image_server/</guid>
+				<description>&lt;h2 id=&#34;nginx-搭建图片服务器及緩存設置&#34;&gt;Nginx 搭建图片服务器及緩存設置&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;2019-08-09 23:13:04&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;准备工作&#34;&gt;准备工作&lt;/h3&gt;&#xA;&lt;p&gt;安装 Nginx 依赖&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum -y install pcre-devel openssl openssl-devel&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果不安装在执行=./configure=时会出现=./configure: error: the HTTP rewrite module requires the PCRE library.=错误&lt;/p&gt;&#xA;&lt;h3 id=&#34;安装-nginx&#34;&gt;安装 Nginx&lt;/h3&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;下载 Nginx 安装包 &lt;a href=&#34;https://nginx.org/en/download.html&#34;&gt;Nginx&#xA;官网下载地址&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;解压 Nginx&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  tar -zxvf nginx-1.14.2.tar.gz&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  cd nginx-1.14.2&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  ./configure&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  make &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在配置/编译/安装过程中可能会出现缺少依赖的问题,&#xA;这个根据个人遇到的问题自行 Google 吧,这里就不一一介绍了&lt;/p&gt;&#xA;&lt;h3 id=&#34;修改配置&#34;&gt;修改配置&lt;/h3&gt;&#xA;&lt;h4 id=&#34;修改工作进程数配置&#34;&gt;修改工作进程数配置&lt;/h4&gt;&#xA;&lt;p&gt;一般根据 CPU 核心数设置, CPU 有几个核心就设置成几, 比如我的服务器有 8&#xA;个核心就设置为 8&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  worker_processes  8;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;修改-events-模块中包含-nginx-中所有处理连接的设置&#34;&gt;修改 events 模块中包含 nginx 中所有处理连接的设置&lt;/h4&gt;&#xA;&lt;p&gt;常用配置项如下:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  events{&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    use epoll;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    worker_connections 20000;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;详细说明 use epoll; 使用 epoll 的 I/O 模型(值得注意的是如果你不知道&#xA;Nginx 该使用哪种轮询方法的话，它会选择一个最适合你操作系统的)&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>禁用Gnome桌面Ctrl&#43;Alt&#43;S调整桌面快捷键</title>
+				<link>https://waver.me/posts/2019/disable_ctrl_alt_s_to_minimize_a_window/</link>
+				<pubDate>Fri, 09 Aug 2019 23:13:00 +0800</pubDate>
+				<guid>https://waver.me/posts/2019/disable_ctrl_alt_s_to_minimize_a_window/</guid>
+				<description>&lt;h2 id=&#34;禁用-gnome-桌面-ctrlalts-调整桌面快捷键-禁用-gnome-桌面-ctrlalts-调整桌面快捷键&#34;&gt;禁用 Gnome 桌面 Ctrl+Alt+S 调整桌面快捷键 {#禁用 gnome 桌面 ctrlalts 调整桌面快捷键}&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;2019-08-09 23:13:04&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;正文&#34;&gt;正文&lt;/h3&gt;&#xA;&lt;p&gt;久仰 Manjaro 大名很久,所以最近搞了个 Manjaro, 为了平滑过度, 所以选择了&#xA;Gnome 版的, 本来以为可以开开心心的撸代码了, 但是当我在 IDEA 中按下快捷键&#xA;备打开设置配置一下字体的时候, 我的 IDEA 竟然变小了??? 想都不用想,&#xA;快捷键冲突, 改 IDEA 的快捷键是不可能的了, 毕竟我已经和 JetBarins&#xA;开展了深度合作,这要改了,岂不是什么 WebStorm PyCharm CLion&#xA;GoLand(虽然不经常用,但是据说多写几个显得牛逼:) )啥的全都得改? 然后&amp;hellip;&amp;hellip;&#xA;我特么把快捷键列表翻了个遍也没找到一个对应的! Fuck!!!&lt;/p&gt;&#xA;&lt;p&gt;但是,作为 Google(养大的)程序员怎么可能妥协, 然后在 Ubuntu&#xA;论坛上找到了这篇帖子,但是我就啥都没找到&amp;hellip;&amp;hellip;&#xA;&lt;img src=&#34;https://waver.me/album/images/post/2019/08/02.png&#34; alt=&#34;&#34;&gt; 最后在 SuperUser&#xA;找到了以下结果 &lt;img src=&#34;https://waver.me/album/images/post/2019/08/03.png&#34; alt=&#34;&#34;&gt;&#xA;然后 &lt;img src=&#34;https://waver.me/album/images/post/2019/08/04.png&#34; alt=&#34;&#34;&gt; 嗯??? Gnome&#xA;扩展??? &lt;img src=&#34;https://waver.me/album/images/post/2019/08/01.png&#34; alt=&#34;&#34;&gt;&#xA;特么要把这个叫 Screen Window sizer 的扩展禁用,&#xA;就解决了!!!也不知到是不是自己手贱装上的, 就当不是吧.&lt;/p&gt;&#xA;&lt;p&gt;又水了一篇博客,开心 -_-&lt;/p&gt;&#xA;&lt;h3 id=&#34;参考链接&#34;&gt;参考链接&lt;/h3&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://superuser.com/questions/1352037/ctrl-alt-s-on-ubuntu-18-04-triggers-a-screen-size-toggle-but-is-not-listed-i&#34;&gt;SuperUser&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://askubuntu.com/questions/74041/how-do-i-disable-ctrlalts-to-minimize-a-window?newreg=fd6736b0f20d4307ab995a5ba33a117d&#34;&gt;Ask&#xA;Ubuntu&lt;/a&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>
